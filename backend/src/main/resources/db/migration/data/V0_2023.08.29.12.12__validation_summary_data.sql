@@ -1,0 +1,11 @@
+INSERT INTO validation_summary VALUES(1,'Kas kasutajad on samad?','The same stakeholders?',50);
+INSERT INTO validation_summary VALUES(2,'Kas kasutuskontekst (nt aeg, tehnoloogia, eesmärk) on sama?','The same context? (time, technology, purpose)',60);
+INSERT INTO validation_summary VALUES(3,'Kas kasutajad on osanud tegutseda analoognäites vastavalt eesmärgile?','Purposeful use by the stakeholders?',70);
+INSERT INTO validation_summary VALUES(4,'Kas kasutajad on analoogse lahendusega olnud rahul?','Satisfied with the solution in a comparable situation?',80);
+INSERT INTO validation_summary VALUES(5,'Tunnuse kirjeldus','Feature description',10);
+INSERT INTO validation_summary VALUES(6,replace('TO-BE eeldustingimused ehk käitumiseeldused\n(vaikimisi lisatud küsisõna "Kas")','\n',char(10)),'Features prerequisties',20);
+INSERT INTO validation_summary VALUES(7,'Analoognäited varasemast tegevusest','Comparable examples stakeholders have experienced',30);
+INSERT INTO validation_summary VALUES(8,'Valideeri näited','Prioritize  examples ',40);
+INSERT INTO validation_summary VALUES(9,'Käitumiskirjeldus näite kaupa','Description of behavior by example',90);
+INSERT INTO validation_summary VALUES(10,'Conclusions by Feature','Conclusions by Feature',100);
+INSERT INTO validation_summary VALUES(11,'Conclusions and action plan','Conclusions and action plan',110);

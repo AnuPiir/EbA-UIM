@@ -1,0 +1,182 @@
+mat-tab-group, mat-tab, app-validation {
+  border: none !important;
+  margin-bottom: 5rem;
+  overflow-y: visible;
+}
+
+mat-tab-group {
+  max-width: 219.25rem;
+  width: 96.67cqw;
+}
+
+:host ::ng-deep .mat-mdc-tab-body.mat-mdc-tab-body-active {
+  overflow-y: visible !important;
+}
+
+:host ::ng-deep div[role='tab'] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 1rem;
+  height: 3.5rem;
+  min-width: 12.5rem;
+  background-color: var(--table-head);
+  border: solid;
+  border-width: 0.125rem;
+  border-radius: 0.25rem;
+  color: var(--text-color);
+  font: inherit;
+  letter-spacing: normal;
+}
+
+:host ::ng-deep div[role='tab']:hover {
+  background-color: var(--highlight);
+  color: var(--text-color);
+}
+
+:host ::ng-deep div[role='tab'].mdc-tab--active {
+  background-color: var(--beige);
+  color: var(--text-color);
+  border-width: 0.25rem;
+}
+
+:host ::ng-deep div[role='tablist'] > .mat-mdc-tab-labels {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  gap: 0.25rem;
+  background-color: none;
+}
+
+:host ::ng-deep .mat-mdc-tab-header.mat-mdc-tab-header-pagination-controls-enabled {
+  background-color: var(--container);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+}
+ 
+:host ::ng-deep .mat-mdc-tab-header.mat-mdc-tab-header-pagination-controls-enabled > .mat-mdc-tab-header-pagination.mat-mdc-tab-header-pagination-before.mat-ripple,
+:host ::ng-deep .mat-mdc-tab-header.mat-mdc-tab-header-pagination-controls-enabled > .mat-mdc-tab-header-pagination.mat-mdc-tab-header-pagination-after.mat-ripple {
+  background-color: var(--table-head);
+  color: var(--text-color);
+  width: fit-content;
+  height: 3.25rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0.25rem;
+  border: solid;
+  border-width: 0.125rem;
+  border-radius: 0.25rem;
+}
+
+:host ::ng-deep .mdc-tab-indicator .mdc-tab-indicator__content {
+  border: none;
+}
+
+:host ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--text-color);
+}
+
+.mat-mdc-tab-group, .mat-mdc-tab-nav-bar {
+  --mat-tab-header-active-ripple-color: var(--highlight);
+  --mat-tab-header-inactive-ripple-color: var(--highlight);
+  --mat-tab-header-active-focus-label-text-color: var(--text-color);
+  --mat-tab-header-active-hover-label-text-color: var(--text-color);
+  --mat-tab-header-inactive-focus-label-text-color: none;
+  --mat-tab-header-inactive-hover-label-text-color: none;
+  --mat-tab-header-active-focus-indicator-color: none;
+  --mat-tab-header-active-hover-indicator-color: none;
+}
+
+.page-body {
+  box-sizing: border-box;
+  padding-top: 5rem;
+  gap: 5rem;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modals {
+  max-width: 113.75rem;
+  width: 91.16vw;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+
+  @media (max-width: 1500px) {
+    align-items: center;
+    gap: 2.5rem;
+    flex-direction: column;
+  }
+}
+
+.projects-wrapper {
+  height: fit-content;
+  width: fit-content;
+  padding: 2rem;
+  background-color: var(--container);
+  border-radius: 0.625rem;
+  display: flex;
+  gap: 5rem;
+}
+
+.add-project {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--beige);
+  width: 37.5rem;
+  padding: 1rem;
+  border: solid;
+  border-color: var(--text-color);
+  border-width: 0.125rem;
+  border-radius: 0.625rem;
+  gap: 0.5rem;
+}
+
+.add-project-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-project-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.add-project-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.add-project-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: flex-end;
+  width: 100%;
+  gap: 1rem;
+}
+
+.stakeholders-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: left;
+  align-items: top;
+  width: 100%;
+  gap: 0.5rem;
+}

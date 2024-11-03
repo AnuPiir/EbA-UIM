@@ -1,0 +1,1 @@
+ALTER TABLE validation ADD COLUMN type TEXT;

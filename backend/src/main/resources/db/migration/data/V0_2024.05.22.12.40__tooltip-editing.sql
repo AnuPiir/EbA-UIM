@@ -1,0 +1,6 @@
+UPDATE validation
+SET name_et='',tooltip_et='Kui ühe eeltingimuse kohta olete toonud mitu võrreldava situatsiooni näidet, palun valige nendest kõige asjakohasem näide.',tooltip_en='If there are multiple examples of comparable situations for one precondition, please prioritize what is the most relevant example.',name_en=''
+WHERE id=8;
+UPDATE validation
+SET tooltip_et='Saadud vastuse põhjal otsustage, kas eeldused on lahenduse edukaks toimimiseks piisavad või kui mitte, siis otsustage, mida teha, et olukorda parandada. Looge tegevuskava. Kui samale eeltingimusele antud mitme võrreldava situatsiooni näite seast tuli valida kõige asjakohasem, siis järeldus ja tegevuskava looge nendest kõige prioriteetsema näitega analüüsitud eeltingimuse tulemuse kohta. Vähemprioriteetsed jätke esialgu kõrvale. ',tooltip_en='Based on the answers, decide whether the preconditions are met sufficiently for the solution to work successfully, or if not, decide what to do to improve the situation. Create an action plan. If you had to choose the most relevant example from several examples situations given for the same precondition, then create a conclusion and action plan only for the outcome you had for most relevant example situation. Leave the lower priority ones aside for now.'
+WHERE id=11;

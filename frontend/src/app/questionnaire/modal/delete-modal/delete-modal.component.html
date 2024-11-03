@@ -1,0 +1,54 @@
+<div *ngIf="isProject" class="delete-modal">
+  <h1 translate>{{ 'deleteProjectModal.title' | translate: {name: questionnaireName} }}</h1>
+  <p>{{'deleteProjectModal.body' | translate}}</p>
+  <div class="delete-modal-actions">
+    <button
+      (click)="close(false)"
+      type="button"
+      class="button cancel-button">
+      {{'button.cancel' | translate}}
+    </button>
+    <button
+    (click)="close(true)"
+    type="button"
+    class="button delete-button">
+    {{'button.delete' | translate}}
+  </button>
+  </div>
+</div>
+<div *ngIf="isFeatureGroup" class="delete-modal">
+  <h1 translate>{{ 'deleteFeatureGroupModal.title' | translate: {name: questionnaireName} }}</h1>
+  <p>{{'deleteFeatureGroupModal.body' | translate}}</p>
+  <div class="delete-modal-actions">
+    <button
+      (click)="close(false)"
+      type="button"
+      class="button cancel-button">
+      {{'button.cancel' | translate}}
+    </button>
+    <button
+    (click)="close(true)"
+    type="button"
+    class="button delete-button">
+    {{'button.delete' | translate}}
+  </button>
+  </div>
+</div>
+<div *ngIf="isStakeholder" class="delete-modal">
+  <h1 translate>{{ 'deleteStakeholderModal.title' | translate: {name: questionnaireName} }}</h1>
+  <p>{{'deleteStakeholderModal.body' | translate}}</p>
+  <div class="delete-modal-actions">
+    <button
+      (click)="close(false)"
+      type="button"
+      class="button cancel-button">
+      {{'button.cancel' | translate}}
+    </button>
+    <button
+    (click)="close(true)"
+    type="button"
+    class="button delete-button">
+    {{'button.delete' | translate}}
+  </button>
+  </div>
+</div>

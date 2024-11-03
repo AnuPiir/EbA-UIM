@@ -1,0 +1,8 @@
+UPDATE validation
+SET "type"='FEATURE_PRECONDITION'
+WHERE id=13;
+
+
+UPDATE validation
+SET "type"='STAKEHOLDER'
+WHERE id=12;
