@@ -1,0 +1,93 @@
+.select-component{
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+  padding: 0;
+}
+
+
+.select-button {  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  width: 9.875rem;
+  background-color: lightgray;
+  border-color: #5B5B5B;
+  color: #5B5B5B;
+}
+
+.select-button:hover {
+  background-color: gainsboro;
+}
+
+ 
+.options {
+  display: block;
+  flex-direction: column;
+  position: absolute;
+  height: fit-content;
+  width: fit-content;
+  flex-wrap: wrap;
+  padding: 0;
+  top: 4.5rem;
+  border: 1px solid;
+  border-radius: 0.625rem;
+  border-color: var(--text-color);
+  background: none;
+  z-index: 2;
+  color: var(--text-color);
+  overflow: hidden;
+}
+
+.select-option-button {  
+  display: block;
+  display: inline-block;
+  padding: 0.5rem;
+  width: 9.875rem;
+  border: none;
+  z-index: 1;
+}
+
+
+.YES  {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+  border-color: var(--dark-green);
+}
+
+.YES:hover {
+  background-color: var(--green) !important;
+}
+
+.NO {
+  background-color: var(--light-red);
+  color: var(--dark-red);
+  border-color: var(--dark-red);
+}
+
+.NO:hover {
+  background-color: var(--red);
+}
+
+.PARTLY {
+  background-color: var(--light-yellow);
+  color: var(--dark-yellow);
+  border-color: var(--dark-yellow);
+}
+
+.PARTLY:hover {
+  background-color: var(--yellow);
+}
+
+.DONT_KNOW  {
+  background-color: var(--light-blue);
+  color: var(--dark-blue);
+  border-color: var(--dark-blue);
+}
+
+.DONT_KNOW:hover {
+  background-color: var(--blue);
+}

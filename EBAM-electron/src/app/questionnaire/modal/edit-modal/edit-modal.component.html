@@ -1,0 +1,21 @@
+<div  class="edit-modal">
+  <h1>{{ titleTranslationKey | translate}}</h1>
+  <div class="edit-input">
+    <h2>{{inputTranslationKey | translate}}</h2>
+    <input [(ngModel)]="name" value="{{name}}" type="text"/>
+</div>
+  <div class="edit-modal-actions">
+    <button
+      (click)="close()"
+      type="button"
+      class="button cancel-button">
+      {{'button.cancel' | translate}}
+    </button>
+    <button
+    (click)="closeAndEdit()"
+    type="button"
+    class="button edit-button">
+    {{'button.edit' | translate}}
+  </button>
+  </div>
+</div>

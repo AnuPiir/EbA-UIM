@@ -1,0 +1,28 @@
+<div class="table-wrapper">
+  <table>
+    <thead>
+    <tr>
+      <th class="id">ID</th>
+      <th *ngFor="let header of headers" class="projects-table-head answer">{{header}}</th>    
+      <th class="explanation">{{ "Vastuste kombinatsiooni interpretatsioon" | translate}}</th>
+    </tr>
+    </thead>
+  </table>
+  <tbody>
+    <tr *ngFor="let validationCombinationResult of validationCombinationResults; index as i">
+      <td class="id">
+        {{ i+1 }}
+      </td>
+      <td *ngIf="i === 256" class="answer"></td>
+      <td *ngIf="i === 256" class="answer"></td>
+      <td *ngIf="i === 256" class="answer"></td>
+      <td *ngIf="i === 256" class="answer"></td>
+      <td class="answer" *ngFor="let validationCombination of validationCombinationResult.validationCombinations" [ngClass]="validationCombination.validationValue">
+        {{ 'methodCombinations.' + validationCombination.validationValue | translate}}
+      </td>
+      <td class="explanation">
+        {{ getValidationCombinationResultValueTranslationKey(validationCombinationResult) | translate}}
+      </td>
+    </tr>
+  </tbody>
+</div>

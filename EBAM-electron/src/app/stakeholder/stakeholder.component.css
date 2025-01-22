@@ -1,0 +1,101 @@
+.stakeholder {
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+  max-width: 30rem;
+  padding: 0.25rem 0.5rem;
+  border-style: solid;
+  border-width: 0.125rem;
+  border-radius: 0.5rem;
+}
+
+.stakeholder-label {
+  word-break: normal;
+}
+
+.x-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.25rem;
+  background: none;
+  border: none;
+  color: var(--dark-red);
+  border-radius: 0.5rem;
+}
+
+.btn-red {
+  color: var(--dark-red);
+}
+
+.btn-red:hover {
+  background: color-mix(in srgb, var(--dark-red) 25%, transparent);
+}
+
+.btn-orange {
+  color: var(--dark-orange);
+}
+
+.btn-orange:hover {
+  background: color-mix(in srgb, var(--dark-orange) 25%, transparent);
+}
+
+.btn-yellow {
+  color: var(--dark-yellow);
+}
+
+.btn-yellow:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 25%, transparent);
+}
+
+.btn-lime {
+  color: var(--dark-lime);
+}
+
+.btn-lime:hover {
+  background: color-mix(in srgb, var(--dark-lime) 25%, transparent);
+}
+
+.btn-green {
+  color: var(--dark-green);
+}
+
+.btn-green:hover {
+  background: color-mix(in srgb, var(--dark-green) 25%, transparent);
+}
+
+.btn-aquamarine {
+  color: var(--dark-aquamarine);
+}
+
+.btn-aquamarine:hover {
+  background: color-mix(in srgb, var(--dark-aquamarine) 25%, transparent);
+}
+
+.btn-blue {
+  color: var(--dark-blue);
+}
+
+.btn-blue:hover {
+  background: color-mix(in srgb, var(--dark-blue) 25%, transparent);
+}
+
+.btn-purple {
+  color: var(--dark-purple);
+}
+
+.btn-purple:hover {
+  background: color-mix(in srgb, var(--dark-purple) 25%, transparent);
+}
+
+.btn-pink {
+  color: var(--dark-pink);
+}
+
+.btn-pink:hover {
+  background: color-mix(in srgb, var(--dark-pink) 25%, transparent);
+}
