@@ -1,0 +1,283 @@
+<div class="method-view">
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #featureGroupTabs>
+    <mat-tab label="{{ 'methodTabs.method.tab' | translate }}" class="tabs">
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #featureGroupTabs>
+        <mat-tab label="{{ 'methodTabs.method.subtab' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h1 [innerHTML]="'method.intro.title' | translate | sanitizeHtml"></h1>
+              <h2 [innerHTML]="'method.intro.header' | translate | sanitizeHtml"></h2>
+              <div class="green-area">
+                <p [innerHTML]="'method.intro.area' | translate | sanitizeHtml"></p>
+              </div>
+              <p [innerHTML]="'method.intro.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                <img src="{{ 'method.figures.1' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.1' | translate | sanitizeHtml"></span>
+              </div>
+          </div>
+        </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab1' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step1.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step1.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                <img src="{{ 'method.figures.2' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.2' | translate | sanitizeHtml"></span>
+              </div>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step1.example' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+              <p [innerHTML]="'method.step1.text2' | translate | sanitizeHtml"></p>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab2' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step2.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step2.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                <img src="{{ 'method.figures.3' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.3' | translate | sanitizeHtml"></span>
+              </div>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example'| translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step2.example' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+              <p [innerHTML]="'method.step2.text2' | translate | sanitizeHtml"></p>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step2.example2' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab3' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step3.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step3.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                <img src="{{ 'method.figures.4' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.4' | translate | sanitizeHtml"></span>
+              </div>
+              <p [innerHTML]="'method.step3.text2' | translate | sanitizeHtml"></p>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step3.example' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab4' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step4.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step4.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                <img src="{{ 'method.figures.5' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.5' | translate | sanitizeHtml"></span>
+              </div>
+              <h3 [innerHTML]="'method.step4.subheading1' | translate | sanitizeHtml"></h3>
+              <p [innerHTML]="'method.step4.text1' | translate | sanitizeHtml"></p>
+              <h3 [innerHTML]="'method.step4.subheading2' | translate | sanitizeHtml"></h3>
+              <p [innerHTML]="'method.step4.text2' | translate | sanitizeHtml"></p>
+              <h3 [innerHTML]="'method.step4.subheading3' | translate | sanitizeHtml"></h3>
+              <p [innerHTML]="'method.step4.text3' | translate | sanitizeHtml"></p>
+              <h3 [innerHTML]="'method.step4.subheading4' | translate | sanitizeHtml"></h3>
+              <p [innerHTML]="'method.step4.text4' | translate | sanitizeHtml"></p>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step4.example' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab5' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step5.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step5.text' | translate | sanitizeHtml"></p>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab6' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step6.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step6.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                <img src="{{ 'method.figures.6' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.6' | translate | sanitizeHtml"></span>
+              </div>
+              <p [innerHTML]="'method.step6.text2' | translate | sanitizeHtml"></p>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step6.example' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+              <div class="figure">
+                <img src="{{ 'method.figures.7' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.7' | translate | sanitizeHtml"></span>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab7' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.step7.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.step7.text' | translate | sanitizeHtml"></p>
+              <ul>
+                <li class="green plan" [innerHTML]="'method.step7.plan1' | translate | sanitizeHtml"></li>
+                <li class="orange plan" [innerHTML]="'method.step7.plan2' | translate | sanitizeHtml"></li>
+                <li class="red plan" [innerHTML]="'method.step7.plan3' | translate | sanitizeHtml"></li>
+                <li class="yellow plan" [innerHTML]="'method.step7.plan4' | translate | sanitizeHtml"></li>
+                <li class="blue plan" [innerHTML]="'method.step7.plan5' | translate | sanitizeHtml"></li>
+                <li [innerHTML]="'method.step7.plan6' | translate | sanitizeHtml"></li>
+              </ul>
+              <div class="figure">
+                <img src="{{ 'method.figures.8' | translate }}">
+                <span class="figure-text" [innerHTML]="'method.figureText.8' | translate | sanitizeHtml"></span>
+              </div>
+              <div class="example">
+                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                <div class="example-text">
+                  <p [innerHTML]="'method.step7.example' | translate | sanitizeHtml"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.method.subtab8' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'method.nb.header' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'method.nb.text' | translate | sanitizeHtml"></p>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="{{ 'methodTabs.combinations.tab' | translate }}" class="tabs">
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #featureGroupTabs>
+        <mat-tab label="{{ 'methodTabs.combinations.subtab' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h1 [innerHTML]="'combinations.header' | translate | sanitizeHtml"></h1>
+              <h2 [innerHTML]="'combinations.section1Heading' | translate | sanitizeHtml"></h2>
+              <p [innerHTML]="'combinations.section1Text' | translate | sanitizeHtml"></p>
+              <app-combination-view></app-combination-view>
+          </div>
+        </div>
+        </mat-tab>
+        <mat-tab label="{{ 'methodTabs.combinations.subtab1' | translate }}" class="tabs">
+          <div class="wrapper">
+            <div class="content">
+              <h2 [innerHTML]="'combinations.section2Heading' | translate | sanitizeHtml"></h2>
+              <h3 [innerHTML]="'combinations.section2SubHeading' | translate | sanitizeHtml"></h3>
+              <p [innerHTML]="'combinations.section2Text' | translate | sanitizeHtml"></p>
+              <h3 [innerHTML]="'combinations.section2SubHeading2' | translate | sanitizeHtml"></h3>
+              <p [innerHTML]="'combinations.section2Text2' | translate | sanitizeHtml"></p>
+              <h3 [innerHTML]="'combinations.selection1Heading' | translate | sanitizeHtml"></h3>
+              <div class="option-description">
+                <span class="green option">{{"select.yes" | translate}}</span>
+                <p [innerHTML]="'combinations.selection1Yes' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="yellow option">{{"select.partly" | translate}}</span>
+                <p [innerHTML]="'combinations.selection1Partly' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="red option">{{"select.no" | translate}}</span>
+                <p [innerHTML]="'combinations.selection1No' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="blue option">{{"select.dontKnow" | translate}}</span>
+                <p [innerHTML]="'combinations.selection1DontKnow' | translate | sanitizeHtml"></p>
+              </div>
+              <h3 [innerHTML]="'combinations.selection2Heading' | translate | sanitizeHtml"></h3>
+              <div class="option-description">
+                <span class="green option">{{"select.yes" | translate}}</span>
+                <p [innerHTML]="'combinations.selection2Yes' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="yellow option">{{"select.partly" | translate}}</span>
+                <p [innerHTML]="'combinations.selection2Partly' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="red option">{{"select.no" | translate}}</span>
+                <p [innerHTML]="'combinations.selection2No' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="blue option">{{"select.dontKnow" | translate}}</span>
+                <p [innerHTML]="'combinations.selection2DontKnow' | translate | sanitizeHtml"></p>
+              </div>
+              <h3 [innerHTML]="'combinations.selection3Heading' | translate | sanitizeHtml"></h3>
+              <div class="option-description">
+                <span class="green option">{{"select.yes" | translate}}</span>
+                <p [innerHTML]="'combinations.selection3Yes' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="yellow option">{{"select.partly" | translate}}</span>
+                <p [innerHTML]="'combinations.selection3Partly' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="red option">{{"select.no" | translate}}</span>
+                <p [innerHTML]="'combinations.selection3No' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="blue option">{{"select.dontKnow" | translate}}</span>
+                <p [innerHTML]="'combinations.selection3DontKnow' | translate | sanitizeHtml"></p>
+              </div>
+              <h3 [innerHTML]="'combinations.selection4Heading' | translate | sanitizeHtml"></h3>
+              <div class="option-description">
+                <span class="green option">{{"select.yes" | translate}}</span>
+                <p [innerHTML]="'combinations.selection4Yes' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="yellow option">{{"select.partly" | translate}}</span>
+                <p [innerHTML]="'combinations.selection4Partly' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="red option">{{"select.no" | translate}}</span>
+                <p [innerHTML]="'combinations.selection4No' | translate | sanitizeHtml"></p>
+              </div>
+              <div class="option-description">
+                <span class="blue option">{{"select.dontKnow" | translate}}</span>
+                <p [innerHTML]="'combinations.selection4DontKnow' | translate | sanitizeHtml"></p>
+              </div>
+          </div>
+        </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-tab>
+    <mat-tab label="{{ 'methodTabs.example.tab' | translate }}" class="tabs">
+      <div class="wrapper">
+        <div class="content">
+          <h1 [innerHTML]="'example.header' | translate | sanitizeHtml"></h1>
+          <h2 [innerHTML]="'example.section1Heading' | translate | sanitizeHtml"></h2>
+          <div class="green-area">
+            <p [innerHTML]="'example.area' | translate | sanitizeHtml"></p>
+          </div>
+          <p [innerHTML]="'example.section1Text' | translate | sanitizeHtml"></p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

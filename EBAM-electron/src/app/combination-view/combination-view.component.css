@@ -1,0 +1,59 @@
+table{
+  width: 100%;
+}
+
+.id {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.5rem;
+  height: auto;
+  width: 8%;
+  border: solid;
+  border-width: 0.125rem;
+}
+
+.answer {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.5rem;
+  height: auto;
+  width: 16%;
+  border: solid;
+  border-width: 0.125rem;
+  word-break: normal;
+  overflow: hidden;
+}
+
+.explanation {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.5rem;
+  height: auto;
+  width: 28%;
+  border: solid;
+  border-width: 0.125rem;
+}
+
+.YES  {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+  border-color: var(--dark-green);
+}
+
+.NO {
+  background-color: var(--light-red);
+  color: var(--dark-red);
+  border-color: var(--dark-red);
+}
+
+.PARTLY {
+  background-color: var(--light-yellow);
+  color: var(--dark-yellow);
+  border-color: var(--dark-yellow);
+}
+
+.DONT_KNOW  {
+  background-color: var(--light-blue);
+  color: var(--dark-blue);
+  border-color: var(--dark-blue);
+}
