@@ -27,6 +27,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
   },
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

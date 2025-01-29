@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Component } from '@angular/core';
-import { GlobalConstants } from '../constants/global-constants';
+import { GlobalConstants } from '../constants/global-constants.js';
 let CombinationViewComponent = class CombinationViewComponent {
     constructor(validationService, translateService) {
         this.validationService = validationService;

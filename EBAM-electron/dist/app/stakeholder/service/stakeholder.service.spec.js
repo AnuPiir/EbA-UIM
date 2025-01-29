@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { StakeholderService } from './stakeholder.service';
+import { StakeholderService } from './stakeholder.service.js';
 describe('StakeholderService', () => {
     let service;
     beforeEach(() => {

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DeleteModalComponent } from './delete-modal.component';
+import { DeleteModalComponent } from './delete-modal.component.js';
 describe('DeleteModalComponent', () => {
     let component;
     let fixture;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FeatureGroupService } from './feature-group.service';
+import { FeatureGroupService } from './feature-group.service.js';
 describe('FeatureGroupService', () => {
     let service;
     beforeEach(() => {

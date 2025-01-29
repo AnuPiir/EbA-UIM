@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@angular/core';
-import { FeatureEndpointConstants } from '../../constants/feature-endpoint-constants';
+import { FeatureEndpointConstants } from '../../constants/feature-endpoint-constants.js';
 let FeaturePreConditionService = class FeaturePreConditionService {
     constructor(http) {
         this.http = http;

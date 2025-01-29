@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HomepageComponent } from './homepage.component';
+import { HomepageComponent } from './homepage.component.js';
 describe('HomepageComponent', () => {
     let component;
     let fixture;

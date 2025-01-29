@@ -1,8 +1,8 @@
 import { __decorate } from "tslib";
 import { Component, ViewChild } from '@angular/core';
-import { GlobalConstants } from '../constants/global-constants';
-import { DeleteModalComponent } from '../questionnaire/modal/delete-modal/delete-modal.component';
-import { EditModalComponent } from '../questionnaire/modal/edit-modal/edit-modal.component';
+import { GlobalConstants } from '../constants/global-constants.js';
+import { DeleteModalComponent } from '../questionnaire/modal/delete-modal/delete-modal.component.js';
+import { EditModalComponent } from '../questionnaire/modal/edit-modal/edit-modal.component.js';
 let FeatureGroupComponent = class FeatureGroupComponent {
     constructor(featureGroupService, route, router, stakeholderService, modalService) {
         this.featureGroupService = featureGroupService;

@@ -1,7 +1,7 @@
 import { __decorate } from "tslib";
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { ValidationValue, ValidationValue2LabelMapping } from '../validation/model/validation-value';
-import { GlobalConstants } from '../constants/global-constants';
+import { ValidationValue, ValidationValue2LabelMapping } from '../validation/model/validation-value.js';
+import { GlobalConstants } from '../constants/global-constants.js';
 let SelectComponent = class SelectComponent {
     constructor(elementRef, translateService) {
         this.elementRef = elementRef;

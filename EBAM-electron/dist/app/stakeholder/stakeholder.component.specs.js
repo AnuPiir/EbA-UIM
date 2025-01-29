@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { StakeholderComponent } from './stakeholder.component';
+import { StakeholderComponent } from './stakeholder.component.js';
 describe('StakeholderComponent', () => {
     let component;
     let fixture;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ValidationComponent } from './validation.component';
+import { ValidationComponent } from './validation.component.js';
 describe('ValidationComponent', () => {
     let component;
     let fixture;

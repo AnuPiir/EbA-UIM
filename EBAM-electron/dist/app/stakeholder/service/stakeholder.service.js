@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@angular/core';
-import { StakeholderEndpointConstants } from '../../constants/stakeholder-endpoint-constants';
+import { StakeholderEndpointConstants } from '../../constants/stakeholder-endpoint-constants.js';
 let StakeholderService = class StakeholderService {
     constructor(http) {
         this.http = http;

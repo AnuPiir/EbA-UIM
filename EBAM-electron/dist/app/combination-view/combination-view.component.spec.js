@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CombinationViewComponent } from './combination-view.component';
+import { CombinationViewComponent } from './combination-view.component.js';
 describe('CombinationViewComponent', () => {
     let component;
     let fixture;

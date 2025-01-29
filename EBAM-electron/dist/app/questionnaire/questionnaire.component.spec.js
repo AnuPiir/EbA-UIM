@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { QuestionnaireComponent } from './questionnaire.component';
+import { QuestionnaireComponent } from './questionnaire.component.js';
 describe('QuestionnaireComponent', () => {
     let component;
     let fixture;

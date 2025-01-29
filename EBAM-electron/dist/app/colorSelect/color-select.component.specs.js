@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ColorSelectComponent } from './color-select.component';
+import { ColorSelectComponent } from './color-select.component.js';
 describe('ColorSelectComponent', () => {
     let component;
     let fixture;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { QuestionnaireService } from './questionnaire.service';
+import { QuestionnaireService } from './questionnaire.service.js';
 describe('QuestionnaireService', () => {
     let service;
     beforeEach(() => {

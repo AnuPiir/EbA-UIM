@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@angular/core';
-import { QuestionnaireEndpointConstants } from '../../constants/questionnaire-endpoint-constants';
+import { QuestionnaireEndpointConstants } from '../../constants/questionnaire-endpoint-constants.js';
 let QuestionnaireService = class QuestionnaireService {
     constructor(http) {
         this.http = http;
