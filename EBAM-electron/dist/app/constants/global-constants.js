@@ -1,13 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GlobalConstants = void 0;
-var GlobalConstants = /** @class */ (function () {
-    function GlobalConstants() {
-    }
-    GlobalConstants.ET = 'et';
-    GlobalConstants.EN = 'en';
-    GlobalConstants.STAKEHOLDER_COLOR_ORDER = ['aquamarine', 'lime', 'yellow', 'orange'];
-    return GlobalConstants;
-}());
+class GlobalConstants {
+    static { this.ET = 'et'; }
+    static { this.EN = 'en'; }
+    static { this.STAKEHOLDER_COLOR_ORDER = ['aquamarine', 'lime', 'yellow', 'orange']; }
+}
 exports.GlobalConstants = GlobalConstants;
 //# sourceMappingURL=global-constants.js.map

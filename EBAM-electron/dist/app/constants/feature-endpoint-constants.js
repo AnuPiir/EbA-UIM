@@ -1,23 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeatureEndpointConstants = void 0;
-var FeatureEndpointConstants = /** @class */ (function () {
-    function FeatureEndpointConstants() {
-    }
-    FeatureEndpointConstants.rootUri = function () {
+class FeatureEndpointConstants {
+    static { this.API_ENDPOINT = 'api/'; }
+    static rootUri() {
         return FeatureEndpointConstants.API_ENDPOINT + 'feature';
-    };
-    FeatureEndpointConstants.preConditionRootUri = function () {
+    }
+    static preConditionRootUri() {
         return FeatureEndpointConstants.API_ENDPOINT + 'feature-precondition';
-    };
-    FeatureEndpointConstants.preConditionIdPath = function (id) {
+    }
+    static preConditionIdPath(id) {
         return this.preConditionRootUri() + '/' + id;
-    };
-    FeatureEndpointConstants.idPath = function (id) {
+    }
+    static idPath(id) {
         return this.rootUri() + '/' + id;
-    };
-    FeatureEndpointConstants.API_ENDPOINT = 'api/';
-    return FeatureEndpointConstants;
-}());
+    }
+}
 exports.FeatureEndpointConstants = FeatureEndpointConstants;
 //# sourceMappingURL=feature-endpoint-constants.js.map

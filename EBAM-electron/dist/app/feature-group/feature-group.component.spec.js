@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var testing_1 = require("@angular/core/testing");
-var feature_group_component_1 = require("./feature-group.component");
-describe('FeatureGroupComponent', function () {
-    var component;
-    var fixture;
-    beforeEach(function () {
+const testing_1 = require("@angular/core/testing");
+const feature_group_component_1 = require("./feature-group.component");
+describe('FeatureGroupComponent', () => {
+    let component;
+    let fixture;
+    beforeEach(() => {
         testing_1.TestBed.configureTestingModule({
             declarations: [feature_group_component_1.FeatureGroupComponent]
         });
@@ -13,7 +13,7 @@ describe('FeatureGroupComponent', function () {
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
-    it('should create', function () {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 });

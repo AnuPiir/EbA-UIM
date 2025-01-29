@@ -1,29 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidationEndpointConstants = void 0;
-var ValidationEndpointConstants = /** @class */ (function () {
-    function ValidationEndpointConstants() {
-    }
-    ValidationEndpointConstants.getValidationUri = function () {
+class ValidationEndpointConstants {
+    static { this.API_ENDPOINT = 'api/'; }
+    static getValidationUri() {
         return ValidationEndpointConstants.API_ENDPOINT + 'validation';
-    };
-    ValidationEndpointConstants.getValidationCombinationResultUri = function () {
+    }
+    static getValidationCombinationResultUri() {
         return ValidationEndpointConstants.API_ENDPOINT + 'validation-combination-result';
-    };
-    ValidationEndpointConstants.getValidationAnswersUri = function () {
+    }
+    static getValidationAnswersUri() {
         return ValidationEndpointConstants.API_ENDPOINT + 'validation-answer';
-    };
-    ValidationEndpointConstants.getValidationAnswersByQuestionnaireIdUri = function (questionnaireId) {
+    }
+    static getValidationAnswersByQuestionnaireIdUri(questionnaireId) {
         return this.getValidationAnswersUri() + '/questionnaire-id/' + questionnaireId;
-    };
-    ValidationEndpointConstants.getValidationAnswersByFeatureGroupUri = function (featureGroupId) {
+    }
+    static getValidationAnswersByFeatureGroupUri(featureGroupId) {
         return this.getValidationAnswersUri() + '/feature-group-id/' + featureGroupId;
-    };
-    ValidationEndpointConstants.deleteValidationAnswersByQuestionnaireIdUriAndRowId = function (questionnaireId, rowId) {
+    }
+    static deleteValidationAnswersByQuestionnaireIdUriAndRowId(questionnaireId, rowId) {
         return this.getValidationAnswersByQuestionnaireIdUri(questionnaireId) + '/row-id/' + rowId;
-    };
-    ValidationEndpointConstants.API_ENDPOINT = 'api/';
-    return ValidationEndpointConstants;
-}());
+    }
+}
 exports.ValidationEndpointConstants = ValidationEndpointConstants;
 //# sourceMappingURL=validation-endpoint-constants.js.map

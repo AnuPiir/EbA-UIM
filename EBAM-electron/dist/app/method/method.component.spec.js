@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var testing_1 = require("@angular/core/testing");
-var method_component_1 = require("./method.component");
-describe('MethodComponent', function () {
-    var component;
-    var fixture;
-    beforeEach(function () {
+const testing_1 = require("@angular/core/testing");
+const method_component_1 = require("./method.component");
+describe('MethodComponent', () => {
+    let component;
+    let fixture;
+    beforeEach(() => {
         testing_1.TestBed.configureTestingModule({
             declarations: [method_component_1.MethodComponent]
         });
@@ -13,7 +13,7 @@ describe('MethodComponent', function () {
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
-    it('should create', function () {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 });
