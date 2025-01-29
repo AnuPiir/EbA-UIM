@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EditModalComponent } from './edit-modal.component';
+import { EditModalComponent } from './edit-modal.component.js';
 describe('EditModalComponent', () => {
     let component;
     let fixture;

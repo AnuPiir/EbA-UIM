@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@angular/core';
-import { ValidationEndpointConstants } from '../../constants/validation-endpoint-constants';
+import { ValidationEndpointConstants } from '../../constants/validation-endpoint-constants.js';
 let ValidationService = class ValidationService {
     constructor(http) {
         this.http = http;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FeaturePreConditionService } from './feature-pre-condition.service';
+import { FeaturePreConditionService } from './feature-pre-condition.service.js';
 describe('FeaturePreConditionService', () => {
     let service;
     beforeEach(() => {

@@ -1,9 +1,9 @@
 import { __decorate } from "tslib";
 import { Component, Input, ViewChild } from '@angular/core';
-import { ValidationType } from './model/validation';
+import { ValidationType } from './model/validation.js';
 import { debounceTime, firstValueFrom, Observable, Subject } from 'rxjs';
-import { GlobalConstants } from '../constants/global-constants';
-import { ValidationValue } from './model/validation-value';
+import { GlobalConstants } from '../constants/global-constants.js';
+import { ValidationValue } from './model/validation-value.js';
 let ValidationComponent = class ValidationComponent {
     constructor(validationService, route, router, translateService, featureService, featurePreconditionService, el) {
         this.validationService = validationService;

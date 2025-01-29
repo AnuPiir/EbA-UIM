@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FeatureService } from './feature.service';
+import { FeatureService } from './feature.service.js';
 describe('FeatureService', () => {
     let service;
     beforeEach(() => {

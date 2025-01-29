@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MethodComponent } from './method.component';
+import { MethodComponent } from './method.component.js';
 describe('MethodComponent', () => {
     let component;
     let fixture;

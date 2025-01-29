@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SelectComponent } from './select.component';
+import { SelectComponent } from './select.component.js';
 describe('SelectComponent', () => {
     let component;
     let fixture;

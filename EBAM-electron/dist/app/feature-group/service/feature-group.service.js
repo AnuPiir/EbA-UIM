@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@angular/core';
-import { FeatureGroupEndpointConstants } from '../../constants/feature-group-endpoint-constants';
+import { FeatureGroupEndpointConstants } from '../../constants/feature-group-endpoint-constants.js';
 let FeatureGroupService = class FeatureGroupService {
     constructor(http) {
         this.http = http;

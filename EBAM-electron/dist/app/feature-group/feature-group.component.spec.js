@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FeatureGroupComponent } from './feature-group.component';
+import { FeatureGroupComponent } from './feature-group.component.js';
 describe('FeatureGroupComponent', () => {
     let component;
     let fixture;

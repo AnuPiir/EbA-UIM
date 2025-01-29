@@ -1,7 +1,7 @@
 import { __decorate } from "tslib";
 import { Component } from '@angular/core';
-import { DeleteModalComponent } from './modal/delete-modal/delete-modal.component';
-import { EditModalComponent } from './modal/edit-modal/edit-modal.component';
+import { DeleteModalComponent } from './modal/delete-modal/delete-modal.component.js';
+import { EditModalComponent } from './modal/edit-modal/edit-modal.component.js';
 import { formatDate } from '@angular/common';
 let QuestionnaireComponent = class QuestionnaireComponent {
     constructor(questionnaireService, modalService, translateService) {

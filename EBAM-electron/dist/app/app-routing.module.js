@@ -2,10 +2,10 @@ import { __decorate } from "tslib";
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { HomepageComponent } from './homepage/homepage.component';
-import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
-import { AboutComponent } from './about/about.component';
-import { MethodComponent } from './method/method.component';
+import { HomepageComponent } from './homepage/homepage.component.js';
+import { QuestionnaireComponent } from './questionnaire/questionnaire.component.js';
+import { AboutComponent } from './about/about.component.js';
+import { MethodComponent } from './method/method.component.js';
 const validationRoutes = [
     {
         path: 'validation',

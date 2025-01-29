@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Component, Input, HostListener } from '@angular/core';
-import { GlobalConstants } from '../constants/global-constants';
+import { GlobalConstants } from '../constants/global-constants.js';
 let StakeholderselectComponent = class StakeholderselectComponent {
     constructor(elementRef) {
         this.elementRef = elementRef;

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ToolbarComponent } from './toolbar.component';
+import { ToolbarComponent } from './toolbar.component.js';
 describe('ToolbarComponent', () => {
     let component;
     let fixture;
