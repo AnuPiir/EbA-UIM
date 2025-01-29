@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var testing_1 = require("@angular/core/testing");
-var combination_view_component_1 = require("./combination-view.component");
-describe('CombinationViewComponent', function () {
-    var component;
-    var fixture;
-    beforeEach(function () {
+const testing_1 = require("@angular/core/testing");
+const combination_view_component_1 = require("./combination-view.component");
+describe('CombinationViewComponent', () => {
+    let component;
+    let fixture;
+    beforeEach(() => {
         testing_1.TestBed.configureTestingModule({
             declarations: [combination_view_component_1.CombinationViewComponent]
         });
@@ -13,7 +13,7 @@ describe('CombinationViewComponent', function () {
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
-    it('should create', function () {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 });

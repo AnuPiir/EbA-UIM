@@ -1,20 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeatureGroupEndpointConstants = void 0;
-var FeatureGroupEndpointConstants = /** @class */ (function () {
-    function FeatureGroupEndpointConstants() {
-    }
-    FeatureGroupEndpointConstants.rootUri = function () {
+class FeatureGroupEndpointConstants {
+    static { this.API_ENDPOINT = 'api/'; }
+    static rootUri() {
         return FeatureGroupEndpointConstants.API_ENDPOINT + 'feature-group';
-    };
-    FeatureGroupEndpointConstants.getByQuestionnaireId = function (questionnaireId) {
+    }
+    static getByQuestionnaireId(questionnaireId) {
         return this.rootUri() + '/questionnaire-id/' + questionnaireId;
-    };
-    FeatureGroupEndpointConstants.idPath = function (id) {
+    }
+    static idPath(id) {
         return this.rootUri() + '/' + id;
-    };
-    FeatureGroupEndpointConstants.API_ENDPOINT = 'api/';
-    return FeatureGroupEndpointConstants;
-}());
+    }
+}
 exports.FeatureGroupEndpointConstants = FeatureGroupEndpointConstants;
 //# sourceMappingURL=feature-group-endpoint-constants.js.map

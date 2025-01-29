@@ -11,5 +11,5 @@ var ValidationType;
     ValidationType["FEATURE_PRECONDITION"] = "FEATURE_PRECONDITION";
     ValidationType["DO"] = "DO";
     ValidationType["EXAMPLE"] = "EXAMPLE";
-})(ValidationType || (exports.ValidationType = ValidationType = {}));
+})(ValidationType = exports.ValidationType || (exports.ValidationType = {}));
 //# sourceMappingURL=validation.js.map

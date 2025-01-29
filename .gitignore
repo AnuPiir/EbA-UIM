@@ -41,5 +41,4 @@ EbA installer.exe
 /nbdist/
 /.nb-gradle/
 /mqtt*
-/EBAM-electron/dist/
 /EBAM-electron/node_modules/
