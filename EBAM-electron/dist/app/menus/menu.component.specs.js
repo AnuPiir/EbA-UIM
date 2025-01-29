@@ -1,18 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const testing_1 = require("@angular/core/testing");
-const menu_component_1 = require("./menu.component");
+import { TestBed } from '@angular/core/testing';
+import { MenuComponent } from './menu.component';
 describe('MenuComponent', () => {
     let component;
     let fixture;
     beforeEach(async () => {
-        await testing_1.TestBed.configureTestingModule({
-            declarations: [menu_component_1.MenuComponent]
+        await TestBed.configureTestingModule({
+            declarations: [MenuComponent]
         })
             .compileComponents();
     });
     beforeEach(() => {
-        fixture = testing_1.TestBed.createComponent(menu_component_1.MenuComponent);
+        fixture = TestBed.createComponent(MenuComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -1,16 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const testing_1 = require("@angular/core/testing");
-const edit_modal_component_1 = require("./edit-modal.component");
+import { TestBed } from '@angular/core/testing';
+import { EditModalComponent } from './edit-modal.component';
 describe('EditModalComponent', () => {
     let component;
     let fixture;
     beforeEach(async () => {
-        await testing_1.TestBed.configureTestingModule({
-            declarations: [edit_modal_component_1.EditModalComponent]
+        await TestBed.configureTestingModule({
+            declarations: [EditModalComponent]
         })
             .compileComponents();
-        fixture = testing_1.TestBed.createComponent(edit_modal_component_1.EditModalComponent);
+        fixture = TestBed.createComponent(EditModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

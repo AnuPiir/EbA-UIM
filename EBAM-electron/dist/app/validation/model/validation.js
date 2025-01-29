@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidationType = void 0;
-var ValidationType;
+export var ValidationType;
 (function (ValidationType) {
     ValidationType["SELECT"] = "SELECT";
     ValidationType["FILL"] = "FILL";
@@ -11,5 +8,5 @@ var ValidationType;
     ValidationType["FEATURE_PRECONDITION"] = "FEATURE_PRECONDITION";
     ValidationType["DO"] = "DO";
     ValidationType["EXAMPLE"] = "EXAMPLE";
-})(ValidationType = exports.ValidationType || (exports.ValidationType = {}));
+})(ValidationType || (ValidationType = {}));
 //# sourceMappingURL=validation.js.map

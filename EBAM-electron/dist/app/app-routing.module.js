@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppRoutingModule = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
-const router_1 = require("@angular/router");
-const platform_browser_1 = require("@angular/platform-browser");
-const homepage_component_1 = require("./homepage/homepage.component");
-const questionnaire_component_1 = require("./questionnaire/questionnaire.component");
-const about_component_1 = require("./about/about.component");
-const method_component_1 = require("./method/method.component");
+import { __decorate } from "tslib";
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { HomepageComponent } from './homepage/homepage.component';
+import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
+import { AboutComponent } from './about/about.component';
+import { MethodComponent } from './method/method.component';
 const validationRoutes = [
     {
         path: 'validation',
-        component: homepage_component_1.HomepageComponent,
+        component: HomepageComponent,
         data: {
             meta: {
                 title: {
@@ -23,7 +20,7 @@ const validationRoutes = [
     },
     {
         path: 'questionnaire',
-        component: questionnaire_component_1.QuestionnaireComponent,
+        component: QuestionnaireComponent,
         data: {
             meta: {
                 title: {
@@ -34,7 +31,7 @@ const validationRoutes = [
     },
     {
         path: 'method',
-        component: method_component_1.MethodComponent,
+        component: MethodComponent,
         data: {
             meta: {
                 title: {
@@ -45,7 +42,7 @@ const validationRoutes = [
     },
     {
         path: 'about',
-        component: about_component_1.AboutComponent,
+        component: AboutComponent,
         data: {
             meta: {
                 title: {
@@ -62,13 +59,13 @@ const routes = [
 ];
 let AppRoutingModule = class AppRoutingModule {
 };
-AppRoutingModule = tslib_1.__decorate([
-    (0, core_1.NgModule)({
-        imports: [platform_browser_1.BrowserModule,
-            router_1.RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
+AppRoutingModule = __decorate([
+    NgModule({
+        imports: [BrowserModule,
+            RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
         ],
-        exports: [router_1.RouterModule],
+        exports: [RouterModule],
     })
 ], AppRoutingModule);
-exports.AppRoutingModule = AppRoutingModule;
+export { AppRoutingModule };
 //# sourceMappingURL=app-routing.module.js.map

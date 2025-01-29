@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StakeholderComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
+import { __decorate } from "tslib";
+import { Component, Input } from '@angular/core';
 let StakeholderComponent = class StakeholderComponent {
     constructor() {
         this.isToggled = false;
@@ -11,24 +8,24 @@ let StakeholderComponent = class StakeholderComponent {
         this.isToggled = !this.isToggled;
     }
 };
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], StakeholderComponent.prototype, "stakeholder", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], StakeholderComponent.prototype, "color", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], StakeholderComponent.prototype, "editAction", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], StakeholderComponent.prototype, "deleteAction", void 0);
-StakeholderComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+StakeholderComponent = __decorate([
+    Component({
         selector: 'app-stakeholder',
         templateUrl: './stakeholder.component.html',
         styleUrls: ['./stakeholder.component.css']
     })
 ], StakeholderComponent);
-exports.StakeholderComponent = StakeholderComponent;
+export { StakeholderComponent };
 //# sourceMappingURL=stakeholder.component.js.map

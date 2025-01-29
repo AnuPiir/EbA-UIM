@@ -1,16 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const testing_1 = require("@angular/core/testing");
-const toolbar_component_1 = require("./toolbar.component");
+import { TestBed } from '@angular/core/testing';
+import { ToolbarComponent } from './toolbar.component';
 describe('ToolbarComponent', () => {
     let component;
     let fixture;
     beforeEach(async () => {
-        await testing_1.TestBed.configureTestingModule({
-            declarations: [toolbar_component_1.ToolbarComponent]
+        await TestBed.configureTestingModule({
+            declarations: [ToolbarComponent]
         })
             .compileComponents();
-        fixture = testing_1.TestBed.createComponent(toolbar_component_1.ToolbarComponent);
+        fixture = TestBed.createComponent(ToolbarComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

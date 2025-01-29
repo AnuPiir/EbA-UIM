@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MenuComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
+import { __decorate } from "tslib";
+import { Component, HostListener, Input } from '@angular/core';
 let MenuComponent = class MenuComponent {
     constructor(elementRef) {
         this.elementRef = elementRef;
@@ -45,33 +42,33 @@ let MenuComponent = class MenuComponent {
         return { onClick: () => this.stakeholderListToggled = false };
     }
 };
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], MenuComponent.prototype, "icon", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], MenuComponent.prototype, "actions", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], MenuComponent.prototype, "returnAction", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], MenuComponent.prototype, "stakeholders", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], MenuComponent.prototype, "toggle", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], MenuComponent.prototype, "isStakeholdersCell", void 0);
-tslib_1.__decorate([
-    (0, core_1.HostListener)('document:click', ['$event'])
+__decorate([
+    HostListener('document:click', ['$event'])
 ], MenuComponent.prototype, "handleClickOutside", null);
-MenuComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+MenuComponent = __decorate([
+    Component({
         selector: 'app-menu',
         templateUrl: './menu.component.html',
         styleUrls: ['./menu.component.css']
     })
 ], MenuComponent);
-exports.MenuComponent = MenuComponent;
+export { MenuComponent };
 //# sourceMappingURL=menu.component.js.map

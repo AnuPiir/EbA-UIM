@@ -1,37 +1,34 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteModalComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
-const rxjs_1 = require("rxjs");
+import { __decorate } from "tslib";
+import { Component, Input } from '@angular/core';
+import { Subject } from 'rxjs';
 let DeleteModalComponent = class DeleteModalComponent {
     constructor(modalRef) {
         this.modalRef = modalRef;
         this.questionnaireName = '';
     }
     ngOnInit() {
-        this.onClose = new rxjs_1.Subject();
+        this.onClose = new Subject();
     }
     close(deleteObject) {
         this.onClose.next({ deleteObject: deleteObject });
         this.modalRef.hide();
     }
 };
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], DeleteModalComponent.prototype, "isProject", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], DeleteModalComponent.prototype, "isFeatureGroup", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], DeleteModalComponent.prototype, "isStakeholder", void 0);
-DeleteModalComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+DeleteModalComponent = __decorate([
+    Component({
         selector: 'app-delete-modal',
         templateUrl: './delete-modal.component.html',
         styleUrls: ['./delete-modal.component.css']
     })
 ], DeleteModalComponent);
-exports.DeleteModalComponent = DeleteModalComponent;
+export { DeleteModalComponent };
 //# sourceMappingURL=delete-modal.component.js.map

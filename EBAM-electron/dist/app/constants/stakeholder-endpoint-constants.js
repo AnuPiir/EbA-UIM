@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StakeholderEndpointConstants = void 0;
-class StakeholderEndpointConstants {
+export class StakeholderEndpointConstants {
     static { this.API_ENDPOINT = 'api/'; }
     static rootUri() {
         return StakeholderEndpointConstants.API_ENDPOINT + 'stakeholder';
@@ -13,5 +10,4 @@ class StakeholderEndpointConstants {
         return this.rootUri() + '/' + id;
     }
 }
-exports.StakeholderEndpointConstants = StakeholderEndpointConstants;
 //# sourceMappingURL=stakeholder-endpoint-constants.js.map

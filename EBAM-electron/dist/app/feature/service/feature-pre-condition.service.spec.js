@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const testing_1 = require("@angular/core/testing");
-const feature_pre_condition_service_1 = require("./feature-pre-condition.service");
+import { TestBed } from '@angular/core/testing';
+import { FeaturePreConditionService } from './feature-pre-condition.service';
 describe('FeaturePreConditionService', () => {
     let service;
     beforeEach(() => {
-        testing_1.TestBed.configureTestingModule({});
-        service = testing_1.TestBed.inject(feature_pre_condition_service_1.FeaturePreConditionService);
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(FeaturePreConditionService);
     });
     it('should be created', () => {
         expect(service).toBeTruthy();

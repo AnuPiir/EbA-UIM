@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ToolbarComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
+import { __decorate } from "tslib";
+import { Component } from '@angular/core';
 let ToolbarComponent = class ToolbarComponent {
     constructor(translate, questionnaireService, route) {
         this.translate = translate;
@@ -32,12 +29,12 @@ let ToolbarComponent = class ToolbarComponent {
         return this.currentLang == language;
     }
 };
-ToolbarComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+ToolbarComponent = __decorate([
+    Component({
         selector: 'app-toolbar',
         templateUrl: './toolbar.component.html',
         styleUrls: ['./toolbar.component.css']
     })
 ], ToolbarComponent);
-exports.ToolbarComponent = ToolbarComponent;
+export { ToolbarComponent };
 //# sourceMappingURL=toolbar.component.js.map
