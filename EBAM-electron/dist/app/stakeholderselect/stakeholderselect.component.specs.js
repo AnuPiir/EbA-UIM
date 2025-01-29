@@ -1,18 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const testing_1 = require("@angular/core/testing");
-const stakeholderselect_component_1 = require("./stakeholderselect.component");
+import { TestBed } from '@angular/core/testing';
+import { StakeholderselectComponent } from './stakeholderselect.component';
 describe('StakeholderselectComponent', () => {
     let component;
     let fixture;
     beforeEach(async () => {
-        await testing_1.TestBed.configureTestingModule({
-            declarations: [stakeholderselect_component_1.StakeholderselectComponent]
+        await TestBed.configureTestingModule({
+            declarations: [StakeholderselectComponent]
         })
             .compileComponents();
     });
     beforeEach(() => {
-        fixture = testing_1.TestBed.createComponent(stakeholderselect_component_1.StakeholderselectComponent);
+        fixture = TestBed.createComponent(StakeholderselectComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

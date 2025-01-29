@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureGroupComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
-const global_constants_1 = require("../constants/global-constants");
-const delete_modal_component_1 = require("../questionnaire/modal/delete-modal/delete-modal.component");
-const edit_modal_component_1 = require("../questionnaire/modal/edit-modal/edit-modal.component");
+import { __decorate } from "tslib";
+import { Component, ViewChild } from '@angular/core';
+import { GlobalConstants } from '../constants/global-constants';
+import { DeleteModalComponent } from '../questionnaire/modal/delete-modal/delete-modal.component';
+import { EditModalComponent } from '../questionnaire/modal/edit-modal/edit-modal.component';
 let FeatureGroupComponent = class FeatureGroupComponent {
     constructor(featureGroupService, route, router, stakeholderService, modalService) {
         this.featureGroupService = featureGroupService;
@@ -120,14 +117,14 @@ let FeatureGroupComponent = class FeatureGroupComponent {
         });
     }
     getStakeholderColorClass(i) {
-        let colorIndex = i % global_constants_1.GlobalConstants.STAKEHOLDER_COLOR_ORDER.length;
-        return global_constants_1.GlobalConstants.STAKEHOLDER_COLOR_ORDER[colorIndex];
+        let colorIndex = i % GlobalConstants.STAKEHOLDER_COLOR_ORDER.length;
+        return GlobalConstants.STAKEHOLDER_COLOR_ORDER[colorIndex];
     }
     openFeatureGroupDeleteModal(featureGroup) {
         const initialState = {
             isFeatureGroup: true
         };
-        this.modalRef = this.modalService.show(delete_modal_component_1.DeleteModalComponent, {
+        this.modalRef = this.modalService.show(DeleteModalComponent, {
             class: 'modal-box modal-md', initialState
         });
         this.modalRef.content.onClose.subscribe((result) => {
@@ -142,7 +139,7 @@ let FeatureGroupComponent = class FeatureGroupComponent {
             titleTranslationKey: 'editFeatureGroupModal.title',
             inputTranslationKey: 'editFeatureGroupModal.input',
         };
-        this.modalRef = this.modalService.show(edit_modal_component_1.EditModalComponent, {
+        this.modalRef = this.modalService.show(EditModalComponent, {
             class: 'modal-box modal-md', initialState
         });
         this.modalRef.content.onClose.subscribe((result) => {
@@ -155,7 +152,7 @@ let FeatureGroupComponent = class FeatureGroupComponent {
         const initialState = {
             isStakeholder: true
         };
-        this.modalRef = this.modalService.show(delete_modal_component_1.DeleteModalComponent, {
+        this.modalRef = this.modalService.show(DeleteModalComponent, {
             class: 'modal-box modal-md', initialState
         });
         this.modalRef.content.onClose.subscribe((result) => {
@@ -170,7 +167,7 @@ let FeatureGroupComponent = class FeatureGroupComponent {
             titleTranslationKey: 'editStakeholderModal.title',
             inputTranslationKey: 'editStakeholderModal.input',
         };
-        this.modalRef = this.modalService.show(edit_modal_component_1.EditModalComponent, {
+        this.modalRef = this.modalService.show(EditModalComponent, {
             class: 'modal-box modal-md', initialState
         });
         this.modalRef.content.onClose.subscribe((result) => {
@@ -192,15 +189,15 @@ let FeatureGroupComponent = class FeatureGroupComponent {
         return () => this.openStakeholderDeleteModal(stakeholder);
     }
 };
-tslib_1.__decorate([
-    (0, core_1.ViewChild)('featureGroupTabs', { static: false })
+__decorate([
+    ViewChild('featureGroupTabs', { static: false })
 ], FeatureGroupComponent.prototype, "tab", void 0);
-FeatureGroupComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+FeatureGroupComponent = __decorate([
+    Component({
         selector: 'app-feature-group',
         templateUrl: './feature-group.component.html',
         styleUrls: ['./feature-group.component.css']
     })
 ], FeatureGroupComponent);
-exports.FeatureGroupComponent = FeatureGroupComponent;
+export { FeatureGroupComponent };
 //# sourceMappingURL=feature-group.component.js.map

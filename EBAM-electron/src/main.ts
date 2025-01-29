@@ -4,13 +4,20 @@ import * as url from "url";
 
 let mainWindow: BrowserWindow | null;
 
-function createWindow() {
+async function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
     });
 
-    // Load the Angular app's index.html from the `dist` directory
+    const {platformBrowserDynamic} = await import('@angular/platform-browser-dynamic');
+    const {AppModule} = await import('./app/app.module.js'); // Adjust path to your AppModule
+
+    // Bootstrap Angular app after dynamic import
+    platformBrowserDynamic().bootstrapModule(AppModule)
+        .catch(err => console.error(err));
+
+
     mainWindow.loadURL(
         url.format({
             pathname: path.join(__dirname, "../src/index.html"),
@@ -19,7 +26,7 @@ function createWindow() {
         })
     );
 
-    mainWindow.webContents.openDevTools(); // Optional: Open DevTools
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on("closed", () => {
         mainWindow = null;

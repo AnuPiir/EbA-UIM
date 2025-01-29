@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidationComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
-const validation_1 = require("./model/validation");
-const rxjs_1 = require("rxjs");
-const global_constants_1 = require("../constants/global-constants");
-const validation_value_1 = require("./model/validation-value");
+import { __decorate } from "tslib";
+import { Component, Input, ViewChild } from '@angular/core';
+import { ValidationType } from './model/validation';
+import { debounceTime, firstValueFrom, Observable, Subject } from 'rxjs';
+import { GlobalConstants } from '../constants/global-constants';
+import { ValidationValue } from './model/validation-value';
 let ValidationComponent = class ValidationComponent {
     constructor(validationService, route, router, translateService, featureService, featurePreconditionService, el) {
         this.validationService = validationService;
@@ -30,7 +27,7 @@ let ValidationComponent = class ValidationComponent {
         this.isToggled = false;
         this.colorListToggled = false;
         this.isAddingNewRow = false;
-        this.inputSubject = new rxjs_1.Subject();
+        this.inputSubject = new Subject();
         this.columns = [];
         this.onLanguageChanged();
     }
@@ -55,13 +52,13 @@ let ValidationComponent = class ValidationComponent {
         }
         this.questionnaireId = +questionnaireId;
         this.getData();
-        this.inputSubscription = this.inputSubject.pipe((0, rxjs_1.debounceTime)(300)).subscribe(searchTerm => {
+        this.inputSubscription = this.inputSubject.pipe(debounceTime(300)).subscribe(searchTerm => {
             this.onValidationRowValueChange(searchTerm.inputValue, searchTerm.validationRowAnswer, searchTerm.validation, searchTerm.validationRowValue);
         });
     }
     getData() {
         this.loading = true;
-        const finished = new rxjs_1.Observable(subscriber => {
+        const finished = new Observable(subscriber => {
             this.getValidations(subscriber);
             this.getValidationCombinationResults(subscriber);
         });
@@ -120,10 +117,10 @@ let ValidationComponent = class ValidationComponent {
                 return (prev.rowId > current.rowId) ? prev : current;
             }).rowId;
         }
-        const feature = existingFeature ?? await (0, rxjs_1.firstValueFrom)(this.featureService.create(""));
-        const featurePrecondition = existingPreCondition ?? await (0, rxjs_1.firstValueFrom)(this.featurePreconditionService.create(""));
+        const feature = existingFeature ?? await firstValueFrom(this.featureService.create(""));
+        const featurePrecondition = existingPreCondition ?? await firstValueFrom(this.featurePreconditionService.create(""));
         for (const v of this.validations) {
-            const answer = await (0, rxjs_1.firstValueFrom)(this.validationService.saveValidationAnswer({
+            const answer = await firstValueFrom(this.validationService.saveValidationAnswer({
                 id: null,
                 rowId: maxRowId + 1,
                 validationId: v.id,
@@ -140,21 +137,21 @@ let ValidationComponent = class ValidationComponent {
         this.validationRowValues.push({ answers: validationRow, rowId: maxRowId + 1 });
         this.validationRowValues = this.validationRowValues.sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
         this.mapFeatureRowSpans();
-        this.updateRelatedValidationAnswers(this.validations.find(v => v.type === validation_1.ValidationType.FEATURE_PRECONDITION), { answers: validationRow, rowId: maxRowId + 1 });
+        this.updateRelatedValidationAnswers(this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), { answers: validationRow, rowId: maxRowId + 1 });
         this.isAddingNewRow = false;
     }
     getPrefilledValidationRowAnswer(validationType, featureResponse, featurePreCondition, stakeholder) {
-        if (validationType === validation_1.ValidationType.FEATURE_PRECONDITION) {
+        if (validationType === ValidationType.FEATURE_PRECONDITION) {
             return featurePreCondition?.answer ? featurePreCondition.answer : '';
         }
-        if (validationType === validation_1.ValidationType.FEATURE) {
+        if (validationType === ValidationType.FEATURE) {
             return featureResponse?.answer ? featureResponse.answer : '';
         }
-        if (validationType === validation_1.ValidationType.STAKEHOLDER) {
+        if (validationType === ValidationType.STAKEHOLDER) {
             return stakeholder?.name ? stakeholder.name : '';
         }
-        if (validationType === validation_1.ValidationType.DO) {
-            if (this.translateService.currentLang === global_constants_1.GlobalConstants.ET) {
+        if (validationType === ValidationType.DO) {
+            if (this.translateService.currentLang === GlobalConstants.ET) {
                 return 'Kas';
             }
             return 'Do';
@@ -165,28 +162,28 @@ let ValidationComponent = class ValidationComponent {
         return validationRowValue.answers.filter(answer => answer.validationId === validation.id)[0];
     }
     isValidationSelectable(validation) {
-        return validation.type === validation_1.ValidationType.SELECT;
+        return validation.type === ValidationType.SELECT;
     }
     isValidationTextField(validation) {
-        return validation.type === validation_1.ValidationType.TEXT;
+        return validation.type === ValidationType.TEXT;
     }
     isValidationDoField(validation) {
-        return validation.type === validation_1.ValidationType.DO;
+        return validation.type === ValidationType.DO;
     }
     isValidationFeature(validation) {
-        return validation.type === validation_1.ValidationType.FEATURE;
+        return validation.type === ValidationType.FEATURE;
     }
     isValidationAutofill(validation) {
-        return validation.type === validation_1.ValidationType.FILL;
+        return validation.type === ValidationType.FILL;
     }
     isValidationStakeholder(validation) {
-        return validation.type === validation_1.ValidationType.STAKEHOLDER;
+        return validation.type === ValidationType.STAKEHOLDER;
     }
     isValidationFeaturePrecondition(validation) {
-        return validation.type === validation_1.ValidationType.FEATURE_PRECONDITION;
+        return validation.type === ValidationType.FEATURE_PRECONDITION;
     }
     isValidationExample(validation) {
-        return validation.type === validation_1.ValidationType.EXAMPLE;
+        return validation.type === ValidationType.EXAMPLE;
     }
     textAreaValueChange(eventValue, validationRowAnswer, validation, validationRowValue) {
         this.inputSubject.next({
@@ -198,11 +195,11 @@ let ValidationComponent = class ValidationComponent {
     }
     async onValidationRowValueChange(eventValue, validationRowAnswer, validation, validationRowValue) {
         validationRowAnswer.answer = eventValue;
-        if (validation.type === validation_1.ValidationType.FEATURE) {
-            validationRowAnswer.feature = await (0, rxjs_1.firstValueFrom)(this.featureService.update(validationRowAnswer.feature.id, eventValue, validationRowAnswer.feature.customId));
+        if (validation.type === ValidationType.FEATURE) {
+            validationRowAnswer.feature = await firstValueFrom(this.featureService.update(validationRowAnswer.feature.id, eventValue, validationRowAnswer.feature.customId));
         }
-        if (validation.type === validation_1.ValidationType.FEATURE_PRECONDITION) {
-            validationRowAnswer.featurePrecondition = await (0, rxjs_1.firstValueFrom)(this.featurePreconditionService.update(validationRowAnswer.featurePrecondition.id, eventValue));
+        if (validation.type === ValidationType.FEATURE_PRECONDITION) {
+            validationRowAnswer.featurePrecondition = await firstValueFrom(this.featurePreconditionService.update(validationRowAnswer.featurePrecondition.id, eventValue));
         }
         this.setRelatedRowSpanAnswers(validation, validationRowAnswer, eventValue);
         setTimeout(() => {
@@ -212,22 +209,22 @@ let ValidationComponent = class ValidationComponent {
         }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE);
     }
     setRelatedRowSpanAnswers(validation, validationRowAnswer, eventValue) {
-        if ([validation_1.ValidationType.DO, validation_1.ValidationType.FEATURE_PRECONDITION, validation_1.ValidationType.STAKEHOLDER].includes(validation.type)) {
+        if ([ValidationType.DO, ValidationType.FEATURE_PRECONDITION, ValidationType.STAKEHOLDER].includes(validation.type)) {
             for (let validationRow of this.validationRowValues) {
                 for (let answer of validationRow.answers) {
                     if (answer.featurePrecondition.id === validationRowAnswer.featurePrecondition.id && answer.id !== validationRowAnswer.id) {
-                        if (validation.type === validation_1.ValidationType.FEATURE_PRECONDITION && answer.type === validation_1.ValidationType.FEATURE_PRECONDITION) {
+                        if (validation.type === ValidationType.FEATURE_PRECONDITION && answer.type === ValidationType.FEATURE_PRECONDITION) {
                             answer.answer = eventValue;
                         }
-                        if (validation.type === validation_1.ValidationType.DO && answer.type === validation_1.ValidationType.DO) {
-                            if (this.translateService.currentLang === global_constants_1.GlobalConstants.ET) {
+                        if (validation.type === ValidationType.DO && answer.type === ValidationType.DO) {
+                            if (this.translateService.currentLang === GlobalConstants.ET) {
                                 answer.answer = "Kas";
                             }
                             else {
                                 answer.answer = "Do";
                             }
                         }
-                        if (validation.type === validation_1.ValidationType.STAKEHOLDER && answer.type === validation_1.ValidationType.STAKEHOLDER) {
+                        if (validation.type === ValidationType.STAKEHOLDER && answer.type === ValidationType.STAKEHOLDER) {
                             answer.stakeholder = validationRowAnswer.stakeholder;
                             if (answer.stakeholder) {
                                 answer.answer = answer.stakeholder.name;
@@ -263,8 +260,8 @@ let ValidationComponent = class ValidationComponent {
             combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length - 1].resultEn;
         }
         //Example answer
-        const exampleValidationAnswer = validationRowValue.answers.find(a => a.type === validation_1.ValidationType.EXAMPLE);
-        const exampleValidation = this.validations.find(v => v.type === validation_1.ValidationType.EXAMPLE);
+        const exampleValidationAnswer = validationRowValue.answers.find(a => a.type === ValidationType.EXAMPLE);
+        const exampleValidation = this.validations.find(v => v.type === ValidationType.EXAMPLE);
         if (exampleValidationAnswer && exampleValidation) {
             this.onValidationRowValueChange(exampleAnswer, exampleValidationAnswer, exampleValidation, validationRowValue);
         }
@@ -372,7 +369,7 @@ let ValidationComponent = class ValidationComponent {
         return value.nameEn ? value.nameEn : value.resultEn;
     }
     get isCurrentLangEt() {
-        return this.translateService.currentLang === global_constants_1.GlobalConstants.ET;
+        return this.translateService.currentLang === GlobalConstants.ET;
     }
     mapFeatureRowSpans() {
         const featureRowSpans = [];
@@ -403,18 +400,18 @@ let ValidationComponent = class ValidationComponent {
         this.featureRowSpans = featureRowSpans;
     }
     getAnswerRowSpanAndMapAsDisplayed(validation, validationRow) {
-        if (validation.type === validation_1.ValidationType.FEATURE) {
+        if (validation.type === ValidationType.FEATURE) {
             const featureId = validationRow.answers[0].feature.id;
             return this.featureRowSpans.find(a => a.featureId === featureId)?.rowIdsSpanningFeature.length ?? 1;
         }
-        if (validation.type === validation_1.ValidationType.FEATURE_PRECONDITION || validation.type === validation_1.ValidationType.STAKEHOLDER || validation.type === validation_1.ValidationType.DO) {
+        if (validation.type === ValidationType.FEATURE_PRECONDITION || validation.type === ValidationType.STAKEHOLDER || validation.type === ValidationType.DO) {
             const featureId = validationRow.answers[0].featurePrecondition.id;
             return this.featurePreConditionSpans.find(a => a.featureId === featureId)?.rowIdsSpanningFeature.length ?? 1;
         }
         return 1;
     }
     isAnswerNotDisplayed(validation, validationRow) {
-        if (validation.type === validation_1.ValidationType.FEATURE) {
+        if (validation.type === ValidationType.FEATURE) {
             const featureId = validationRow.answers[0].feature.id;
             const existingFeatureToDisplay = this.featuresAlreadyDisplayed.find(f => f.featureId === featureId);
             if (!existingFeatureToDisplay) {
@@ -423,7 +420,7 @@ let ValidationComponent = class ValidationComponent {
             }
             return existingFeatureToDisplay?.rowIdToDisplayOn === validationRow.rowId;
         }
-        if (validation.type === validation_1.ValidationType.FEATURE_PRECONDITION) {
+        if (validation.type === ValidationType.FEATURE_PRECONDITION) {
             const featureId = validationRow.answers[0].featurePrecondition.id;
             const existingFeaturePreconditionToDisplay = this.featurePreconditionsAlreadyDisplayed.find(f => f.featureId === featureId);
             if (!existingFeaturePreconditionToDisplay) {
@@ -432,7 +429,7 @@ let ValidationComponent = class ValidationComponent {
             }
             return existingFeaturePreconditionToDisplay?.rowIdToDisplayOn === validationRow.rowId;
         }
-        if (validation.type === validation_1.ValidationType.STAKEHOLDER || validation.type === validation_1.ValidationType.DO) {
+        if (validation.type === ValidationType.STAKEHOLDER || validation.type === ValidationType.DO) {
             const featureId = validationRow.answers[0].featurePrecondition.id;
             const existingFeaturePreconditionToDisplay = this.featurePreconditionsAlreadyDisplayed.find(f => f.featureId === featureId);
             if (!existingFeaturePreconditionToDisplay) {
@@ -490,7 +487,7 @@ let ValidationComponent = class ValidationComponent {
         this.onValidationRowValueChange(stakeholder ? stakeholder.name : '', validationAnswer, validation, validationRowValue);
     }
     getRowPreConditionAnswer(validationRow) {
-        return validationRow.answers.find(a => a.type === validation_1.ValidationType.FEATURE_PRECONDITION);
+        return validationRow.answers.find(a => a.type === ValidationType.FEATURE_PRECONDITION);
     }
     getFeatureActions(validationRowValue) {
         return [
@@ -535,8 +532,8 @@ let ValidationComponent = class ValidationComponent {
                     break;
                 }
             }
-            let colorIndex = index % global_constants_1.GlobalConstants.STAKEHOLDER_COLOR_ORDER.length;
-            return global_constants_1.GlobalConstants.STAKEHOLDER_COLOR_ORDER[colorIndex];
+            let colorIndex = index % GlobalConstants.STAKEHOLDER_COLOR_ORDER.length;
+            return GlobalConstants.STAKEHOLDER_COLOR_ORDER[colorIndex];
         }
         else {
             return "";
@@ -546,7 +543,7 @@ let ValidationComponent = class ValidationComponent {
         return (stakeHolder) => this.onStakeholderChange(stakeHolder, validation, validationRowValue);
     }
     getStakeHolderMenuAction(validationRowValue) {
-        const validationForStakeHolder = this.validations.find(v => v.type === validation_1.ValidationType.STAKEHOLDER);
+        const validationForStakeHolder = this.validations.find(v => v.type === ValidationType.STAKEHOLDER);
         if (validationForStakeHolder) {
             return this.getStakeHolderAction(validationForStakeHolder, validationRowValue);
         }
@@ -562,30 +559,30 @@ let ValidationComponent = class ValidationComponent {
         element.style.height = (element.scrollHeight) + 'px';
     }
     getValidationValue(answer) {
-        return validation_value_1.ValidationValue[answer];
+        return ValidationValue[answer];
     }
 };
-tslib_1.__decorate([
-    (0, core_1.ViewChild)('PreconditionMenu')
+__decorate([
+    ViewChild('PreconditionMenu')
 ], ValidationComponent.prototype, "menuComponent", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], ValidationComponent.prototype, "tabIndex", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], ValidationComponent.prototype, "columns", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], ValidationComponent.prototype, "featureGroup", void 0);
-tslib_1.__decorate([
-    (0, core_1.Input)()
+__decorate([
+    Input()
 ], ValidationComponent.prototype, "stakeholders", void 0);
-ValidationComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+ValidationComponent = __decorate([
+    Component({
         selector: 'app-validation',
         templateUrl: './validation.component.html',
         styleUrls: ['./validation.component.css']
     })
 ], ValidationComponent);
-exports.ValidationComponent = ValidationComponent;
+export { ValidationComponent };
 //# sourceMappingURL=validation.component.js.map

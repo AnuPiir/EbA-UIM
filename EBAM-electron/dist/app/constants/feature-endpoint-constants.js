@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.FeatureEndpointConstants = void 0;
-class FeatureEndpointConstants {
+export class FeatureEndpointConstants {
     static { this.API_ENDPOINT = 'api/'; }
     static rootUri() {
         return FeatureEndpointConstants.API_ENDPOINT + 'feature';
@@ -16,5 +13,4 @@ class FeatureEndpointConstants {
         return this.rootUri() + '/' + id;
     }
 }
-exports.FeatureEndpointConstants = FeatureEndpointConstants;
 //# sourceMappingURL=feature-endpoint-constants.js.map

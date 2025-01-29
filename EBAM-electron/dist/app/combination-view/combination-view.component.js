@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CombinationViewComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
-const global_constants_1 = require("../constants/global-constants");
+import { __decorate } from "tslib";
+import { Component } from '@angular/core';
+import { GlobalConstants } from '../constants/global-constants';
 let CombinationViewComponent = class CombinationViewComponent {
     constructor(validationService, translateService) {
         this.validationService = validationService;
@@ -22,7 +19,7 @@ let CombinationViewComponent = class CombinationViewComponent {
         this.headers = [];
         if (results.length > 0) {
             for (let combinationTitle of results[0].validationCombinations) {
-                if (this.translateService.currentLang === global_constants_1.GlobalConstants.ET) {
+                if (this.translateService.currentLang === GlobalConstants.ET) {
                     this.headers.push(combinationTitle.validationResponse.nameEt);
                     continue;
                 }
@@ -36,18 +33,18 @@ let CombinationViewComponent = class CombinationViewComponent {
         });
     }
     getValidationCombinationResultValueTranslationKey(validationCombinationResult) {
-        if (this.translateService.currentLang === global_constants_1.GlobalConstants.ET) {
+        if (this.translateService.currentLang === GlobalConstants.ET) {
             return validationCombinationResult.resultEt;
         }
         return validationCombinationResult.resultEn;
     }
 };
-CombinationViewComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+CombinationViewComponent = __decorate([
+    Component({
         selector: 'app-combination-view',
         templateUrl: './combination-view.component.html',
         styleUrls: ['./combination-view.component.css']
     })
 ], CombinationViewComponent);
-exports.CombinationViewComponent = CombinationViewComponent;
+export { CombinationViewComponent };
 //# sourceMappingURL=combination-view.component.js.map

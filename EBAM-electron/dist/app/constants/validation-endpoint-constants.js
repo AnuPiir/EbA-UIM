@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidationEndpointConstants = void 0;
-class ValidationEndpointConstants {
+export class ValidationEndpointConstants {
     static { this.API_ENDPOINT = 'api/'; }
     static getValidationUri() {
         return ValidationEndpointConstants.API_ENDPOINT + 'validation';
@@ -22,5 +19,4 @@ class ValidationEndpointConstants {
         return this.getValidationAnswersByQuestionnaireIdUri(questionnaireId) + '/row-id/' + rowId;
     }
 }
-exports.ValidationEndpointConstants = ValidationEndpointConstants;
 //# sourceMappingURL=validation-endpoint-constants.js.map

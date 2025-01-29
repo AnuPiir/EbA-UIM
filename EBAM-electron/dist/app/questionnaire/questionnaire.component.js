@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.QuestionnaireComponent = void 0;
-const tslib_1 = require("tslib");
-const core_1 = require("@angular/core");
-const delete_modal_component_1 = require("./modal/delete-modal/delete-modal.component");
-const edit_modal_component_1 = require("./modal/edit-modal/edit-modal.component");
-const common_1 = require("@angular/common");
+import { __decorate } from "tslib";
+import { Component } from '@angular/core';
+import { DeleteModalComponent } from './modal/delete-modal/delete-modal.component';
+import { EditModalComponent } from './modal/edit-modal/edit-modal.component';
+import { formatDate } from '@angular/common';
 let QuestionnaireComponent = class QuestionnaireComponent {
     constructor(questionnaireService, modalService, translateService) {
         this.questionnaireService = questionnaireService;
@@ -54,7 +51,7 @@ let QuestionnaireComponent = class QuestionnaireComponent {
             isProject: true,
             questionnaireName: questionnaire.name
         };
-        this.modalRef = this.modalService.show(delete_modal_component_1.DeleteModalComponent, {
+        this.modalRef = this.modalService.show(DeleteModalComponent, {
             class: 'modal-box modal-md', initialState
         });
         this.modalRef.content.onClose.subscribe((result) => {
@@ -73,7 +70,7 @@ let QuestionnaireComponent = class QuestionnaireComponent {
             titleTranslationKey: 'editProjectModal.title',
             inputTranslationKey: 'editProjectModal.input',
         };
-        this.modalRef = this.modalService.show(edit_modal_component_1.EditModalComponent, {
+        this.modalRef = this.modalService.show(EditModalComponent, {
             class: 'modal-box modal-md', initialState
         });
         this.modalRef.content.onClose.subscribe((result) => {
@@ -94,7 +91,7 @@ let QuestionnaireComponent = class QuestionnaireComponent {
             const downloadURL = window.URL.createObjectURL(data);
             const link = document.createElement('a');
             link.href = downloadURL;
-            link.download = questionnaire.name + "_" + (0, common_1.formatDate)(new Date(), 'yyyy-MM-dd', 'en-US') + ".xlsx";
+            link.download = questionnaire.name + "_" + formatDate(new Date(), 'yyyy-MM-dd', 'en-US') + ".xlsx";
             link.click();
         });
     }
@@ -106,12 +103,12 @@ let QuestionnaireComponent = class QuestionnaireComponent {
         ];
     }
 };
-QuestionnaireComponent = tslib_1.__decorate([
-    (0, core_1.Component)({
+QuestionnaireComponent = __decorate([
+    Component({
         selector: 'app-questionnaire',
         templateUrl: './questionnaire.component.html',
         styleUrls: ['./questionnaire.component.css']
     })
 ], QuestionnaireComponent);
-exports.QuestionnaireComponent = QuestionnaireComponent;
+export { QuestionnaireComponent };
 //# sourceMappingURL=questionnaire.component.js.map

@@ -1,15 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const testing_1 = require("@angular/core/testing");
-const combination_view_component_1 = require("./combination-view.component");
+import { TestBed } from '@angular/core/testing';
+import { CombinationViewComponent } from './combination-view.component';
 describe('CombinationViewComponent', () => {
     let component;
     let fixture;
     beforeEach(() => {
-        testing_1.TestBed.configureTestingModule({
-            declarations: [combination_view_component_1.CombinationViewComponent]
+        TestBed.configureTestingModule({
+            declarations: [CombinationViewComponent]
         });
-        fixture = testing_1.TestBed.createComponent(combination_view_component_1.CombinationViewComponent);
+        fixture = TestBed.createComponent(CombinationViewComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
