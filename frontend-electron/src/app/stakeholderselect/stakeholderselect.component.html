@@ -1,0 +1,9 @@
+<div class="stakeholder-selection">
+  <div class="stakeholders-list">
+    <span class="none-added" *ngIf="stakeholders.length == 0">{{"menu.noStakeholder" | translate}}</span>
+    <button *ngFor="let stakeholder of stakeholders; index as i" (click)="action.onClick(stakeholder)" class="stakeholder {{getStakeholderColorClass(i)}}">
+      <span>{{ stakeholder.name }}</span>
+    </button>
+  </div>
+  <!-- <button class="button add-button">{{'button.add' | translate}}</button> -->
+</div>

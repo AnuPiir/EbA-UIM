@@ -1,0 +1,27 @@
+.color-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--beige);
+}
+
+.color-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: fit-content;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120.5rem;
+  height: fit-content;
+  gap: 0.25rem;
+  padding: 4px 0.5rem 4px 0.5rem;
+  border-style: solid;
+  border-width: 0.125rem;
+  border-radius: 0.5rem;
+}

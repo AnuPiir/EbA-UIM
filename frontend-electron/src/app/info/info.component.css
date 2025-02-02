@@ -1,0 +1,22 @@
+.info-button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  width: fit-content;
+  max-width: 20rem;
+  position: absolute;
+  padding: 1rem;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--text-color);
+  color: var(--beige);
+  z-index: 2;
+}
