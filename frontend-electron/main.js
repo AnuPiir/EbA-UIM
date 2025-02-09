@@ -1,21 +1,42 @@
-const {
-    app,
-    BrowserWindow
-} = require('electron')
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+const url = require('url');
 
-let appWindow
+let mainWindow;
 
 function createWindow() {
-    appWindow = new BrowserWindow({
-        width: 800,
-        height: 600
-    })
+    mainWindow = new BrowserWindow({
+        width: 1200,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false, // if you are using a contextBridge, set this to true
+        },
+    });
 
-    appWindow.loadFile('dist/frontend/index.html');
+    mainWindow.loadURL(
+        url.format({
+            pathname: path.join(__dirname, 'dist/frontend/index.html'),
+            protocol: 'file:',
+            slashes: true,
+        })
+    );
 
-    appWindow.on('closed', function () {
-        appWindow = null
-    })
+    mainWindow.on('closed', function () {
+        mainWindow = null;
+    });
 }
 
-app.whenReady().then(createWindow)
+app.on('ready', createWindow);
+
+app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+app.on('activate', function () {
+    if (mainWindow === null) {
+        createWindow();
+    }
+});
