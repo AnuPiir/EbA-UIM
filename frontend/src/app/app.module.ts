@@ -40,7 +40,9 @@ import { CombinationViewComponent } from './combination-view/combination-view.co
 
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  const isElectron = (window as any).process && (window as any).process.type;
+  const basePath = isElectron ? `./assets/i18n/` : `/assets/i18n/`;
+  return new TranslateHttpLoader(http, basePath, ".json");
 }
 
 @NgModule({

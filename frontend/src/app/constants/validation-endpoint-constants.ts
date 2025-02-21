@@ -1,7 +1,7 @@
 
 export class ValidationEndpointConstants {
 
-  static API_ENDPOINT = 'api/';
+  static API_ENDPOINT =  `http://localhost:8080/api/`;
 
   static getValidationUri(): string {
     return ValidationEndpointConstants.API_ENDPOINT + 'validation'

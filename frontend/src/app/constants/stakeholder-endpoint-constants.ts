@@ -1,6 +1,6 @@
 export class StakeholderEndpointConstants {
 
-  static API_ENDPOINT = 'api/';
+  static API_ENDPOINT =  `http://localhost:8080/api/`;
 
   static rootUri(): string {
     return StakeholderEndpointConstants.API_ENDPOINT + 'stakeholder'

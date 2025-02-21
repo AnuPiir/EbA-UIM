@@ -11,6 +11,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // if you are using a contextBridge, set this to true
+            webSecurity: false // Disable security restrictions (for debugging only)
         },
     });
 
@@ -25,6 +26,8 @@ function createWindow() {
     mainWindow.on('closed', function () {
         mainWindow = null;
     });
+
+    process.env.API_URL = 'http://localhost:8080/api';
 }
 
 app.on('ready', createWindow);

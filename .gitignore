@@ -41,3 +41,7 @@ EbA installer.exe
 /nbdist/
 /.nb-gradle/
 /mqtt*
+
+/frontend/.angular/
+/frontend/node_modules/
+/frontend/dist/

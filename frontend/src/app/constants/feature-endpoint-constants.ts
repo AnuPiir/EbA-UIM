@@ -1,5 +1,5 @@
 export class FeatureEndpointConstants {
-  static API_ENDPOINT = 'api/';
+  static API_ENDPOINT =  `http://localhost:8080/api/`;
 
   static rootUri(): string {
     return FeatureEndpointConstants.API_ENDPOINT + 'feature'
