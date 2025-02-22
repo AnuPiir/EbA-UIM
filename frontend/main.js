@@ -1,10 +1,25 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
+const { spawn } = require("child_process");
 
 let mainWindow;
+let backendProcess;
 
 function createWindow() {
+
+    const backendPath = app.isPackaged
+        ? path.join(process.resourcesPath, "app", "jars", "backend-1.1.0.jar") // Packaged path
+        : path.join(__dirname, "jars", "backend-1.1.0.jar"); // Development path
+
+    backendProcess = spawn("java", ["-jar", backendPath], {
+        detached: true,
+        stdio: "ignore",
+        windowsHide: true, // Prevents opening a terminal window
+    });
+
+    backendProcess.unref();
+
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 600,
@@ -33,6 +48,9 @@ function createWindow() {
 app.on('ready', createWindow);
 
 app.on('window-all-closed', function () {
+    if (backendProcess) {
+        backendProcess.kill();
+    }
     if (process.platform !== 'darwin') {
         app.quit();
     }
