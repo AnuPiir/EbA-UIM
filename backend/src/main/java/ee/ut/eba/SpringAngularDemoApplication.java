@@ -14,12 +14,12 @@ public class SpringAngularDemoApplication {
 	public static void main(String[] args) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String url = "http://localhost:8080";
-		rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+		rt.exec("open " + url);
 		SwingUtilities.invokeLater(
-			() -> {
-				createAndShowGUI();
-				SpringApplication.run(SpringAngularDemoApplication.class, args);
-			}
+				() -> {
+					createAndShowGUI();
+					SpringApplication.run(SpringAngularDemoApplication.class, args);
+				}
 		);
 	}
 
