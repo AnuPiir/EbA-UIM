@@ -8,10 +8,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 @SpringBootApplication
 public class SpringAngularDemoApplication {
 
 	public static void main(String[] args) throws IOException {
+		File logFile = new File("logs.txt");
+		PrintStream fileOut = new PrintStream(new FileOutputStream(logFile, true)); // Append mode
+		System.setOut(fileOut);
+		System.setErr(fileOut);
+
 		Runtime rt = Runtime.getRuntime();
 		String url = "http://localhost:8080";
 		rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
