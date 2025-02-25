@@ -1,1 +1,0 @@
-{"version":3,"file":"color-scheme.service.js","sourceRoot":"","sources":["../src/color-scheme.service.ts"],"names":[],"mappings":";AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,eAAe,CAAC;AAKpC,IAAM,kBAAkB,GAAxB,MAAM,kBAAkB;IAE7B,gBAAgB,CAAC;IAEjB,iBAAiB,CAAC,MAAc;QAC9B,sCAAsC;IACxC,CAAC;CACF,CAAA;AAPY,kBAAkB;IAH9B,UAAU,CAAC;QACV,UAAU,EAAE,MAAM;KACnB,CAAC;GACW,kBAAkB,CAO9B;SAPY,kBAAkB"}
