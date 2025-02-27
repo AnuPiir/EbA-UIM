@@ -14,7 +14,6 @@ installer_creation/bin/jre/*
 frontend/node_modules
 frontend/dist
 testdb.db
-database.db
 EbA-*.*.*.exe
 launch4j.log
 EbA installer.exe
