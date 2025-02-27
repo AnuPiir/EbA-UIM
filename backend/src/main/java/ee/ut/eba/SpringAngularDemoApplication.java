@@ -16,11 +16,6 @@ import java.io.PrintStream;
 public class SpringAngularDemoApplication {
 
 	public static void main(String[] args) throws IOException {
-		File logFile = new File("logs.txt");
-		PrintStream fileOut = new PrintStream(new FileOutputStream(logFile, true)); // Append mode
-		System.setOut(fileOut);
-		System.setErr(fileOut);
-
 		Runtime rt = Runtime.getRuntime();
 		String url = "http://localhost:8080";
 		rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
