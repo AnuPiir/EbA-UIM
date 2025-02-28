@@ -7,24 +7,18 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.util.Collections;
 
 @SpringBootApplication
 public class SpringAngularDemoApplication {
 
 	public static void main(String[] args) throws IOException {
-		Runtime rt = Runtime.getRuntime();
-		String url = "http://localhost:8080";
-		rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
-		SwingUtilities.invokeLater(
-			() -> {
-				createAndShowGUI();
-				SpringApplication.run(SpringAngularDemoApplication.class, args);
-			}
-		);
+		//Runtime rt = Runtime.getRuntime();
+		//String url = "http://localhost:8080";
+		//rt.exec("open " + url);
+		SpringApplication app = new SpringApplication(SpringAngularDemoApplication.class);
+		app.setDefaultProperties(Collections.singletonMap("server.port", "8080"));
+		app.run(args);
 	}
 
 	private static void createAndShowGUI() {
