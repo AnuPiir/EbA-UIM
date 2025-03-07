@@ -23,47 +23,50 @@ import lombok.experimental.Accessors;
 @Entity
 @Getter
 @Setter
-@Table(name= ValidationAnswer.TABLE)
+@Table(name = ValidationAnswer.TABLE)
 @ToString
 @Accessors(chain = true)
 public class ValidationAnswer {
 
-  public static final String TABLE = "validation_answer";
+    public static final String TABLE = "validation_answer";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-  @Column
-  private String answer;
+    @Column
+    private String answer;
 
-  @Column
-  private Integer rowId;
+    @Column
+    private Integer rowId;
 
-  @Column
-  private String type;
+    @Column
+    private String type;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="questionnaire_id")
-  private Questionnaire questionnaire;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "questionnaire_id")
+    private Questionnaire questionnaire;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="validation_id")
-  private Validation validation;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "validation_id")
+    private Validation validation;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="feature_group_id")
-  private FeatureGroup featureGroup;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feature_group_id")
+    private FeatureGroup featureGroup;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="feature_precondition_id")
-  private FeaturePrecondition featurePrecondition;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feature_precondition_id")
+    private FeaturePrecondition featurePrecondition;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="feature_id")
-  private Feature feature;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feature_id")
+    private Feature feature;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="stakeholder_id")
-  private Stakeholder stakeholder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stakeholder_id")
+    private Stakeholder stakeholder;
+
+    @Column
+    private String backgroundColor;
 }

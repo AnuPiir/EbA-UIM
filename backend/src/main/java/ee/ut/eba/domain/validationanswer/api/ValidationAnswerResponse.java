@@ -16,14 +16,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ValidationAnswerResponse {
 
-  private Integer id;
-  private Integer rowId;
-  private String answer;
-  private String type;
-  private Integer validationId;
-  private Integer questionnaireId;
-  private Integer featureGroupId;
-  private FeaturePreconditionResponse featurePrecondition;
-  private FeatureResponse feature;
-  private StakeholderResponse stakeholderResponse;
+    private Integer id;
+    private Integer rowId;
+    private String answer;
+    private String type;
+    private Integer validationId;
+    private Integer questionnaireId;
+    private Integer featureGroupId;
+    private FeaturePreconditionResponse featurePrecondition;
+    private FeatureResponse feature;
+    private StakeholderResponse stakeholderResponse;
+    private String backgroundColor;
 }

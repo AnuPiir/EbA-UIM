@@ -23,36 +23,35 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins =  {"${app.dev.frontend.local}"})
+@CrossOrigin(origins = {"${app.dev.frontend.local}"})
 @RequestMapping(value = "/api/questionnaire", produces = MediaType.APPLICATION_JSON_VALUE)
 public class QuestionnaireController {
 
-  private final QuestionnaireService questionnaireService;
-  private final QuestionnaireDeleteService questionnaireDeleteService;
+    private final QuestionnaireService questionnaireService;
+    private final QuestionnaireDeleteService questionnaireDeleteService;
 
-  @GetMapping
-  public List<QuestionnaireResponse> getQuestionnaires() {
-    log.info("Getting all questionnaires");
+    @GetMapping
+    public List<QuestionnaireResponse> getQuestionnaires() {
+        log.info("Getting all questionnaires");
+        return QuestionnaireMapper.toResponse(questionnaireService.get());
+    }
 
-    return QuestionnaireMapper.toResponse(questionnaireService.get());
-  }
+    @GetMapping(value = "/{id}")
+    public QuestionnaireResponse getQuestionnaire(@PathVariable(value = "id") Integer id) {
+        log.info("Getting questionnaire by id: {}", id);
+        return QuestionnaireMapper.toResponse(questionnaireService.get(id));
+    }
 
-  @GetMapping(value = "/{id}")
-  public QuestionnaireResponse getQuestionnaire(@PathVariable(value = "id") Integer id) {
-    log.info("Getting questionnaire by id: {}", id);
+    @PutMapping
+    public void putQuestionnaire(@RequestBody @Valid QuestionnaireRequest questionnaire) {
+        log.info("Saving questionnaire: {}", questionnaire);
+        questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire));
+    }
 
-    return QuestionnaireMapper.toResponse(questionnaireService.get(id));
-  }
+    @DeleteMapping(value = "/{id}")
+    public void deleteQuestionnaire(@PathVariable(value = "id") @NotNull Integer id) {
+        log.info("Deleting questionnaire with id: {}", id);
+        questionnaireDeleteService.delete(id);
+    }
 
-  @PutMapping
-  public void putQuestionnaire(@RequestBody @Valid QuestionnaireRequest questionnaire) {
-    log.info("Saving questionnaire: {}", questionnaire);
-    questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire));
-  }
-
-  @DeleteMapping(value = "/{id}")
-  public void deleteQuestionnaire(@PathVariable(value = "id") @NotNull Integer id) {
-    log.info("Deleting questionnaire with id: {}", id);
-    questionnaireDeleteService.delete(id);
-  }
 }

@@ -5,19 +5,22 @@ const { spawn } = require("child_process");
 
 let mainWindow;
 let backendProcess;
+let developerMode = true
 
 function createWindow() {
 
-    const backendPath = app.isPackaged
-        ? path.join(process.resourcesPath, "app", "jars", "backend-1.1.0.jar")
-        : path.join(__dirname, "jars", "backend-1.1.0.jar");
+    if (!developerMode) {
+        const backendPath = app.isPackaged
+            ? path.join(process.resourcesPath, "app", "jars", "backend-1.1.0.jar")
+            : path.join(__dirname, "jars", "backend-1.1.0.jar");
 
-    backendProcess = spawn("java", ["-jar", backendPath], {
-        detached: false,
-        stdio: "ignore",
-    });
+        backendProcess = spawn("java", ["-jar", backendPath], {
+            detached: false,
+            stdio: "ignore",
+        });
 
-    backendProcess.unref();
+        backendProcess.unref();
+    }
 
     mainWindow = new BrowserWindow({
         width: 1200,

@@ -16,83 +16,85 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ValidationAnswerRequest {
 
-  @Positive
-  private Integer id;
-
-  @NotNull
-  @Positive
-  private Integer rowId;
-
-  @NotNull
-  private String answer;
-
-  @NotNull
-  private String type;
-
-  @NotNull
-  @Positive
-  private Integer questionnaireId;
-
-  @NotNull
-  @Positive
-  private Integer validationId;
-
-  @NotNull
-  @Positive
-  private Integer featureGroupId;
-
-  @Valid
-  private FeaturePreConditionRequest featurePrecondition;
-
-  @Valid
-  private FeatureRequest feature;
-
-  @Valid
-  private StakeholderRequest stakeholder;
-
-  @Getter
-  @Setter
-  @ToString
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class FeatureRequest {
+    @Positive
+    private Integer id;
 
     @NotNull
     @Positive
-    private Integer id;
+    private Integer rowId;
 
     @NotNull
     private String answer;
-  }
-
-  @Getter
-  @Setter
-  @ToString
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class FeaturePreConditionRequest {
-
-    @Positive
-    private Integer id;
 
     @NotNull
-    private String answer;
-  }
-
-  @Getter
-  @Setter
-  @ToString
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class StakeholderRequest {
+    private String type;
 
     @NotNull
     @Positive
-    private Integer id;
+    private Integer questionnaireId;
 
     @NotNull
-    private String name;
-  }
+    @Positive
+    private Integer validationId;
+
+    @NotNull
+    @Positive
+    private Integer featureGroupId;
+
+    @Valid
+    private FeaturePreConditionRequest featurePrecondition;
+
+    @Valid
+    private FeatureRequest feature;
+
+    @Valid
+    private StakeholderRequest stakeholder;
+
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FeatureRequest {
+
+        @NotNull
+        @Positive
+        private Integer id;
+
+        @NotNull
+        private String answer;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FeaturePreConditionRequest {
+
+        @Positive
+        private Integer id;
+
+        @NotNull
+        private String answer;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StakeholderRequest {
+
+        @NotNull
+        @Positive
+        private Integer id;
+
+        @NotNull
+        private String name;
+    }
+
+    private String backgroundColor;
 }
 
 

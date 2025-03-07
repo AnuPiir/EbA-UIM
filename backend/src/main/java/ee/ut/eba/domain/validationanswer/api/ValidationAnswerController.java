@@ -24,42 +24,42 @@ import static ee.ut.eba.domain.validationanswer.api.ValidationAnswerMapper.toRes
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins =  {"${app.dev.frontend.local}"})
+@CrossOrigin(origins = {"${app.dev.frontend.local}"})
 @RequestMapping(value = "/api/validation-answer", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ValidationAnswerController {
 
-  private final ValidationAnswerService validationAnswerService;
+    private final ValidationAnswerService validationAnswerService;
 
-  @PutMapping
-  public ValidationAnswerResponse putValidationAnswer(@RequestBody @Valid ValidationAnswerRequest validationAnswer) {
-    log.info("Saving validation answer: {}", validationAnswer);
-    return toResponse(validationAnswerService.save(ValidationAnswerMapper.toValidationAnswerSaveParams(validationAnswer)));
-  }
+    @PutMapping
+    public ValidationAnswerResponse putValidationAnswer(@RequestBody @Valid ValidationAnswerRequest validationAnswer) {
+        log.info("Saving validation answer: {}", validationAnswer);
+        return toResponse(validationAnswerService.save(ValidationAnswerMapper.toValidationAnswerSaveParams(validationAnswer)));
+    }
 
-  @GetMapping("/questionnaire-id/{questionnaireId}")
-  public List<ValidationAnswerResponse> getValidationAnswersByQuestionnaireId(@PathVariable(value = "questionnaireId") @NotNull Integer id) {
-    log.info("Getting validation answers by questionnaire id: {}", id);
-    return toResponse(validationAnswerService.findByQuestionnaireId(id));
-  }
+    @GetMapping("/questionnaire-id/{questionnaireId}")
+    public List<ValidationAnswerResponse> getValidationAnswersByQuestionnaireId(@PathVariable(value = "questionnaireId") @NotNull Integer id) {
+        log.info("Getting validation answers by questionnaire id: {}", id);
+        return toResponse(validationAnswerService.findByQuestionnaireId(id));
+    }
 
-  @GetMapping("/feature-group-id/{featureGroupId}")
-  public List<ValidationAnswerResponse> getValidationAnswersByFeatureGroupId(@PathVariable(value = "featureGroupId") @NotNull Integer id) {
-    log.info("Getting validation answers by feature group id: {}", id);
-    return toResponse(validationAnswerService.findByFeatureGroupId(id));
-  }
+    @GetMapping("/feature-group-id/{featureGroupId}")
+    public List<ValidationAnswerResponse> getValidationAnswersByFeatureGroupId(@PathVariable(value = "featureGroupId") @NotNull Integer id) {
+        log.info("Getting validation answers by feature group id: {}", id);
+        return toResponse(validationAnswerService.findByFeatureGroupId(id));
+    }
 
-  @DeleteMapping(value = "/{id}")
-  public void deleteValidationAnswer(@PathVariable(value = "id") @NotNull Integer id) {
-    log.info("Deleting validation answer with id: {}", id);
-    validationAnswerService.delete(id);
-  }
+    @DeleteMapping(value = "/{id}")
+    public void deleteValidationAnswer(@PathVariable(value = "id") @NotNull Integer id) {
+        log.info("Deleting validation answer with id: {}", id);
+        validationAnswerService.delete(id);
+    }
 
-  @DeleteMapping(value = "/questionnaire-id/{questionnaireId}/row-id/{rowId}")
-  public void deleteValidationAnswerByQuestionnaireIdAndRowId(
-    @PathVariable(value = "questionnaireId") @NotNull Integer questionnaireId,
-    @PathVariable(value = "rowId") @NotNull Integer rowId
+    @DeleteMapping(value = "/questionnaire-id/{questionnaireId}/row-id/{rowId}")
+    public void deleteValidationAnswerByQuestionnaireIdAndRowId(
+            @PathVariable(value = "questionnaireId") @NotNull Integer questionnaireId,
+            @PathVariable(value = "rowId") @NotNull Integer rowId
     ) {
-    log.info("Deleting validation answer row with questionnaire id: {} and row id: {}", questionnaireId, rowId);
-    validationAnswerService.delete(questionnaireId, rowId);
-  }
+        log.info("Deleting validation answer row with questionnaire id: {} and row id: {}", questionnaireId, rowId);
+        validationAnswerService.delete(questionnaireId, rowId);
+    }
 }
