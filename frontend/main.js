@@ -9,13 +9,12 @@ let backendProcess;
 function createWindow() {
 
     const backendPath = app.isPackaged
-        ? path.join(process.resourcesPath, "app", "jars", "backend-1.1.0.jar") // Packaged path
-        : path.join(__dirname, "jars", "backend-1.1.0.jar"); // Development path
+        ? path.join(process.resourcesPath, "app", "jars", "backend-1.1.0.jar")
+        : path.join(__dirname, "jars", "backend-1.1.0.jar");
 
     backendProcess = spawn("java", ["-jar", backendPath], {
-        detached: true,
+        detached: false,
         stdio: "ignore",
-        windowsHide: true, // Prevents opening a terminal window
     });
 
     backendProcess.unref();
@@ -25,8 +24,8 @@ function createWindow() {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // if you are using a contextBridge, set this to true
-            webSecurity: false // Disable security restrictions (for debugging only)
+            contextIsolation: false,
+            webSecurity: false
         },
     });
 
@@ -47,12 +46,9 @@ function createWindow() {
 
 app.on('ready', createWindow);
 
-app.on('window-all-closed', function () {
+app.on('quit', () => {
     if (backendProcess) {
-        backendProcess.kill();
-    }
-    if (process.platform !== 'darwin') {
-        app.quit();
+        killBackend()
     }
 });
 
@@ -61,3 +57,21 @@ app.on('activate', function () {
         createWindow();
     }
 });
+
+function killBackend() {
+    if (backendProcess) {
+        if (process.platform === 'win32') {
+            spawn("taskkill", ["/pid", backendProcess.pid, '/f', '/t']);
+        } else {
+            backendProcess.kill('SIGTERM');
+        }
+
+        setTimeout(() => {
+            if (backendProcess && !backendProcess.killed) {
+                if (process.platform !== 'win32'){
+                    backendProcess.kill('SIGKILL');
+                }
+            }
+        }, 5000);
+    }
+}
