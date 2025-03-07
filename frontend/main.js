@@ -5,7 +5,7 @@ const { spawn } = require("child_process");
 
 let mainWindow;
 let backendProcess;
-let developerMode = true
+let developerMode = false //change to true if you want to debug backend
 
 function createWindow() {
 
