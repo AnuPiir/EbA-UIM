@@ -36,7 +36,7 @@ pipelines:
         script:
           # Zip the package for easier download
           - apt-get update && apt-get install -y zip
-          - cd release-builds
+          - cd frontend/release-builds
           - zip -r EBAM-win32-ia32.zip EBAM-win32-ia32
           # Use Bitbucket's API to upload the zip as a download
           - pipe: atlassian/bitbucket-upload-file:0.3.2
