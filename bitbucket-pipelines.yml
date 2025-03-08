@@ -1,0 +1,103 @@
+image: node:18
+
+definitions:
+  caches:
+    npm: ~/.npm
+    maven: ~/.m2
+    dist: dist
+    node-modules: node_modules
+
+pipelines:
+  default:
+    - step:
+        name: Build backend with Maven
+        image: maven:3.8-openjdk-11
+        caches:
+          - maven
+        script:
+          - cd ../backend
+          - mvn clean package
+        artifacts:
+          - backend/target/*.jar
+    - step:
+        name: Install frontend dependencies
+        caches:
+          - npm
+          - node-modules
+        script:
+          - npm install
+        artifacts:
+          - node_modules/**
+    - step:
+        name: Test frontend
+        caches:
+          - node-modules
+        script:
+          - npm test
+    - step:
+        name: Build frontend
+        caches:
+          - node-modules
+          - dist
+        script:
+          # Create jars directory if it doesn't exist
+          - mkdir -p frontend/jars
+          # Copy backend JAR file to the jars directory
+          - cp ../backend/target/*.jar frontend/jars/
+          # Build the Angular app
+          - npm run build
+        artifacts:
+          - dist/**
+          - jars/**
+
+  branches:
+    main:
+      - step:
+          name: Build backend with Maven
+          image: maven:3.8-openjdk-11
+          caches:
+            - maven
+          script:
+            - cd ../backend
+            - mvn clean package
+          artifacts:
+            - backend/target/*.jar
+      - step:
+          name: Install frontend dependencies
+          caches:
+            - npm
+            - node-modules
+          script:
+            - npm install
+          artifacts:
+              - node_modules/**
+      - step:
+          name: Test frontend
+          caches:
+            - node-modules
+          script:
+            - npm test
+      - step:
+          name: Build frontend
+          caches:
+            - node-modules
+            - dist
+          script:
+            # Create jars directory if it doesn't exist
+            - mkdir -p frontend/jars
+            # Copy backend JAR file to the jars directory
+            - cp ../backend/target/*.jar frontend/jars/
+            # Build the Angular app
+            - npm run build
+          artifacts:
+            - dist/**
+            - jars/**
+      - step:
+          name: Package for Windows
+          caches:
+            - node-modules
+            - dist
+          script:
+            - npm run package-win
+          artifacts:
+            - release-builds/**
