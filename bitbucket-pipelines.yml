@@ -1,0 +1,44 @@
+image: node:18
+
+definitions:
+  caches:
+    npm: ~/.npm
+    maven: ~/.m2
+    node-modules: node_modules
+
+pipelines:
+  default:
+    - step:
+        name: Build and Package Windows App
+        script:
+          # Build backend with Maven
+          - apt-get update && apt-get install -y maven
+          - cd backend
+          - mvn clean package
+          - cd ../frontend
+          
+          # Install frontend dependencies
+          - npm install
+          
+          # Create jars directory and copy backend JAR
+          - mkdir -p jars
+          - cp ../backend/target/*.jar jars/
+          
+          # Build the Angular app
+          - npm run build
+          
+          # Package for Windows
+          - npm run package-win
+          # Zip the package for easier download
+          - apt-get update && apt-get install -y zip
+          - cd release-builds
+          - zip -r EBAM-win32-ia32.zip EBAM-win32-ia32
+          # Use Bitbucket's API to upload the zip as a download
+          - pipe: atlassian/bitbucket-upload-file:0.3.2
+            variables:
+              BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+              BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+              FILENAME: 'EBAM-win32-ia32.zip'
+        artifacts:
+          - frontend/release-builds/**
+    
