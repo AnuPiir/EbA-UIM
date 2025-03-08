@@ -30,4 +30,4 @@ pipelines:
           # Package for Windows
           - npm run package-win
         artifacts:
-          - release-builds/**
+          - release-builds/EBAM-win32-ia32/**
