@@ -14,7 +14,8 @@
     "electron-build": "ng build && electron .",
     "package-mac": "electron-packager . EbA-meetod --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . EBAM --overwrite --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds",
-    "package-linux": "electron-packager . EBAM --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
+    "package-linux": "electron-packager . EBAM --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "package-everything": "electron-packager . EBAM --platform=win32,linux --arch=x64 --out=release-builds --overwrite"
   },
   "private": true,
   "dependencies": {
