@@ -15,7 +15,7 @@ pipelines:
           - apt-get update && apt-get install -y maven
           - cd backend
           - mvn clean package
-          - cd frontend
+          - cd ../frontend
           
           # Install frontend dependencies
           - npm install
