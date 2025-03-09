@@ -2,13 +2,24 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const { spawn } = require("child_process");
+const fs = require('fs');
 const log = require('electron-log'); // Import electron-log
 
+const logDir = path.join(app.getPath('documents'), 'ebam');
+const logFilePath = path.join(logDir, 'electron-app-log.txt');
+
+// Ensure the directory exists
+if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+}
+
 // Configure electron-log
-log.transports.file.level = 'info'; // Set the minimum log level for the file
-log.transports.file.format = '{h}:{i}:{s}:{ms} {text}'; // Customize log format (optional)
-const logFilePath = path.join(app.getPath('desktop'), 'electron-app-log.txt'); // Log to Desktop
-log.transports.file.resolvePathFn = () => logFilePath;
+log.transports.file.level = 'info'; // Set minimum log level
+log.transports.file.format = '{h}:{i}:{s}:{ms} {text}'; // Custom log format
+log.transports.file.resolvePathFn = () => logFilePath; // Set log file path
+
+// Example log
+log.info('Electron log initialized and writing to:', logFilePath);
 
 let mainWindow;
 let backendProcess;

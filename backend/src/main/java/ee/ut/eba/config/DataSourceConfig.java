@@ -32,7 +32,7 @@ public class DataSourceConfig {
 
     // Create a user-writable path for the database (using Paths)
     String userHome = System.getProperty("user.home");
-    String appDataDir = Paths.get(userHome, "Document", "EBAM").toString();
+    String appDataDir = Paths.get(userHome, "Documents", "EBAM").toString();
 
     // Ensure the directory exists
     new File(appDataDir).mkdirs();  // This is fine; mkdirs() won't throw an error if it already exists
