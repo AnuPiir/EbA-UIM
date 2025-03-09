@@ -32,7 +32,7 @@ pipelines:
           # Zip the package for easier download
           - apt-get update && apt-get install -y zip
           - cd release-builds
-          - zip -r EBAM-win-x64.zip EBAM-win-x64
+          - zip -r EBAM-win32-x64.zip EBAM-win32-x64
           - zip -r EBAM-linux-x64.zip EBAM-linux-x64
           - zip -r EBAM-darwin-x64.zip EBAM-darwin-x64
 
