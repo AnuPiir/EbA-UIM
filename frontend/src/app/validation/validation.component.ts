@@ -45,7 +45,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   private inputSubject: Subject<TextareaInputChange> = new Subject<TextareaInputChange>();
   private inputSubscription: Subscription;
 
-
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
 
   @Input() tabIndex: number;
@@ -55,16 +54,17 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   MenuComponent: any;
 
   constructor(
-    private validationService: ValidationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private translateService: TranslateService,
-    private featureService: FeatureService,
-    private featurePreconditionService: FeaturePreConditionService,
-    private el: ElementRef
+      private validationService: ValidationService,
+      private route: ActivatedRoute,
+      private router: Router,
+      private translateService: TranslateService,
+      private featureService: FeatureService,
+      private featurePreconditionService: FeaturePreConditionService,
+      private el: ElementRef
   ) {
     this.onLanguageChanged();
   }
+
   onLanguageChanged() {
     this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
       if (this.router.url.startsWith('/validation')) {
@@ -93,6 +93,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.inputSubscription = this.inputSubject.pipe(debounceTime(300)).subscribe(searchTerm => {
       this.onValidationRowValueChange(searchTerm.inputValue, searchTerm.validationRowAnswer, searchTerm.validation, searchTerm.validationRowValue);
     });
+
+    // Force stakeholder consistency after initial load
+    setTimeout(() => {
+      if (this.validationRowValues.length > 0 && this.validations.length > 0) {
+        this.forceReapplyAllStakeholders();
+      }
+    }, 2500);
   }
 
   getData(): void {
@@ -103,8 +110,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     })
     finished.subscribe(_ => {
       if (
-        this.validations.length > 0 &&
-        this.validationCombinationResults.length > 0
+          this.validations.length > 0 &&
+          this.validationCombinationResults.length > 0
       ) {
         this.getValidationAnswers();
       }
@@ -113,11 +120,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   getValidations(subscriber: any): void {
     this.validationService
-      .getValidations()
-      .subscribe((next) => {
-        this.validations = next.sort((a,b) => a.weight - b.weight);
-        subscriber.next(this.validations);
-      });
+        .getValidations()
+        .subscribe((next) => {
+          this.validations = next.sort((a,b) => a.weight - b.weight);
+          subscriber.next(this.validations);
+        });
   }
 
   getValidationCombinationResults(subscriber: any): void {
@@ -129,34 +136,201 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   getValidationAnswers(): void {
     this.validationService.getValidationAnswersByFeatureGroupId(this.featureGroup.id).subscribe(
-      next => {
-        if (next.length === 0) {
-          this.addValidationRow();
-        } else {
-          this.validationRowValues = this.mapValidationAnswersToRows(next)
-            .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
-          this.mapFeatureRowSpans();
+        next => {
+          if (next.length === 0) {
+            this.addValidationRow();
+          } else {
+            // Map validation answers to rows
+            this.validationRowValues = this.mapValidationAnswersToRows(next)
+                .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id ||
+                    a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
+                    a.rowId - b.rowId);
+
+            // Fix missing stakeholder objects from backend
+            this.fixStakeholderReferences();
+
+            // Ensure stakeholder consistency
+            this.ensureStakeholdersConsistency();
+
+            // Map spans for UI rendering
+            this.mapFeatureRowSpans();
+
+            // Force reapply all stakeholders with a short delay
+            setTimeout(() => {
+              this.forceReapplyAllStakeholders();
+            }, 1000);
+          }
+
+          this.loading = false;
+        },
+        error => {
+          console.error("Error loading validation answers:", error);
+          this.loading = false;
         }
-        this.loading = false;
-      }
     );
   }
 
+  /**
+   * Fix stakeholder references by matching answer text to stakeholder objects
+   * Workaround for backend serialization issue
+   */
+  private fixStakeholderReferences(): void {
+    let fixCount: number = 0;
+
+    // For each validation row, ensure stakeholder references are complete
+    for (const row of this.validationRowValues) {
+      for (const answer of row.answers) {
+        if (answer.type === ValidationType.STAKEHOLDER) {
+          // Try to match stakeholder by name from the answer field
+          if (answer.answer && answer.answer.trim() !== '') {
+            const matchingStakeholder = this.stakeholders.find((s: StakeholderResponse) =>
+                s.name === answer.answer || s.id.toString() == answer.answer
+            );
+
+            if (matchingStakeholder) {
+              // Recreate the stakeholder object
+              answer.stakeholder = matchingStakeholder;
+              fixCount++;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Ensure stakeholder consistency across all rows with the same precondition
+   */
+  ensureStakeholdersConsistency(): void {
+    // Group rows by precondition ID
+    const preconditionGroups = new Map<number, ValidationRow[]>();
+
+    for (const row of this.validationRowValues) {
+      if (row.answers.length > 0) {
+        const preconditionId = row.answers[0].featurePrecondition.id;
+        if (!preconditionGroups.has(preconditionId)) {
+          preconditionGroups.set(preconditionId, []);
+        }
+        preconditionGroups.get(preconditionId)?.push(row);
+      }
+    }
+
+    // For each precondition group, find a stakeholder and apply it to all rows
+    for (const [preconditionId, rows] of preconditionGroups.entries()) {
+      // Find a stakeholder in any row of this group
+      let stakeholder: StakeholderResponse | undefined;
+
+      for (const row of rows) {
+        const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+        if (stakeholderAnswer?.stakeholder) {
+          stakeholder = stakeholderAnswer.stakeholder;
+          break;
+        }
+      }
+
+      // If a stakeholder was found, apply it to all rows in this group
+      if (stakeholder) {
+        for (const row of rows) {
+          const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+          if (stakeholderAnswer) {
+            stakeholderAnswer.stakeholder = stakeholder;
+            stakeholderAnswer.answer = stakeholder.name;
+
+            // Save the updated stakeholder answer
+            this.validationService.saveValidationAnswer(stakeholderAnswer).subscribe();
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Force reapply all stakeholders by simulating stakeholder selection
+   */
+  forceReapplyAllStakeholders(): void {
+    if (!this.validationRowValues.length || !this.validations.length) {
+      return;
+    }
+
+    // Find the stakeholder validation type
+    const stakeholderValidation = this.validations.find(v => v.type === ValidationType.STAKEHOLDER);
+    if (!stakeholderValidation) {
+      return;
+    }
+
+    // Track which preconditions we've already processed to avoid duplicates
+    const processedPreconditions = new Set<number>();
+
+    // Process each row that has a stakeholder
+    for (const row of this.validationRowValues) {
+      if (row.answers && row.answers.length > 0) {
+        const preconditionId = row.answers[0].featurePrecondition.id;
+
+        // Skip if we've already processed this precondition
+        if (processedPreconditions.has(preconditionId)) {
+          continue;
+        }
+
+        // Find stakeholder answer in this row
+        const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+        if (stakeholderAnswer?.stakeholder) {
+          // Simulate stakeholder selection by calling onStakeholderChange
+          // This will trigger the propagation to all rows with the same precondition
+          this.onStakeholderChange(stakeholderAnswer.stakeholder, stakeholderValidation, row);
+
+          // Mark this precondition as processed
+          processedPreconditions.add(preconditionId);
+        }
+      }
+    }
+  }
 
   mapValidationAnswersToRows(validationAnswers: ValidationAnswer[]) {
     const result: { rowId: number; answers: ValidationAnswer[]; }[] = [];
+
+    // First pass: create all rows
     for (const validationAnswer of validationAnswers) {
       const existingRow = result.find(va => va.rowId === validationAnswer.rowId);
       if (existingRow) {
-        existingRow.answers.push(validationAnswer)
+        existingRow.answers.push(validationAnswer);
         continue;
       }
-      result.push({rowId: validationAnswer.rowId, answers: [validationAnswer]})
+      result.push({rowId: validationAnswer.rowId, answers: [validationAnswer]});
+    }
+
+    // Second pass: ensure stakeholders are consistent within preconditions
+    const preconditionMap = new Map<number, StakeholderResponse>();
+
+    // First collect all stakeholders by precondition
+    for (const row of result) {
+      if (row.answers.length > 0) {
+        const preconditionId = row.answers[0].featurePrecondition.id;
+        const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+
+        if (stakeholderAnswer?.stakeholder && !preconditionMap.has(preconditionId)) {
+          preconditionMap.set(preconditionId, stakeholderAnswer.stakeholder);
+        }
+      }
+    }
+
+    // Then ensure all rows with the same precondition have the same stakeholder
+    for (const row of result) {
+      if (row.answers.length > 0) {
+        const preconditionId = row.answers[0].featurePrecondition.id;
+        const stakeholder = preconditionMap.get(preconditionId);
+
+        if (stakeholder) {
+          const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+          if (stakeholderAnswer && !stakeholderAnswer.stakeholder) {
+            stakeholderAnswer.stakeholder = stakeholder;
+            stakeholderAnswer.answer = stakeholder.name;
+          }
+        }
+      }
     }
 
     return result;
   }
-
 
   async addValidationRow(existingFeature?: FeatureResponse, existingPreCondition?: FeaturePreCondition, stakeholder?: StakeholderResponse) {
     this.isAddingNewRow = true;
@@ -168,35 +342,78 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }).rowId;
     }
     const feature = existingFeature ?? await firstValueFrom(
-      this.featureService.create("")
+        this.featureService.create("")
     );
     const featurePrecondition = existingPreCondition ?? await firstValueFrom(
-      this.featurePreconditionService.create("")
+        this.featurePreconditionService.create("")
     );
+
+    // If no stakeholder is provided but we're creating a row with an existing precondition,
+    // try to find a stakeholder from any row with the same precondition
+    if (!stakeholder && existingPreCondition) {
+      // Loop through ALL rows to find any with the same precondition that has a stakeholder
+      for (const row of this.validationRowValues) {
+        if (row.answers[0].featurePrecondition.id === existingPreCondition.id) {
+          const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+          if (stakeholderAnswer?.stakeholder) {
+            stakeholder = stakeholderAnswer.stakeholder;
+            break;
+          }
+        }
+      }
+    }
 
     for (const v of this.validations) {
       const answer = await firstValueFrom(
-        this.validationService.saveValidationAnswer({
-        id: null,
-        rowId: maxRowId + 1,
-        validationId: v.id,
-        answer: this.getPrefilledValidationRowAnswer(v.type, feature, existingPreCondition),
-        type: v.type,
-        questionnaireId: this.questionnaireId,
-        featureGroupId: this.featureGroup.id,
-        featurePrecondition: featurePrecondition,
-        feature: {answer: feature.answer, id: feature.id, customId: feature.customId},
-        stakeholder: stakeholder
-        })
+          this.validationService.saveValidationAnswer({
+            id: null,
+            rowId: maxRowId + 1,
+            validationId: v.id,
+            answer: this.getPrefilledValidationRowAnswer(v.type, feature, existingPreCondition, stakeholder),
+            type: v.type,
+            questionnaireId: this.questionnaireId,
+            featureGroupId: this.featureGroup.id,
+            featurePrecondition: featurePrecondition,
+            feature: {answer: feature.answer, id: feature.id, customId: feature.customId},
+            stakeholder: stakeholder
+          })
       );
       validationRow.push(answer);
     }
 
+    // Add the new row to the UI immediately
     this.validationRowValues.push({answers: validationRow, rowId: maxRowId + 1});
     this.validationRowValues = this.validationRowValues.sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
     this.mapFeatureRowSpans();
-    this.updateRelatedValidationAnswers(<Validation>this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), {answers: validationRow, rowId: maxRowId + 1})
+
+    // Update precondition related answers
+    this.updateRelatedValidationAnswers(<Validation>this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), {answers: validationRow, rowId: maxRowId + 1});
+
+    // Force update of stakeholder-related UI elements
+    if (stakeholder) {
+      const stakeholderValidation = this.validations.find(v => v.type === ValidationType.STAKEHOLDER);
+      if (stakeholderValidation) {
+        // Update all rows with the same precondition to have the same stakeholder
+        for (let row of this.validationRowValues) {
+          if (row.answers[0].featurePrecondition.id === featurePrecondition.id) {
+            const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+            if (stakeholderAnswer) {
+              stakeholderAnswer.stakeholder = stakeholder;
+              stakeholderAnswer.answer = stakeholder.name;
+
+              // Force update of the UI by triggering related validation answers update
+              this.validationService.saveValidationAnswer(stakeholderAnswer).subscribe(() => {
+                if (stakeholderValidation) {
+                  this.updateRelatedValidationAnswers(stakeholderValidation, row);
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+
     this.isAddingNewRow = false;
   }
 
@@ -208,7 +425,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return featureResponse?.answer ? featureResponse.answer : '';
     }
     if (validationType === ValidationType.STAKEHOLDER) {
-      return stakeholder?.name ? stakeholder.name : '';
+      return stakeholder?.name ?? '';
     }
     if (validationType === ValidationType.DO) {
       if (this.translateService.currentLang === GlobalConstants.ET) {
@@ -223,6 +440,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return validationRowValue.answers.filter(answer => answer.validationId === validation.id)[0];
   }
 
+  // Various validation type checking methods
   isValidationSelectable(validation: Validation): boolean {
     return validation.type === ValidationType.SELECT;
   }
@@ -255,7 +473,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return validation.type === ValidationType.EXAMPLE;
   }
 
-
   textAreaValueChange(eventValue: any, validationRowAnswer: ValidationAnswer, validation: Validation, validationRowValue: ValidationRow){
     this.inputSubject.next({
       inputValue: eventValue,
@@ -266,16 +483,16 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   async onValidationRowValueChange(eventValue: any, validationRowAnswer: ValidationAnswer, validation: Validation, validationRowValue: ValidationRow) {
-      validationRowAnswer.answer = eventValue;
+    validationRowAnswer.answer = eventValue;
     if (validation.type === ValidationType.FEATURE) {
       validationRowAnswer.feature = await firstValueFrom(
-        this.featureService.update(validationRowAnswer.feature.id, eventValue, validationRowAnswer.feature.customId)
+          this.featureService.update(validationRowAnswer.feature.id, eventValue, validationRowAnswer.feature.customId)
       );
     }
 
     if (validation.type === ValidationType.FEATURE_PRECONDITION) {
       validationRowAnswer.featurePrecondition = await firstValueFrom(
-        this.featurePreconditionService.update(validationRowAnswer.featurePrecondition.id, eventValue)
+          this.featurePreconditionService.update(validationRowAnswer.featurePrecondition.id, eventValue)
       );
     }
 
@@ -283,9 +500,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     setTimeout(() => {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
-        next => {
-          this.updateRelatedValidationAnswers(validation, validationRowValue);
-        }
+          next => {
+            this.updateRelatedValidationAnswers(validation, validationRowValue);
+          }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
   }
@@ -296,29 +513,32 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         for (let answer of validationRow.answers) {
           if (answer.featurePrecondition.id === validationRowAnswer.featurePrecondition.id && answer.id !== validationRowAnswer.id) {
             if (validation.type === ValidationType.FEATURE_PRECONDITION && answer.type === ValidationType.FEATURE_PRECONDITION) {
-              answer.answer = eventValue
+              answer.answer = eventValue;
             }
             if (validation.type === ValidationType.DO && answer.type === ValidationType.DO) {
               if (this.translateService.currentLang === GlobalConstants.ET) {
-                answer.answer = "Kas"
+                answer.answer = "Kas";
               } else {
-                answer.answer = "Do"
+                answer.answer = "Do";
               }
             }
 
             if (validation.type === ValidationType.STAKEHOLDER && answer.type === ValidationType.STAKEHOLDER) {
-              answer.stakeholder = validationRowAnswer.stakeholder
+              answer.stakeholder = validationRowAnswer.stakeholder;
               if (answer.stakeholder) {
-                answer.answer = answer.stakeholder.name
+                answer.answer = answer.stakeholder.name;
               }
             }
 
             setTimeout(() => {
               this.validationService.saveValidationAnswer(answer).subscribe(
-                next => {
-                }
+                  next => {
+                    if (validation.type === ValidationType.STAKEHOLDER) {
+                      this.updateRelatedValidationAnswers(validation, validationRow);
+                    }
+                  }
               );
-            }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
+            }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE);
           }
         }
         this.updateRelatedValidationAnswers(validation, validationRow);
@@ -328,10 +548,31 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   updateRelatedValidationAnswers(validation: Validation, validationRowValue: ValidationRow): void {
     const validationsFilledByAnswer = this.validations.filter(foundValidation =>
-      foundValidation.validationAutofillList.some(autofill =>
-        autofill.validationFilledById !== null && autofill.validationFilledById === validation.id
-      )
+        foundValidation.validationAutofillList.some(autofill =>
+            autofill.validationFilledById !== null && autofill.validationFilledById === validation.id
+        )
     );
+
+    // If this is a stakeholder validation, ensure all rows with the same precondition have the same stakeholder
+    if (validation.type === ValidationType.STAKEHOLDER) {
+      const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+      if (stakeholderAnswer?.stakeholder) {
+        const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
+        // Update all rows with the same precondition
+        for (let row of this.validationRowValues) {
+          if (row.rowId !== validationRowValue.rowId &&
+              row.answers[0].featurePrecondition.id === preconditionId) {
+            const otherStakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+            if (otherStakeholderAnswer) {
+              otherStakeholderAnswer.stakeholder = stakeholderAnswer.stakeholder;
+              otherStakeholderAnswer.answer = stakeholderAnswer.stakeholder.name;
+              this.validationService.saveValidationAnswer(otherStakeholderAnswer).subscribe();
+            }
+          }
+        }
+      }
+    }
 
     for (let validationFilledByAnswer of validationsFilledByAnswer) {
       if (validationFilledByAnswer) {
@@ -340,7 +581,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  private setNoExampleAnswer(validationRowValue: ValidationRow) { //TODO jätkuarendus
+  private setNoExampleAnswer(validationRowValue: ValidationRow) {
     let exampleAnswer = '';
     let combinationAnswer = '';
 
@@ -357,10 +598,10 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     const exampleValidation = this.validations.find(v => v.type === ValidationType.EXAMPLE);
     if (exampleValidationAnswer && exampleValidation) {
       this.onValidationRowValueChange(
-        exampleAnswer,
-        exampleValidationAnswer,
-        exampleValidation,
-        validationRowValue
+          exampleAnswer,
+          exampleValidationAnswer,
+          exampleValidation,
+          validationRowValue
       )
     }
     //Combination anwer
@@ -368,13 +609,14 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     const combinationValidationAnswer = validationRowValue.answers.find(a => a.validationId === combinationValidation?.id);
     if (combinationValidation && combinationValidationAnswer) {
       this.onValidationRowValueChange(
-        combinationAnswer,
-        combinationValidationAnswer,
-        combinationValidation,
-        validationRowValue
+          combinationAnswer,
+          combinationValidationAnswer,
+          combinationValidation,
+          validationRowValue
       )
     }
   }
+
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
     if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
       return;
@@ -405,7 +647,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     if (isAutofillTypeCombination && isAutoFillFromSelect) {
       this.updateCombinationAutoFillAnswers(answerValuesSortedByWeight, validationRowValue, validationFilledByAnswer);
-
       return;
     }
 
@@ -417,7 +658,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
-   getAnswerToSet(answerValuesSortedByWeight: any[]) {
+  getAnswerToSet(answerValuesSortedByWeight: any[]) {
     if (answerValuesSortedByWeight.length > 0) {
       let combinationAnswer = '';
       for (let answerValueSortedByWeight of answerValuesSortedByWeight) {
@@ -445,7 +686,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       if (this.hasMatchingCombination(combinationResult, answerValuesSortedByWeight)) {
         const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
         if (correctAnswer) {
-          correctAnswer.answer = this.getTranslation(combinationResult);
+          // Find the stakeholder from the row
+          const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+          const stakeholderName = stakeholderAnswer?.stakeholder?.name || 'Unknown Stakeholder';
+          // Append stakeholder to the combined answer
+          correctAnswer.answer = `${this.getTranslation(combinationResult)} (${stakeholderName})`;
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
           });
@@ -459,7 +704,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     let answerValuesSortedByWeight: any[] = JSON.parse(JSON.stringify(answerValuesSortedByWeightOriginal));
     for (let combination of combinationResult.validationCombinations) {
       const foundAnswer = answerValuesSortedByWeight.find(
-        av => av.validationId == combination.validationResponse.id && av.value == combination.validationValue);
+          av => av.validationId == combination.validationResponse.id && av.value == combination.validationValue);
       if (foundAnswer) {
         foundAnswer.hasMatch = true;
       }
@@ -475,10 +720,10 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   deleteRow(rowId: number) {
     this.validationService.deleteValidationAnswersByQuestionnaireIdAndRowId(this.questionnaireId, rowId).subscribe(
-      next => {
-        this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
-        this.reloadComponent();
-      }
+        next => {
+          this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
+          this.reloadComponent();
+        }
     );
   }
 
@@ -494,8 +739,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.translateService.currentLang === GlobalConstants.ET;
   }
 
-
-  mapFeatureRowSpans():void {
+  mapFeatureRowSpans(): void {
     const featureRowSpans: FeatureRowSpan[] = [];
     const featurePreConditionRowSpans: FeatureRowSpan[] = [];
     for (let validationRow of this.validationRowValues) {
@@ -522,7 +766,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.featurePreConditionSpans = featurePreConditionRowSpans;
     this.featureRowSpans = featureRowSpans;
   }
-
 
   getAnswerRowSpanAndMapAsDisplayed(validation: Validation, validationRow: ValidationRow): number {
     if (validation.type === ValidationType.FEATURE) {
@@ -600,31 +843,93 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   onStakeholderChange(stakeholder: any, validation: Validation, validationRowValue: ValidationRow) {
-    const validationAnswer = this.getValidationRowAnswer(validation, validationRowValue)
+    const validationAnswer = this.getValidationRowAnswer(validation, validationRowValue);
     validationAnswer.stakeholder = stakeholder;
+
+    // Update all rows with the same precondition
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
+    // First update the current row
     this.onValidationRowValueChange(stakeholder ? stakeholder.name : '', validationAnswer, validation, validationRowValue);
+
+    // Then update all other rows with the same precondition
+    for (let row of this.validationRowValues) {
+      if (row.rowId !== validationRowValue.rowId &&
+          row.answers[0].featurePrecondition.id === preconditionId) {
+        const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+        if (stakeholderAnswer) {
+          stakeholderAnswer.stakeholder = stakeholder;
+          stakeholderAnswer.answer = stakeholder ? stakeholder.name : '';
+          this.validationService.saveValidationAnswer(stakeholderAnswer).subscribe(() => {
+            // Force update of related answers
+            this.updateRelatedValidationAnswers(validation, row);
+          });
+        }
+      }
+    }
   }
 
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {
     return <ValidationAnswer>validationRow.answers.find(a => a.type === ValidationType.FEATURE_PRECONDITION);
   }
 
-  getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
-    return [
-      {name: "menu.deleteFeature", icon: 'delete', onClick: () => this.deleteFeature(validationRowValue.answers[0].feature.id)},
-    ];
-  }
-
   getPreconditionActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
+    // Find the stakeholder from the current row
+    const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+    const stakeholder = stakeholderAnswer?.stakeholder;
+
     return [
-      {name: "menu.addPrecondition", icon: 'add', onClick: () => this.addValidationRow(validationRowValue.answers[0].feature)},
-      {name: "menu.deletePrecondition", icon: 'delete', onClick: () => this.deleteFeaturePreCondition(validationRowValue.answers[0].featurePrecondition.id)},
+      {
+        name: "menu.addPrecondition",
+        icon: 'add',
+        onClick: () => {
+          // Pass the stakeholder when adding a new precondition
+          this.addValidationRow(validationRowValue.answers[0].feature, undefined, stakeholder);
+        }
+      },
+      {
+        name: "menu.deletePrecondition",
+        icon: 'delete',
+        onClick: () => this.deleteFeaturePreCondition(validationRowValue.answers[0].featurePrecondition.id)
+      },
     ];
   }
 
-  getExampleActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
+  getExampleActions(validationRowValue: ValidationRow): {name: string, icon: string, onClick: any}[] {
+    // Find the stakeholder answer in the current row
+    const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+    const stakeholder = stakeholderAnswer?.stakeholder;
+
+    // If no stakeholder in current row but we have a precondition, try to find stakeholder from other rows
+    let effectiveStakeholder = stakeholder;
+    if (!effectiveStakeholder && validationRowValue.answers.length > 0) {
+      const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
+      // Look for any row with the same precondition that has a stakeholder
+      for (const row of this.validationRowValues) {
+        if (row.answers[0].featurePrecondition.id === preconditionId && row.rowId !== validationRowValue.rowId) {
+          const otherStakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+          if (otherStakeholderAnswer?.stakeholder) {
+            effectiveStakeholder = otherStakeholderAnswer.stakeholder;
+            break;
+          }
+        }
+      }
+    }
+
     return [
-      {name: "menu.addExample", icon: 'add', onClick: () => this.addValidationRow(validationRowValue.answers[0].feature, this.getRowPreConditionAnswer(validationRowValue).featurePrecondition, validationRowValue.answers[0].stakeholder)},
+      {
+        name: "menu.addExample",
+        icon: 'add',
+        onClick: () => {
+          // Always pass the effective stakeholder when adding a new row
+          this.addValidationRow(
+              validationRowValue.answers[0].feature,
+              this.getRowPreConditionAnswer(validationRowValue).featurePrecondition,
+              effectiveStakeholder
+          );
+        }
+      },
       {name: "menu.deleteExample", icon: 'delete', onClick: () => this.deleteRow(validationRowValue.rowId)},
       {name: "menu.noExample", icon: 'cancel', onClick: () => this.setNoExampleAnswer(validationRowValue)}
     ];
@@ -694,5 +999,14 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getValidationValue(answer: string): ValidationValue {
     return (<any>ValidationValue)[answer];
   }
-}
 
+  getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
+    return [
+      {
+        name: "menu.deleteFeature",
+        icon: 'delete',
+        onClick: () => this.deleteFeature(validationRowValue.answers[0].feature.id)
+      },
+    ];
+  }
+}
