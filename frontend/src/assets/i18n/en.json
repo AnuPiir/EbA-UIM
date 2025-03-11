@@ -90,6 +90,7 @@
     "partly": "Partly"
   },
   "methodCombinations": {
+    "CHOOSE_OPTION": "Choose",
     "YES": "Yes",
     "NO": "No",
     "DONT_KNOW": "Don't know",

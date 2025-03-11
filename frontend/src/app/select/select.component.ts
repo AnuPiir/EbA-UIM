@@ -25,7 +25,7 @@ export class SelectComponent {
     this.isToggled = !this.isToggled;
   }
 
-  customSelectionValue(): string {
+  /*customSelectionValue(): string {
     if (!Object.keys(this.validationValue2LabelMapping).includes(this.selectedValue)){
       if (this.translateService.currentLang === GlobalConstants.ET) {
         return "Vali";
@@ -33,6 +33,13 @@ export class SelectComponent {
       return "Select";
     }
     return 'select.' + this.validationValue2LabelMapping[this.selectedValue];
+  }*/
+
+  customSelectionValue(): string {
+    if (!this.selectedValue || !(this.selectedValue in this.validationValue2LabelMapping)) {
+      return this.translateService.instant('select.chooseOption'); // Show default text
+    }
+    return this.translateService.instant('select.' + this.validationValue2LabelMapping[this.selectedValue]);
   }
 
   onValueChange(validationValue: ValidationValue): void {
