@@ -45,7 +45,10 @@ export class ValidationService {
   public saveValidationAnswer(validationAnswer: ValidationAnswer): Observable<ValidationAnswer> {
     return this.http.put<ValidationAnswer>(
       ValidationEndpointConstants.getValidationAnswersUri(),
-      validationAnswer
+        {
+          ...validationAnswer,
+          backgroundColor: validationAnswer.backgroundColor || '#FFDE21' // to ensure that backgroundColor is sent in the API request?
+        }
     );
   }
 }

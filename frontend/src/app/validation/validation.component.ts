@@ -19,6 +19,7 @@ import { FeaturePreConditionService } from '../feature/service/feature-pre-condi
 import { MenuComponent } from '../menus/menu.component';
 import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-validation',
@@ -33,6 +34,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   translate: boolean = false;
   validations: Validation[] = [];
   validationRowValues: ValidationRow[] = [];
+  //validationAnswers: ValidationAnswer[] = [];
   validationCombinationResults: ValidationCombinationResult[] = [];
   featureRowSpans: FeatureRowSpan[] = [];
   featurePreConditionSpans: FeatureRowSpan[] = [];
@@ -61,7 +63,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private translateService: TranslateService,
     private featureService: FeatureService,
     private featurePreconditionService: FeaturePreConditionService,
-    private el: ElementRef
+    private el: ElementRef,
+    private http: HttpClient
   ) {
     this.onLanguageChanged();
   }
@@ -134,6 +137,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           this.addValidationRow();
         } else {
           this.validationRowValues = this.mapValidationAnswersToRows(next)
+            .map(row => ({
+              ...row,
+              answers: row.answers.map(answer => ({
+                ...answer,
+                backgroundColor: answer.backgroundColor || '#F7F1E6' // default (beige) color - ensures that every row has one
+              }))
+            }))
             .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
           this.mapFeatureRowSpans();
         }
@@ -694,5 +704,75 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getValidationValue(answer: string): ValidationValue {
     return (<any>ValidationValue)[answer];
   }
+
+  /*onColorChange(event: Event, validationRowAnswer: ValidationAnswer): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newColor = inputElement.value;
+
+    if (!validationRowAnswer) {
+      console.error("ValidationRowAnswer is undefined");
+      return;
+    }
+
+    validationRowAnswer.backgroundColor = newColor;
+
+    // Save the new background color to the backend
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
+        () => {
+          console.log("Background color updated successfully");
+        },
+        (error) => {
+          console.error("Error updating background color", error);
+        }
+    );
+  }*/
+
+  onColorChange(event: Event, validationRowAnswer: ValidationAnswer): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newColor = inputElement.value;
+
+    if (!validationRowAnswer) {
+      console.error("ValidationRowAnswer is undefined");
+      return;
+    }
+
+    // Update local UI immediately
+    validationRowAnswer.backgroundColor = newColor;
+
+    // Prepare payload
+    const payload = {
+      ...validationRowAnswer, // Spread existing values
+      backgroundColor: newColor // Update color
+    };
+
+    // Save to backend
+    this.http.put('/api/validation-answer', payload).subscribe({
+      next: () => console.log("Background color updated successfully"),
+      error: (error: any) => console.error("Error updating background color", error)
+    });
+  }
+
+  /*saveValidationAnswer(validationAnswer: any): void {
+        const url = '/api/validation-answer'; // Make sure this matches your backend endpoint
+        const payload = {
+            id: validationAnswer.id,
+            rowId: validationAnswer.rowId,
+            answer: validationAnswer.answer,
+            type: validationAnswer.type,
+            questionnaireId: validationAnswer.questionnaireId,
+            validationId: validationAnswer.validationId,
+            featureGroupId: validationAnswer.featureGroupId,
+            featurePrecondition: validationAnswer.featurePrecondition,
+            feature: validationAnswer.feature,
+            stakeholder: validationAnswer.stakeholder,
+            backgroundColor: validationAnswer.backgroundColor // Include color
+        };
+
+        this.http.put(url, payload).subscribe({
+            next: () => console.log('Background color saved successfully!'),
+            error: err => console.error('Error saving background color:', err)
+        });
+    }*/
+
 }
 

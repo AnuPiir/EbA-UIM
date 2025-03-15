@@ -18,7 +18,19 @@
       <tr *ngFor="let validationRowValue of validationRowValues; index as j">
         <td class="id-cell background-beige">{{ j  + 1 }}</td>
         <ng-container *ngFor="let validation of validations; index as i">
-          <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
+          <!-- <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)"> -->
+            <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)"
+                [ngStyle]="{'background-color': getValidationRowAnswer(validation, validationRowValue).backgroundColor || 'transparent'}"
+                class="background-beige"
+                [ngClass]="getStickyClassByIndex(i)"
+                [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
+
+                <!-- condition to apply color picker only in the 15th column -->
+                <ng-container *ngIf="i === 14">
+                    <input type="color"
+                           [value]="getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'"
+                           (change)="onColorChange($event, getValidationRowAnswer(validation, validationRowValue))">
+                </ng-container>
             <div class="selection" *ngIf="isValidationSelectable(validation)">
               <app-select
                 [selectedValue]="getValidationValue(getValidationRowAnswer(validation, validationRowValue).answer)"
