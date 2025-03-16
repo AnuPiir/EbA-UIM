@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Table(name = ValidationAnswer.TABLE)
-@ToString
+@ToString(exclude = {"questionnaire", "validation", "featureGroup", "featurePrecondition", "feature", "stakeholder"})
 @Accessors(chain = true)
 public class ValidationAnswer {
 
