@@ -19,6 +19,8 @@ import { FeaturePreConditionService } from '../feature/service/feature-pre-condi
 import { MenuComponent } from '../menus/menu.component';
 import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
+import { Renderer2 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-validation',
@@ -46,6 +48,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   private inputSubscription: Subscription;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
+  @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];
@@ -54,13 +57,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   MenuComponent: any;
 
   constructor(
-      private validationService: ValidationService,
-      private route: ActivatedRoute,
-      private router: Router,
-      private translateService: TranslateService,
-      private featureService: FeatureService,
-      private featurePreconditionService: FeaturePreConditionService,
-      private el: ElementRef
+    private validationService: ValidationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private translateService: TranslateService,
+    private featureService: FeatureService,
+    private featurePreconditionService: FeaturePreConditionService,
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private sanitizer: DomSanitizer
   ) {
     this.onLanguageChanged();
   }
@@ -436,8 +441,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return '';
   }
 
-  getValidationRowAnswer(validation: Validation, validationRowValue: ValidationRow) {
-    return validationRowValue.answers.filter(answer => answer.validationId === validation.id)[0];
+  getValidationRowAnswer(validation: Validation, validationRowValue: ValidationRow): ValidationAnswer {
+    const validationAnswer = validationRowValue.answers.find(a => a.validationId === validation.id);
+    if (!validationAnswer) {
+      return {} as ValidationAnswer;
+    }
+    return validationAnswer;
   }
 
   // Various validation type checking methods
@@ -867,6 +876,23 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         }
       }
     }
+  }
+
+  getFormattedSentence(validation: Validation, validationRowValue: ValidationRow): SafeHtml {
+    const answer = this.getValidationRowAnswer(validation, validationRowValue)?.answer?.trim();
+    let foundStakeholder = this.stakeholders.find(stakeholder =>
+        answer.includes(stakeholder.name)
+    );
+    if (!foundStakeholder) {
+      return this.sanitizer.bypassSecurityTrustHtml(answer);
+    }
+
+    // Replacing the stakeholder name with a bold version
+    const formattedSentence = answer.replace(
+        new RegExp(`\\b${foundStakeholder.name}\\b`, 'g'),
+        `<strong>${foundStakeholder.name}</strong>`
+    );
+    return this.sanitizer.bypassSecurityTrustHtml(formattedSentence);
   }
 
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {
