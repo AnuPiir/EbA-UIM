@@ -24,8 +24,9 @@ public class QuestionnaireService {
     return questionnaireRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Questionnare not found with id:" + id));
   }
 
-  public void save(Questionnaire questionnaire) {
-    questionnaireRepository.save(questionnaire);
+  public save(Questionnaire questionnaire) {
+    //wasnt returning anything
+    return questionnaireRepository.save(questionnaire);
   }
 
   public void delete(Integer id) {

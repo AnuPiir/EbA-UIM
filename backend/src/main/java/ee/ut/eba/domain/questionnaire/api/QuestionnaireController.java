@@ -43,9 +43,10 @@ public class QuestionnaireController {
     }
 
     @PutMapping
-    public void putQuestionnaire(@RequestBody @Valid QuestionnaireRequest questionnaire) {
+    public putQuestionnaire(@RequestBody @Valid QuestionnaireRequest questionnaire) {
         log.info("Saving questionnaire: {}", questionnaire);
-        questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire));
+        //wasnt returning anything before
+        return QuestionnaireMapper.toResponse(questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire)));
     }
 
     @DeleteMapping(value = "/{id}")

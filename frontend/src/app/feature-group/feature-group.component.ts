@@ -9,6 +9,13 @@ import { GlobalConstants } from '../constants/global-constants';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DeleteModalComponent } from '../questionnaire/modal/delete-modal/delete-modal.component';
 import { EditModalComponent } from '../questionnaire/modal/edit-modal/edit-modal.component';
+import { ValidationService } from '../validation/service/validation.service';
+import { firstValueFrom } from 'rxjs';
+import { FeatureService } from '../feature/service/feature.service';
+import { FeaturePreConditionService } from '../feature/service/feature-pre-condition.service';
+import { ValidationAnswer } from '../validation/model/validation-answer';
+import { Validation, ValidationType } from '../validation/model/validation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-feature-group',
@@ -27,18 +34,24 @@ export class FeatureGroupComponent implements OnInit {
   isToggledGroupList: boolean = true;
   isToggledStakeholderAdding: boolean = false;
   isToggledStakeholderList: boolean = true;
-  featureGroupName: string;
-  stakeholderName: string;
+  featureGroupName: string = '';
+  stakeholderName: string = '';
   @ViewChild('featureGroupTabs', {static: false}) tab: MatTabGroup;
   modalRef: BsModalRef;
+  validations: Validation[] = [];
+  defaultTabName: string = "Vahekaart 1";
 
   constructor(
-    private featureGroupService: FeatureGroupService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private stakeholderService: StakeholderService,
-    private modalService: BsModalService
-    ) {}
+      private featureGroupService: FeatureGroupService,
+      private route: ActivatedRoute,
+      private router: Router,
+      private stakeholderService: StakeholderService,
+      private validationService: ValidationService,
+      private featureService: FeatureService,
+      private featurePreconditionService: FeaturePreConditionService,
+      private modalService: BsModalService,
+      private translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {
     const questionnaireId = this.route.snapshot.queryParamMap.get('questionnaireId');
@@ -51,6 +64,13 @@ export class FeatureGroupComponent implements OnInit {
       this.tabIndex = +tabIndex;
     }
     this.questionnaireId = +questionnaireId;
+
+    // Translate default tab name if needed
+    this.translateService.get('addGroup.defaultTabName').subscribe((res: string) => {
+      if (res && res !== 'addGroup.defaultTabName') {
+        this.defaultTabName = res;
+      }
+    });
 
     this.getData();
   }
@@ -72,85 +92,157 @@ export class FeatureGroupComponent implements OnInit {
   }
 
   getData(): void {
-    this.featureGroupService
-      .getFeatureGroupsByQuestionnaireId(this.questionnaireId)
-      .subscribe((next) => {
-        this.featureGroups = next.sort((a,b) => a.id - b.id);
-        this.loading = false;
-        setTimeout(() => {
-          this.tab.selectedIndex = this.tabIndex;
-        });
-      });
+    // Fetch validations first as they're needed for adding rows
+    this.validationService.getValidations().subscribe(validations => {
+      this.validations = validations.sort((a, b) => a.weight - b.weight);
 
-    this.stakeholderService
-      .getStakeholdersByQuestionnaireId(this.questionnaireId)
-      .subscribe((next) => {
-        this.stakeholders = next.sort((a,b) => a.id - b.id);
-        this.loading = false;
-        setTimeout(() => {
-          this.tab.selectedIndex = this.tabIndex;
-        });
-      });
+      // Get feature groups
+      this.featureGroupService
+          .getFeatureGroupsByQuestionnaireId(this.questionnaireId)
+          .subscribe(async (next) => {
+            this.featureGroups = next.sort((a, b) => a.id - b.id);
+
+            // If no feature groups exist, create a default one
+            if (this.featureGroups.length === 0) {
+              try {
+                const defaultGroup = await this.createDefaultFeatureGroup();
+                // Reload the page to show the new feature group with a row
+                this.router.navigate(['/validation'], {
+                  queryParams: {
+                    questionnaireId: this.questionnaireId,
+                    tabIndex: 0
+                  }
+                });
+              } catch (error) {
+                console.error("Error creating default feature group:", error);
+              }
+            }
+
+            this.loading = false;
+            setTimeout(() => {
+              if (this.tab) {
+                this.tab.selectedIndex = this.tabIndex;
+              }
+            });
+          });
+
+      // Get stakeholders
+      this.stakeholderService
+          .getStakeholdersByQuestionnaireId(this.questionnaireId)
+          .subscribe((next) => {
+            this.stakeholders = next.sort((a, b) => a.id - b.id);
+          });
+    });
   }
 
+  async createDefaultFeatureGroup(): Promise<FeatureGroupResponse> {
+    // Create default feature group
+    const createdFeatureGroup = await firstValueFrom(
+        this.featureGroupService.createFeatureGroup(this.questionnaireId, this.defaultTabName)
+    );
+    this.featureGroups.push(createdFeatureGroup);
+
+    // Create feature and precondition for the first row
+    const feature = await firstValueFrom(this.featureService.create(""));
+    const featurePrecondition = await firstValueFrom(this.featurePreconditionService.create(""));
+
+    // Create validation answers for each validation type
+    let validationRow: ValidationAnswer[] = [];
+    let rowId = 1; // First row
+
+    for (const validation of this.validations) {
+      const answer = await firstValueFrom(
+          this.validationService.saveValidationAnswer({
+            id: null,
+            rowId: rowId,
+            validationId: validation.id,
+            answer: this.getPrefilledValidationRowAnswer(validation.type, feature, featurePrecondition),
+            type: validation.type,
+            questionnaireId: this.questionnaireId,
+            featureGroupId: createdFeatureGroup.id,
+            featurePrecondition: featurePrecondition,
+            feature: { answer: feature.answer, id: feature.id, customId: feature.customId },
+            stakeholder: undefined
+          })
+      );
+      validationRow.push(answer);
+    }
+
+    return createdFeatureGroup;
+  }
+
+  getPrefilledValidationRowAnswer(validationType: ValidationType, feature?: any, featurePreCondition?: any): string {
+    if (validationType === ValidationType.FEATURE_PRECONDITION) {
+      return featurePreCondition?.answer ? featurePreCondition.answer : '';
+    }
+    if (validationType === ValidationType.FEATURE) {
+      return feature?.answer ? feature.answer : '';
+    }
+    if (validationType === ValidationType.DO) {
+      if (this.translateService.currentLang === GlobalConstants.ET) {
+        return 'Kas';
+      }
+      return 'Do';
+    }
+    return '';
+  }
 
   createNewFeatureGroup(featureGroupName: string) {
     this.featureGroupService.createFeatureGroup(this.questionnaireId, featureGroupName)
-      .subscribe(next => {
-        this.featureGroups.push(next);
-        this.featureGroupName = "";
-      })
-
+        .subscribe(next => {
+          this.featureGroups.push(next);
+          this.featureGroupName = "";
+        })
   }
 
   createNewStakeholder(stakeholderName: string) {
     this.stakeholderService.createStakeholder(this.questionnaireId, stakeholderName)
-      .subscribe(next => {
-        this.stakeholders.push(next);
-        this.stakeholderName = "";
-      })
+        .subscribe(next => {
+          this.stakeholders.push(next);
+          this.stakeholderName = "";
+        })
   }
 
   deleteStakeholder(id: number) {
     this.tabsLoading = true;
     this.stakeholderService.deleteStakeholder(id)
-      .subscribe(next =>  {
-        this.stakeholders = this.stakeholders.filter(s => s.id !== id)
-        this.tabsLoading = false;
-      })
+        .subscribe(next =>  {
+          this.stakeholders = this.stakeholders.filter(s => s.id !== id)
+          this.tabsLoading = false;
+        })
   }
 
   updateStakeHolder(id: number, name: string) {
     this.tabsLoading = true;
     this.stakeholderService.update(id, name)
-      .subscribe(next =>  {
-        const stakeholderToEdit = this.stakeholders.find(s => s.id === id);
-        if (stakeholderToEdit) {
-          stakeholderToEdit.name = name;
-        }
-        this.tabsLoading = false;
-      })
+        .subscribe(next =>  {
+          const stakeholderToEdit = this.stakeholders.find(s => s.id === id);
+          if (stakeholderToEdit) {
+            stakeholderToEdit.name = name;
+          }
+          this.tabsLoading = false;
+        })
   }
 
   deleteFeatureGroup(id: number) {
     this.tabsLoading = true;
     this.featureGroupService.deleteFeatureGroup(id)
-      .subscribe(next => {
-        this.featureGroups = this.featureGroups.filter(fg => fg.id !== id)
-        this.tabsLoading = false;
-      })
+        .subscribe(next => {
+          this.featureGroups = this.featureGroups.filter(fg => fg.id !== id)
+          this.tabsLoading = false;
+        })
   }
 
   updateFeatureGroup(id: number, name: string) {
     this.tabsLoading = true;
     this.featureGroupService.updateFeatureGroup(id, name)
-      .subscribe(next => {
-        const featureGroupToEdit = this.featureGroups.find(fg => fg.id === id)
-        if (featureGroupToEdit) {
-          featureGroupToEdit.name = name;
-        }
-        this.tabsLoading = false;
-      })
+        .subscribe(next => {
+          const featureGroupToEdit = this.featureGroups.find(fg => fg.id === id)
+          if (featureGroupToEdit) {
+            featureGroupToEdit.name = name;
+          }
+          this.tabsLoading = false;
+        })
   }
 
   getStakeholderColorClass(i: number): string {

@@ -5,6 +5,13 @@
     "add": "Add",
     "cancel": "Cancel"
   },
+  "addGroup": {
+    "title": "Lisa tabeli vahekaart",
+    "list": "Olemasolevad tabeli vahekaardid",
+    "input": "Tabeli vahekaardi nimetus",
+    "placeholder": "Sisesta tunnuse ID või lühend",
+    "defaultTabName": "Vahekaart 1"
+  },
   "menu": {
     "edit": "Edit",
     "delete":"Delete",
@@ -61,12 +68,6 @@
   "editStakeholderModal": {
     "title": "Edit stakeholder name",
     "input": "Stakeholder name"
-  },
-  "addGroup": {
-    "title": "Add a new table tab",
-    "list": "Existing table tabs",
-    "input": "Table tab name",
-    "placeholder": "Enter feature ID or abbreviation"
   },
   "addStakeholder": {
     "title": "Add a new stakeholder",
