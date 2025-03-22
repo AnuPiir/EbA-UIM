@@ -39,6 +39,6 @@ export class QuestionnaireService {
     const httpOptions = {
       responseType: 'blob' as 'json'
     };
-    return this.http.get<any>('api/excel/' + id + "?language=" + language, httpOptions);
+    return this.http.get<any>(`http://localhost:8080/api/export/questionnaire/${id}/language/${language}`, httpOptions);
   }
 }

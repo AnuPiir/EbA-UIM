@@ -110,7 +110,16 @@
               </div>
             </div>
             <div *ngIf="isValidationAutofill(validation)">
-              <span *ngIf="getValidationRowAnswer(validation, validationRowValue).answer.length>0" class="answer-stakeholder {{getStakeholderColorClass(getValidationRowAnswer(validation, validationRowValue).answer, i)}}">{{getValidationRowAnswer(validation, validationRowValue).answer}}</span>
+              <span *ngIf="getValidationRowAnswer(validation, validationRowValue).answer.length>0" class="answer-stakeholder {{getStakeholderColorClass(getValidationRowAnswer(validation, validationRowValue).answer, i)}}">
+                <!-- Accessing the fourteenth cell to turn stakeholder into bold-->
+                <ng-container *ngIf="i === 13">
+                  <span [innerHTML]="getFormattedSentence(validation, validationRowValue)"></span>
+                </ng-container>
+                  <!-- Default rendering for other cells containing validation -->
+                <ng-container *ngIf="i !== 13">
+                  {{ getValidationRowAnswer(validation, validationRowValue).answer }}
+                </ng-container>
+              </span>
             </div>
           </td>
         </ng-container>
