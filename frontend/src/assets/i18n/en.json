@@ -10,6 +10,8 @@
     "delete":"Delete",
     "copy": "Make a copy",
     "download": "Download",
+    "downloadExcel": "Download as Excel",
+    "downloadJson": "Download as Json",
     "deleteFeature": "Delete this feature",
     "addStakeholder": "Add a stakeholder",
     "addPrecondition": "Add a preconditon",

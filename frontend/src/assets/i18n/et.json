@@ -10,6 +10,8 @@
     "delete":"Kustuta",
     "copy": "Tee koopia",
     "download": "Lae alla",
+    "downloadExcel": "Lae alla Excel",
+    "downloadJson": "Lae alla Json",
     "deleteFeature": "Kustuta funktsionaalsus",
     "addStakeholder": "Lisa sidusrühm",
     "addPrecondition": "Lisa eeltingimus",

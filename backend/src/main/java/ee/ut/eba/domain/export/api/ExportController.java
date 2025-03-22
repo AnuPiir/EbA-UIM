@@ -26,33 +26,51 @@ import java.util.Date;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins =  {"${app.dev.frontend.local}"})
+@CrossOrigin(origins = {"${app.dev.frontend.local}"})
 @RequestMapping(value = "/api/export", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ExportController {
 
-  private final ExcelExportService excelExportService;
-  private final QuestionnaireService questionnaireService;
+    private final ExcelExportService excelExportService;
+    private final QuestionnaireService questionnaireService;
 
-  @GetMapping(value = "questionnaire/{questionnaireId}/language/{language}")
-  public void getQuestionnaire(
-          @PathVariable(value = "questionnaireId") Integer questionnaireId,
-          @PathVariable(value = "language") String language,
-          HttpServletResponse response) throws IOException {
+    @GetMapping(value = "excel/questionnaire/{questionnaireId}/language/{language}")
+    public void getQuestionnaireAsExcel(
+            @PathVariable(value = "questionnaireId") Integer questionnaireId,
+            @PathVariable(value = "language") String language,
+            HttpServletResponse response) throws IOException {
 
-    log.info("Exporting excel by questionnaire id: {}", questionnaireId);
+        log.info("Exporting excel by questionnaire id: {}", questionnaireId);
 
-    Workbook workbook = excelExportService.generateExcel(questionnaireId, language);
+        Workbook workbook = excelExportService.generateExcel(questionnaireId, language);
 
-    response.setContentType("application/octet-stream");
-    DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-    String currentDateTime = dateFormatter.format(new Date());
-    String headerKey = "Content-Disposition";
-    String headerValue = "attachment; filename=" + questionnaireService.get(questionnaireId).getName() + "_" + currentDateTime + ".xlsx";
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=" + questionnaireService.get(questionnaireId).getName() + "_" + currentDateTime + ".xlsx";
 
-    response.setHeader(headerKey, headerValue);
-    ServletOutputStream outputStream = response.getOutputStream();
-    workbook.write(outputStream);
-    workbook.close();
-    outputStream.close();
-  }
+        response.setHeader(headerKey, headerValue);
+        ServletOutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
+    }
+
+    @GetMapping(value = "json/questionnaire/{questionnaireId}")
+    public void getQuestionaireAsJson(@PathVariable(value = "questionnaireId") Integer questionnaireId, HttpServletResponse response) {
+        try {
+            String json = excelExportService.getQuestionnaireJson(questionnaireId);
+
+            response.setContentType("application/json");
+            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            String currentDateTime = dateFormatter.format(new Date());
+            response.setHeader("Content-Disposition", "attachment; filename=" + questionnaireService.get(questionnaireId).getName() + "_" + currentDateTime + ".json");
+
+            response.getOutputStream().write(json.getBytes());
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

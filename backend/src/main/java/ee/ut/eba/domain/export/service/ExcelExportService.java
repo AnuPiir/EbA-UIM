@@ -1,7 +1,11 @@
 package ee.ut.eba.domain.export.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.ut.eba.domain.export.model.ExcelCell;
+import ee.ut.eba.domain.export.model.json.*;
 import ee.ut.eba.domain.featuregroup.service.FeatureGroupService;
+import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
+import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import ee.ut.eba.domain.validationanswer.persistence.ValidationAnswer;
 import ee.ut.eba.domain.validationanswer.service.ValidationAnswerService;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +14,19 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExcelExportService {
-
     private final ValidationAnswerService validationAnswerService;
+
     private final ExcelColumnService excelColumnService;
     private final FeatureGroupService featureGroupService;
+    private final QuestionnaireService questionnaireService;
 
     private final List<Integer> columnsWidths = Arrays.asList(144, 420, 74, 201, 365, 365, 234, 234, 234, 234, 170, 452, 201, 365, 602, 602);
     private final List<HorizontalAlignment> headerColumnsAlignment = Arrays.asList(HorizontalAlignment.CENTER, HorizontalAlignment.LEFT, HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT, HorizontalAlignment.LEFT, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT, HorizontalAlignment.LEFT);
@@ -55,6 +62,60 @@ public class ExcelExportService {
         });
 
         return workbook;
+    }
+
+    public String getQuestionnaireJson(int questionnaireId) {
+        try {
+            Questionnaire questionnaire = questionnaireService.get(questionnaireId);
+            QuestionaireJson questionaireJson = mapToJson(questionnaire);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(questionaireJson);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return "";
+        }
+    }
+
+    public QuestionaireJson mapToJson(Questionnaire questionnaire) {
+        return new QuestionaireJson(
+                questionnaire.getName(),
+                questionnaire.getValidationAnswers().stream().map(validationAnswer ->
+                        new ValidationAnswerJson(
+                                validationAnswer.getId(),
+                                validationAnswer.getAnswer(),
+                                validationAnswer.getRowId(),
+                                validationAnswer.getType(),
+                                validationAnswer.getQuestionnaire().getId(),
+                                new ValidationJson(
+                                        validationAnswer.getValidation().getId(),
+                                        validationAnswer.getValidation().getNameEt(),
+                                        validationAnswer.getValidation().getNameEn(),
+                                        validationAnswer.getValidation().getTooltipEt(),
+                                        validationAnswer.getValidation().getTooltipEn(),
+                                        validationAnswer.getValidation().getWeight(),
+                                        validationAnswer.getValidation().getType()
+                                ),
+                                new FeatureGroupJson(
+                                        validationAnswer.getFeatureGroup().getId(),
+                                        validationAnswer.getFeatureGroup().getName()
+                                ),
+                                new FeaturePreconditionJson(
+                                        validationAnswer.getFeaturePrecondition().getId(),
+                                        validationAnswer.getFeaturePrecondition().getAnswer()
+                                ),
+                                new FeatureJson(
+                                        validationAnswer.getFeature().getId(),
+                                        validationAnswer.getFeature().getAnswer(),
+                                        validationAnswer.getFeature().getCustomId()
+                                ),
+                                new StakeholderJson(
+                                        validationAnswer.getStakeholder() != null ? validationAnswer.getStakeholder().getId() : null,
+                                        validationAnswer.getStakeholder() != null ? validationAnswer.getStakeholder().getName() : null
+                                ),
+                                validationAnswer.getBackgroundColor()
+                        )
+                ).toList()
+        );
     }
 
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> getAnswers(Integer questionnaireId) {
@@ -173,5 +234,4 @@ public class ExcelExportService {
         }
         return result;
     }
-
 }

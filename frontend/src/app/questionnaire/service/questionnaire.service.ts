@@ -35,10 +35,17 @@ export class QuestionnaireService {
     );
   }
 
-  public exportQuestionnaire(id: number, language: string): Observable<any> {
+  public exportQuestionnaireAsExcel(id: number, language: string): Observable<any> {
     const httpOptions = {
       responseType: 'blob' as 'json'
     };
-    return this.http.get<any>(`http://localhost:8080/api/export/questionnaire/${id}/language/${language}`, httpOptions);
+    return this.http.get<any>(`http://localhost:8080/api/export/excel/questionnaire/${id}/language/${language}`, httpOptions);
+  }
+
+  public exportQuestionnaireAsJson(id: number): Observable<any> {
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
+    return this.http.get<any>(`http://localhost:8080/api/export/json/questionnaire/${id}`, httpOptions);
   }
 }
