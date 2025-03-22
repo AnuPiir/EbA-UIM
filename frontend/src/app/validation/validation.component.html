@@ -18,18 +18,18 @@
       <tr *ngFor="let validationRowValue of validationRowValues; index as j">
         <td class="id-cell background-beige">{{ j  + 1 }}</td>
         <ng-container *ngFor="let validation of validations; index as i">
-          <!-- <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)"> -->
-          <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)"
-            [ngStyle]="{'background-color': getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'}"
-            class="background-beige"
-            [ngClass]="getStickyClassByIndex(i)"
-            [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
-
-              <!-- condition to apply color picker only in the 15th column -->
+          <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
+              <!-- Condition to apply color changing in the 15th column -->
               <ng-container *ngIf="i === 14">
-                <input type="color"
-                  [value]="getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'"
-                  (change)="onColorChange($event, getValidationRowAnswer(validation, validationRowValue))">
+                  <!-- Toggle button for color selection menu -->
+                  <button (click)="toggleColorSelection(validationRowValue.rowId)" class="toggle-button">
+                      {{ showColorSelectionMap[validationRowValue.rowId] ? 'Close' : 'Change Color' }}
+                  </button>
+                  <!-- Color selection menu -->
+                  <div *ngIf="showColorSelectionMap[validationRowValue.rowId]" class="textarea-color-selection-container">
+                      <div *ngFor="let color of colorOptions" class="textarea-color-option" [style.background-color]="color.value" (click)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))" title="{{color.name}}">
+                      </div>
+                  </div>
               </ng-container>
               <div class="selection" *ngIf="isValidationSelectable(validation)">
               <app-select
@@ -99,8 +99,9 @@
                 <textarea (input)="autoGrow($event)"
                   [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                   (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
-                  class="overflow-auto border-0 textarea-min-height"
-                >
+                  [ngClass]="{'colored-textarea': true}"
+                  [ngStyle]="{'background-color': getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'}"
+                  class="overflow-auto border-0 textarea-min-height">
                 </textarea>
               </div>
             </div>

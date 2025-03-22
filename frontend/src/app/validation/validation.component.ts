@@ -1042,28 +1042,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return;
     }
 
-    validationRowAnswer.backgroundColor = newColor;
-
-    // Save the new background color to the backend
-    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
-        () => {
-          console.log("Background color updated successfully");
-        },
-        (error) => {
-          console.error("Error updating background color", error);
-        }
-    );
-  }*/
-
-  onColorChange(event: Event, validationRowAnswer: ValidationAnswer): void {
-    const inputElement = event.target as HTMLInputElement;
-    const newColor = inputElement.value;
-
-    if (!validationRowAnswer) {
-      console.error("ValidationRowAnswer is undefined");
-      return;
-    }
-
     validationRowAnswer.backgroundColor = newColor; // Local UI
 
     // Saving the validation answer
@@ -1071,40 +1049,45 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       next: () => console.log("Background color updated successfully"),
       error: (error: any) => console.error("Error updating background color", error)
     });
+  }*/
 
-    // Prepare payload
-    /*const payload = {
-      ...validationRowAnswer, // Spread existing values
-      backgroundColor: newColor // Update color
-    };*/
-    // Save to backend
-    /*this.http.put('/api/validation-answer', payload).subscribe({
+  colorOptions = [
+    { name: 'Beige', value: 'var(--light-beige)' },
+    { name: 'Grey', value: 'var(--light-grey)' },
+    { name: 'Green', value: 'var(--light-green)' },
+    { name: 'Yellow', value: 'var(--light-yellow)' },
+    { name: 'Orange', value: 'var(--light-orange)' },
+    { name: 'Red', value: 'var(--light-red)' },
+    { name: 'Blue', value: 'var(--light-blue)' }
+
+  ];
+  onColorChange(event: Event | string, validationRowAnswer: ValidationAnswer): void {
+    // Check if the event is a string (predefined color click) or Event (color picker change)
+    const newColor = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
+
+    if (!validationRowAnswer) {
+      console.error("ValidationRowAnswer is undefined");
+      return;
+    }
+
+    validationRowAnswer.backgroundColor = newColor; // Update Local UI
+
+    // Save the new background color to the backend
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe({
       next: () => console.log("Background color updated successfully"),
       error: (error: any) => console.error("Error updating background color", error)
-    });*/
+    });
   }
 
-  /*saveValidationAnswer(validationAnswer: any): void {
-        const url = '/api/validation-answer'; // Make sure this matches your backend endpoint
-        const payload = {
-            id: validationAnswer.id,
-            rowId: validationAnswer.rowId,
-            answer: validationAnswer.answer,
-            type: validationAnswer.type,
-            questionnaireId: validationAnswer.questionnaireId,
-            validationId: validationAnswer.validationId,
-            featureGroupId: validationAnswer.featureGroupId,
-            featurePrecondition: validationAnswer.featurePrecondition,
-            feature: validationAnswer.feature,
-            stakeholder: validationAnswer.stakeholder,
-            backgroundColor: validationAnswer.backgroundColor // Include color
-        };
+  showColorSelection: boolean = false;
+  // Keep track of which rows have the color selection menu open
+  showColorSelectionMap: Record<number, boolean> = {};
 
-        this.http.put(url, payload).subscribe({
-            next: () => console.log('Background color saved successfully!'),
-            error: err => console.error('Error saving background color:', err)
-        });
-    }*/
+// Toggle the color selection menu for a specific row
+  toggleColorSelection(rowId: number): void {
+    // Toggle visibility for the specific row
+    this.showColorSelectionMap[rowId] = !this.showColorSelectionMap[rowId];
+  }
 
   getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
     return [
