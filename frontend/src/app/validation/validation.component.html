@@ -5,7 +5,7 @@
       <tr>
         <th>
         </th>
-        <th *ngFor="let validation of validations; index as i" [ngClass]="getStickyClassByIndex(i, true)">
+        <th *ngFor="let validation of validations; index as i" [ngClass]="getStickyClassByIndex(i, true)"> <!-- Creating table headers -->
           <div class="header">{{getTranslation(validation)}}
             <mat-icon *ngIf="validation.tooltipEt"   matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"   matTooltipClass="tooltip" class="material-symbols-outlined overflow-unset">info</mat-icon>
           </div>
@@ -15,17 +15,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let validationRowValue of validationRowValues; index as j">
-        <td class="id-cell background-beige">{{ j  + 1 }}</td>
-        <ng-container *ngFor="let validation of validations; index as i">
-          <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
-            <div class="selection" *ngIf="isValidationSelectable(validation)">
+      <tr *ngFor="let validationRowValue of validationRowValues; index as j"> <!-- Creating table rows -->
+        <td class="id-cell background-beige">{{ j  + 1 }}</td> <!-- Row number -->
+        <ng-container *ngFor="let validation of validations; index as i"> <!-- Creating table cells -->
+          <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)"> <!-- Only displaying cells that are not already displayed -->
+            <div class="selection" *ngIf="isValidationSelectable(validation)"> <!-- Dropdown answer selection -->
               <app-select
                 [selectedValue]="getValidationValue(getValidationRowAnswer(validation, validationRowValue).answer)"
                 (selectionChange)="onValidationRowValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
               />
             </div>
-            <div *ngIf="isValidationStakeholder(validation)" class="cell-with-menu-stakeholder">
+            <div *ngIf="isValidationStakeholder(validation)" class="cell-with-menu-stakeholder"> <!-- Stakeholder handling (3rd column) -->
               <div>
                 <app-stakeholder
                   *ngIf="getValidationRowAnswer(validation, validationRowValue).answer !== null && getValidationRowAnswer(validation, validationRowValue).answer !== ''"
@@ -38,9 +38,9 @@
               </div>
               <app-menu [toggle]="'Menu'" [icon]="menuIcon" [returnAction]="getStakeHolderMenuAction(validationRowValue)" [stakeholders]="stakeholders" [isStakeholdersCell]="true"></app-menu>
             </div>
-            <div *ngIf="isValidationFeature(validation)" class="feature-cell">
+            <div *ngIf="isValidationFeature(validation)" class="feature-cell"> <!-- All text areas (feature input handling) -->
               <div class="cell-with-menu">
-                <div class="textarea-border">
+                <div class="textarea-border"> <!-- Custom ID textarea -->
                   <textarea id="id" (input)="autoGrow($event)"
                     [ngModel]="getValidationRowAnswer(validation, validationRowValue).feature.customId"
                     (ngModelChange)="onFeatureCustomIdChange($event, getValidationRowAnswer(validation, validationRowValue).feature)"
@@ -51,7 +51,7 @@
                 </div>
                 <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getFeatureActions(validationRowValue)"></app-menu>
               </div>
-              <div class="textarea-border w-100">
+              <div class="textarea-border w-100"> <!-- Feature description textarea -->
                 <textarea (input)="autoGrow($event)"
                   [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                   (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
@@ -60,7 +60,7 @@
                 </textarea>
               </div>
             </div>
-            <div *ngIf="isValidationFeaturePrecondition(validation)" class="cell-with-menu">
+            <div *ngIf="isValidationFeaturePrecondition(validation)" class="cell-with-menu"> <!-- Precondition text area -->
               <div class="textarea-border">
                 <textarea (input)="autoGrow($event)"
                 [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
@@ -71,7 +71,7 @@
               </div>
               <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getPreconditionActions(validationRowValue)"></app-menu>
             </div>
-            <div *ngIf="isValidationExample(validation)" class="cell-with-menu">
+            <div *ngIf="isValidationExample(validation)" class="cell-with-menu"> <!-- Precondition example text area -->
               <div class="textarea-border">
                 <textarea (input)="autoGrow($event)"
                   [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
@@ -82,7 +82,7 @@
               </div>
               <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getExampleActions(validationRowValue)"></app-menu>
             </div>
-            <div *ngIf="isValidationTextField(validation)" class="textfield">
+            <div *ngIf="isValidationTextField(validation)" class="textfield"> <!-- (In case of multiple preconditions&/examples) Prioritizing input text area ? -->
               <div class="textarea-border w-100">
                 <textarea (input)="autoGrow($event)"
                   [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
@@ -97,12 +97,21 @@
                 {{ getValidationRowAnswer(validation, validationRowValue).answer }}
               </div>
             </div>
-            <div *ngIf="isValidationAutofill(validation)">
-              <span *ngIf="getValidationRowAnswer(validation, validationRowValue).answer.length>0" class="answer-stakeholder {{getStakeholderColorClass(getValidationRowAnswer(validation, validationRowValue).answer, i)}}">{{getValidationRowAnswer(validation, validationRowValue).answer}}</span>
+            <div *ngIf="isValidationAutofill(validation)"> <!-- Displaying autofilled data -->
+              <span *ngIf="getValidationRowAnswer(validation, validationRowValue).answer.length>0" class="answer-stakeholder {{getStakeholderColorClass(getValidationRowAnswer(validation, validationRowValue).answer, i)}}">
+                <!-- Accessing the fourteenth cell to turn stakeholder into bold-->
+                <ng-container *ngIf="i === 13">
+                  <span [innerHTML]="getFormattedSentence(validation, validationRowValue)"></span>
+                </ng-container>
+                    <!-- Default rendering for other cells containing validation -->
+                <ng-container *ngIf="i !== 13">
+                  {{ getValidationRowAnswer(validation, validationRowValue).answer }}
+                </ng-container>
+              </span>
             </div>
           </td>
         </ng-container>
-        <td  class="delete-row">
+        <td  class="delete-row"> <!-- Deleting a row button -->
           <button class="delete-row-button button-icon" (click)="deleteRow(validationRowValue.rowId)">
             <span class="material-symbols-outlined icon">
               delete
@@ -112,7 +121,7 @@
     </tbody>
     <tfoot >
     <tr>
-      <td class="add-row">
+      <td class="add-row"> <!-- Adding a new row button -->
         <button [disabled]="isAddingNewRow" class="add-row-button" (click)="addValidationRow()">
           <span class="material-symbols-outlined icon small-icon">add</span>
           {{'table.newRow' | translate}}</button>

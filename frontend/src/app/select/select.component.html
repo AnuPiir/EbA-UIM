@@ -7,9 +7,8 @@
     <button 
       *ngFor="let validationValue of validationValues"
       class="select-option-button {{validationValue}}" 
-      (click)="onValueChange(validationValue)"
-    >
-      {{'select.' + validationValue2LabelMapping[validationValue] | translate}}
+      (click)="onValueChange(validationValue)">
+        {{'select.' + validationValue2LabelMapping[validationValue] | translate}}
     </button>
   </div>
 </div>

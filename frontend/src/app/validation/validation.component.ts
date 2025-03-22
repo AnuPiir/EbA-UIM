@@ -19,6 +19,8 @@ import { FeaturePreConditionService } from '../feature/service/feature-pre-condi
 import { MenuComponent } from '../menus/menu.component';
 import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
+import { Renderer2 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-validation',
@@ -47,6 +49,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
+  @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];
@@ -61,7 +64,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private translateService: TranslateService,
     private featureService: FeatureService,
     private featurePreconditionService: FeaturePreConditionService,
-    private el: ElementRef
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private sanitizer: DomSanitizer
   ) {
     this.onLanguageChanged();
   }
@@ -221,6 +226,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   getValidationRowAnswer(validation: Validation, validationRowValue: ValidationRow) {
     return validationRowValue.answers.filter(answer => answer.validationId === validation.id)[0];
+    /*const validationAnswer = validationRowValue.answers.find(a => a.validationId === validation.id);
+    if (!validationAnswer) {
+      return {} as ValidationAnswer;
+    }
+    return validationAnswer;*/
   }
 
   isValidationSelectable(validation: Validation): boolean {
@@ -266,7 +276,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   async onValidationRowValueChange(eventValue: any, validationRowAnswer: ValidationAnswer, validation: Validation, validationRowValue: ValidationRow) {
-      validationRowAnswer.answer = eventValue;
+    validationRowAnswer.answer = eventValue;
     if (validation.type === ValidationType.FEATURE) {
       validationRowAnswer.feature = await firstValueFrom(
         this.featureService.update(validationRowAnswer.feature.id, eventValue, validationRowAnswer.feature.customId)
@@ -281,13 +291,18 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     this.setRelatedRowSpanAnswers(validation, validationRowAnswer, eventValue);
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
         next => {
           this.updateRelatedValidationAnswers(validation, validationRowValue);
         }
       );
-    }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
+    }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)*/
+
+    await firstValueFrom(this.validationService.saveValidationAnswer(validationRowAnswer)); // Save the answer
+
+    this.updateRelatedValidationAnswers(validation, validationRowValue);
+
   }
 
   private setRelatedRowSpanAnswers(validation: Validation, validationRowAnswer: ValidationAnswer, eventValue: any) {
@@ -326,6 +341,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  private clearValidationTimeout: any;
+
   updateRelatedValidationAnswers(validation: Validation, validationRowValue: ValidationRow): void {
     const validationsFilledByAnswer = this.validations.filter(foundValidation =>
       foundValidation.validationAutofillList.some(autofill =>
@@ -333,12 +350,91 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       )
     );
 
+    /*for (let validationFilledByAnswer of validationsFilledByAnswer) {
+      if (validationFilledByAnswer) {
+        if (this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {  // Changed from areAllAnswersValid to allRequiredAnswersFilled
+          console.log("Valid answers detected, generating sentence...");
+          this.setAutoFillAnswers(validationFilledByAnswer, validationRowValue);
+        } else {
+          console.log("Invalid answers detected, clearing sentence...");
+          this.clearValidationAnswer(validationRowValue);  // Clear the sentence if not all answers are valid
+        }
+      }
+    }*/
+
     for (let validationFilledByAnswer of validationsFilledByAnswer) {
       if (validationFilledByAnswer) {
-        this.setAutoFillAnswers(validationFilledByAnswer, validationRowValue);
+
+        // Check if answers are valid
+        const areAnswersValid = this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue);
+
+        if (areAnswersValid) {
+          console.log("Valid answers detected, generating sentence...");
+          this.setAutoFillAnswers(validationFilledByAnswer, validationRowValue);
+          if (this.clearValidationTimeout) clearTimeout(this.clearValidationTimeout); // Clear pending clearing
+
+        } else {
+          console.log("Invalid answers detected, scheduling clearing of sentence...");
+
+          if (this.clearValidationTimeout) clearTimeout(this.clearValidationTimeout);
+
+          // Schedule the clearing operation after a small delay (to avoid immediate clearing)
+          this.clearValidationTimeout = setTimeout(() => {
+            this.clearValidationAnswer(validationRowValue);
+          }, 500);  // Adjust the delay time if needed
+        }
       }
     }
   }
+
+  clearValidationAnswer(validationRowValue: ValidationRow): void {
+    /*const validationAnswerToClear = validationRowValue.answers.find(
+        a => a.type === ValidationType.FILL  // This is the type used for the validational sentence
+    );
+
+    if (validationAnswerToClear) {
+      const parts = validationAnswerToClear.answer.split(" ");
+      if (parts.length > 1) {
+        validationAnswerToClear.answer = parts.slice(1).join(" ");  // Keep everything except the first word (validational part)
+      } else {
+        validationAnswerToClear.answer = "";  // If there's only one part, clear it all
+      }
+      this.validationService.saveValidationAnswer(validationAnswerToClear).subscribe();
+    }*/
+
+    const validationAnswerToClear = validationRowValue.answers.find(
+        a => a.type === ValidationType.FILL  // This is the type used for the validational sentence
+    );
+
+    /*if (validationAnswerToClear) {
+      validationAnswerToClear.answer = "";  // Completely clear the answer if any dropdown selection is invalid
+      this.validationService.saveValidationAnswer(validationAnswerToClear).subscribe();
+    }*/
+
+    if (!validationAnswerToClear) return;
+
+    if (this.areAllAnswersValid(validationRowValue)) {
+      console.log("All answers are valid, clearing operation is canceled.");
+      return;  // Stop clearing if answers are valid
+    }
+
+    console.log("Clearing the validational sentence due to invalid answers.");
+
+    /*validationAnswerToClear.answer = "";  // Clear the sentence if answers are invalid
+    this.validationService.saveValidationAnswer(validationAnswerToClear).subscribe();*/
+
+    // Only clear the validational sentence part, leave other parts untouched
+    const parts = validationAnswerToClear.answer.split(" ");
+    if (parts.length > 1) {
+      validationAnswerToClear.answer = parts.slice(1).join(" ");  // Keep the rest (stakeholder + precondition)
+    } else {
+      validationAnswerToClear.answer = "";  // Clear it all if only one part exists
+    }
+
+    this.validationService.saveValidationAnswer(validationAnswerToClear).subscribe();
+
+  }
+
 
   private setNoExampleAnswer(validationRowValue: ValidationRow) { //TODO jätkuarendus
     let exampleAnswer = '';
@@ -376,7 +472,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
+    /*if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
+      return;
+    }*/
+    /*if (!this.areAllAnswersValid(validationRowValue)) {
+      this.clearValidationAnswer(validationRowValue);
+      return;
+    }*/
     if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
+      this.clearValidationAnswer(validationRowValue);
       return;
     }
 
@@ -398,22 +502,34 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           weight: validationFilledBy.weight,
           hasMatch: false
         })
+        }
       }
-    }
 
     const answerValuesSortedByWeight = answerValues.sort(({ weight: a }, { weight: b }) => a - b);
 
     if (isAutofillTypeCombination && isAutoFillFromSelect) {
       this.updateCombinationAutoFillAnswers(answerValuesSortedByWeight, validationRowValue, validationFilledByAnswer);
-
       return;
     }
 
     const answerToFill = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
 
     if (answerToFill) {
-      answerToFill.answer = this.getAnswerToSet(answerValuesSortedByWeight);
-      this.validationService.saveValidationAnswer(answerToFill).subscribe(next => {});
+      /*answerToFill.answer = this.getAnswerToSet(answerValuesSortedByWeight);
+      this.validationService.saveValidationAnswer(answerToFill).subscribe(next => {});*/
+      const generatedSentence = this.getAnswerToSet(answerValuesSortedByWeight);
+
+      // Find the stakeholder and precondition for the 2nd column combination
+      const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER)?.answer || "";
+      const preconditionAnswer = validationRowValue.answers.find(a => a.type === ValidationType.FEATURE_PRECONDITION)?.answer || "";
+
+      // Create the complete sentence for the 2nd column
+      const combinedSentence = `${generatedSentence} ${stakeholderAnswer} ${preconditionAnswer}`.trim();
+
+      answerToFill.answer = combinedSentence; // Update the 2nd column's sentence
+      this.validationService.saveValidationAnswer(answerToFill).subscribe(() => {
+        this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
+      });
     }
   }
 
@@ -430,13 +546,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   allRequiredAnswersFilled(validationFilledByAnswer: Validation, validationRowValue: ValidationRow): boolean {
+    const validAnswerKeys = ["YES", "NO", "PARTLY", "DONT_KNOW"];
     for (let validationFilledBy of validationFilledByAnswer.validationAutofillList) {
       const answer = validationRowValue.answers.find(a => a.validationId === validationFilledBy.validationFilledById);
-      if (answer == null  || answer.answer == null) {
+      if (answer == null  || answer.answer == null || !validAnswerKeys.includes(answer.answer as ValidationValue)) {
+        console.log("Invalid or missing answer found:", answer?.answer);
         return false;
       }
     }
-
+    console.log("All answers are valid.");
     return true;
   }
 
@@ -605,6 +723,22 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.onValidationRowValueChange(stakeholder ? stakeholder.name : '', validationAnswer, validation, validationRowValue);
   }
 
+  getFormattedSentence(validation: Validation, validationRowValue: ValidationRow): SafeHtml {
+    const answer = this.getValidationRowAnswer(validation, validationRowValue)?.answer?.trim();
+    let foundStakeholder = this.stakeholders.find(stakeholder =>
+        answer.includes(stakeholder.name)
+    );
+    if (!foundStakeholder) {
+      return this.sanitizer.bypassSecurityTrustHtml(answer);
+    }
+    // Replacing the stakeholder name with a bold version
+    const formattedSentence = answer.replace(
+        new RegExp(`\\b${foundStakeholder.name}\\b`, 'g'),
+        `<strong>${foundStakeholder.name}</strong>`
+    );
+    return this.sanitizer.bypassSecurityTrustHtml(formattedSentence);
+  }
+
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {
     return <ValidationAnswer>validationRow.answers.find(a => a.type === ValidationType.FEATURE_PRECONDITION);
   }
@@ -694,5 +828,25 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getValidationValue(answer: string): ValidationValue {
     return (<any>ValidationValue)[answer];
   }
+
+  areAllAnswersValid(validationRowValue: ValidationRow): boolean {
+    const validAnswerKeys = ["YES", "NO", "PARTLY", "DONT_KNOW"];  // Use keys instead of translations
+
+    console.log("Valid answers (keys):", validAnswerKeys);
+
+    for (let answer of validationRowValue.answers) {
+      if (answer.type === ValidationType.SELECT) {
+        console.log(`Checking answer: ${answer.answer}`);
+        if (!validAnswerKeys.includes(answer.answer as ValidationValue)) {
+          console.log("Invalid answer found:", answer.answer);
+          return false;  // Found an invalid answer, return false
+        }
+      }
+    }
+    console.log("All answers are valid");
+    return true;  // All answers are valid
+  }
+
+
 }
 
