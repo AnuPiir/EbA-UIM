@@ -133,6 +133,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getValidationAnswers(): void {
     this.validationService.getValidationAnswersByFeatureGroupId(this.featureGroup.id).subscribe(
       next => {
+        console.log("Validation Answers from Backend: ", next);
         if (next.length === 0) {
           this.addValidationRow();
         } else {
@@ -736,20 +737,24 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return;
     }
 
-    // Update local UI immediately
-    validationRowAnswer.backgroundColor = newColor;
+    validationRowAnswer.backgroundColor = newColor; // Local UI
 
-    // Prepare payload
-    const payload = {
-      ...validationRowAnswer, // Spread existing values
-      backgroundColor: newColor // Update color
-    };
-
-    // Save to backend
-    this.http.put('/api/validation-answer', payload).subscribe({
+    // Saving the validation answer
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe({
       next: () => console.log("Background color updated successfully"),
       error: (error: any) => console.error("Error updating background color", error)
     });
+
+    // Prepare payload
+    /*const payload = {
+      ...validationRowAnswer, // Spread existing values
+      backgroundColor: newColor // Update color
+    };*/
+    // Save to backend
+    /*this.http.put('/api/validation-answer', payload).subscribe({
+      next: () => console.log("Background color updated successfully"),
+      error: (error: any) => console.error("Error updating background color", error)
+    });*/
   }
 
   /*saveValidationAnswer(validationAnswer: any): void {
