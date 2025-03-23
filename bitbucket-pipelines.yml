@@ -8,13 +8,14 @@ definitions:
 
 pipelines:
   branches:
-    master:
+    ebam-gerdo:
       - step:
           name: Build and Package App
           script:
             # Build backend with Maven
             - apt-get update && apt-get install -y maven
             - cd backend
+            - mvn test
             - mvn clean package
             - cd ../frontend
 
