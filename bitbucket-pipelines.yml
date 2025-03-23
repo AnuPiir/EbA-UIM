@@ -30,6 +30,7 @@ pipelines:
           # Package for All
           - npm run package-everything
           # Zip the package for easier download
+          - npm run efm
           - npm run wdio
           - apt-get update && apt-get install -y zip
           - cd release-builds

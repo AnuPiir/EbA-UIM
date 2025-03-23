@@ -18,7 +18,7 @@
     "package-win": "electron-packager . EBAM --overwrite --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds",
     "package-linux": "electron-packager . EBAM --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
     "package-everything": "electron-packager . EBAM --platform=win32,linux,darwin --arch=x64 --out=release-builds --overwrite",
-    "package-mac2": "electron-forge -m",
+    "efm": "electron-forge make",
     "wdio": "wdio run ./wdio.conf.ts"
   },
   "private": true,
