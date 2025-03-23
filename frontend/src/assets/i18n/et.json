@@ -92,6 +92,7 @@
     "partly": "Osaliselt"
   },
   "methodCombinations": {
+    "CHOOSE_OPTION": "Vali",
     "YES": "Jah",
     "NO": "Ei",
     "DONT_KNOW": "Ei tea",

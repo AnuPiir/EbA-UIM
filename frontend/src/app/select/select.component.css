@@ -91,3 +91,13 @@
 .DONT_KNOW:hover {
   background-color: var(--blue);
 }
+
+.select-option-button.CHOOSE_OPTION  {
+  background-color: lightgray;
+  border-color: #5B5B5B;
+  color: #5B5B5B;
+}
+.select-option-button.CHOOSE_OPTION:hover  {
+  background-color: #b2b2b2;
+  color: #505050;
+}

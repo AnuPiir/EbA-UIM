@@ -26,11 +26,14 @@ export class SelectComponent {
   }
 
   customSelectionValue(): string {
-    if (!Object.keys(this.validationValue2LabelMapping).includes(this.selectedValue)){
+    /*if (!Object.keys(this.validationValue2LabelMapping).includes(this.selectedValue)){
       if (this.translateService.currentLang === GlobalConstants.ET) {
         return "Vali";
       }
       return "Select";
+    }*/
+    if (!this.selectedValue || this.selectedValue === ValidationValue.CHOOSE_OPTION) {
+      return 'select.chooseOption';
     }
     return 'select.' + this.validationValue2LabelMapping[this.selectedValue];
   }
