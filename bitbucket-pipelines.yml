@@ -9,7 +9,7 @@ definitions:
 pipelines:
   default:
     - step:
-        name: Build and Package Windows App
+        name: Build and Package App
         script:
           # Build backend with Maven
           - apt-get update && apt-get install -y maven
@@ -30,6 +30,7 @@ pipelines:
           # Package for All
           - npm run package-everything
           # Zip the package for easier download
+          - npm run wdio
           - apt-get update && apt-get install -y zip
           - cd release-builds
           - zip -r EBAM-win32-x64.zip EBAM-win32-x64

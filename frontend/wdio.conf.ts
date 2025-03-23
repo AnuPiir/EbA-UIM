@@ -1,5 +1,4 @@
 /// <reference types="wdio-electron-service" />
-// @ts-ignore
 export const config: WebdriverIO.Config = {
     //
     // ====================
