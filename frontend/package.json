@@ -1,5 +1,7 @@
 {
-  "name": "frontend",
+  "name": "EbAM",
+  "author": "EbA team",
+  "description": "This project was generated with Electron and Angular CLI version 16.2.10.",
   "version": "1.1.0",
   "main": "main.js",
   "scripts": {
@@ -7,15 +9,16 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng ../test",
     "clean-frontend-win32": "cd release-builds && rd /s /q EBAM-win32-ia32",
     "btf": "copy ..\\backend\\target\\*.jar ..\\frontend\\jars\\",
     "electron": "electron .",
     "electron-build": "ng build && electron .",
-    "package-mac": "electron-packager . EbA-meetod --overwrite --platform=darwin --arch=x64 --out=release-builds",
+    "package-mac": "electron-packager . EBAM --overwrite --platform=darwin --arch=x64 --out=release-builds",
     "package-win": "electron-packager . EBAM --overwrite --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds",
     "package-linux": "electron-packager . EBAM --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
-    "package-everything": "electron-packager . EBAM --platform=win32,linux,darwin --arch=x64 --out=release-builds --overwrite"
+    "package-everything": "electron-packager . EBAM --platform=win32,linux,darwin --arch=x64 --out=release-builds --overwrite",
+    "test:e2e": "mocha --timeout 10000 test/e2e"
   },
   "private": true,
   "dependencies": {
@@ -48,12 +51,19 @@
     "@types/jasmine": "~4.3.0",
     "electron": "^34.0.2",
     "electron-log": "^5.3.2",
+    "electron-builder": "^25.1.8",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.9.4"
+    "typescript": "~4.9.4",
+    "spectron": "^17.0.0",
+    "mocha": "^10.0.0",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "@playwright/test": "^1.28.0",
+    "playwright": "^1.28.0"
   }
 }
