@@ -22,6 +22,7 @@ export class CombinationViewComponent implements OnInit{
 
   ngOnInit(): void {
     this.validationService.getValidationCombinationResults().subscribe((next) => {
+      console.log('API respone', next);
       this.validationCombinationResults = next
       this.mapResourcesForTableView(this.validationCombinationResults);
     });
@@ -49,8 +50,12 @@ export class CombinationViewComponent implements OnInit{
 
   getValidationCombinationResultValueTranslationKey(validationCombinationResult: ValidationCombinationResult): string {
     if (this.translateService.currentLang === GlobalConstants.ET) {
+      console.log('Estonian result:', validationCombinationResult.resultEt);
       return validationCombinationResult.resultEt;
+
     }
+    console.log('Eng result:', validationCombinationResult.resultEn);
     return validationCombinationResult.resultEn;
+
   }
 }

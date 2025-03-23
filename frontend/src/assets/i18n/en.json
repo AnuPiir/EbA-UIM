@@ -10,6 +10,8 @@
     "delete":"Delete",
     "copy": "Make a copy",
     "download": "Download",
+    "downloadExcel": "Download as Excel",
+    "downloadJson": "Download as Json",
     "deleteFeature": "Delete this feature",
     "addStakeholder": "Add a stakeholder",
     "addPrecondition": "Add a preconditon",
@@ -255,6 +257,10 @@
     "section3Text": "<b>EBA-UIM</b> application is an improved version of the preliminary version of the EbA method tool. The EBA-UIM application has been developed by Tartu University informatics students Karl Olaf Kuldmaa and Iris Kreinin as part of their bachelor thesis. Karl Olaf Kuldmaa created the back-end, front-end and database of the application. Iris Kreinin created front-end and its user interface. Anu Piirisild created the EbA method guide, texts explaining the method, and an example project.",
     "contact": "Contacts",
     "address": "Anu Piirisild<br></br><a href='mailto:anu.piirisild@ut.ee'>anu.piirisild@ut.ee</a><br></br><br></br>University of Tartu<br></br>Institute of Computer Science<br></br>Narva mnt 18<br></br>51009 Tartu, Estonia"
+  },
+  "backToTop": {
+    "buttonLabel": "Back to Top",
+    "ariaLabel": "Button for scrolling back to the top. Press Enter, Space, or use Ctrl + Up Arrow to activate."
   },
   "questionnaires": "Questionnaires",
   "et": "EST",

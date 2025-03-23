@@ -1,0 +1,3 @@
+<button class="back-to-top" (click)="scrollToTop()" (keydown)="handleKeyPress($event)" *ngIf="showButton" [attr.aria-label]="'backToTop.ariaLabel' | translate" tabindex="0">
+    {{ 'backToTop.buttonLabel' | translate }}
+</button>
