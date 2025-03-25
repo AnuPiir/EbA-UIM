@@ -44,7 +44,8 @@ public class ExcelExportService {
             "YES", new XSSFColor(new byte[]{(byte) 179, (byte) 217, (byte) 155}),
             "PARTLY", new XSSFColor(new byte[]{(byte) 247, (byte) 222, (byte) 135}),
             "DONT_KNOW", new XSSFColor(new byte[]{(byte) 160, (byte) 206, (byte) 234}),
-            "NO", new XSSFColor(new byte[]{(byte)  245, (byte) 148, (byte) 138})
+            "NO", new XSSFColor(new byte[]{(byte)  245, (byte) 148, (byte) 138}),
+            "", new XSSFColor(new byte[]{(byte)  211, (byte) 211, (byte) 211})
     );
 
     private int rowCounter = 0;
@@ -153,7 +154,7 @@ public class ExcelExportService {
         CellStyle cellStyle = workbook.createCellStyle();
 
         if (cell != null && cell.type.equalsIgnoreCase("SELECT")) {
-            cellStyle.setFillForegroundColor(selectionBackground.get(cell.value));
+            cellStyle.setFillForegroundColor(selectionBackground.get(cell.value.strip()));
             cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
 
