@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.export.model;
+package ee.ut.eba.domain.io.model;
 
 public class ExcelCell {
     public int featureGroupId;

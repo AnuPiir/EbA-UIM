@@ -1,8 +1,4 @@
-package ee.ut.eba.domain.export.model.json;
-
-import ee.ut.eba.domain.featureprecondition.persistence.FeaturePrecondition;
-import ee.ut.eba.domain.stakeholder.persistence.Stakeholder;
-import ee.ut.eba.domain.validation.persistence.Validation;
+package ee.ut.eba.domain.io.model.json;
 
 public record ValidationAnswerJson (
         Integer id,
@@ -11,7 +7,7 @@ public record ValidationAnswerJson (
         String type,
         Integer questionaireId,
         ValidationJson validation,
-        FeatureGroupJson featureGroupId,
+        FeatureGroupJson featureGroup,
         FeaturePreconditionJson featurePrecondition,
         FeatureJson feature,
         StakeholderJson stakeholder,

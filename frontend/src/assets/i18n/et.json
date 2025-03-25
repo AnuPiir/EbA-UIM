@@ -3,7 +3,8 @@
     "delete": "Kustuta",
     "edit": "Muuda",
     "add": "Lisa",
-    "cancel": "Loobu"
+    "cancel": "Loobu",
+    "import": "Impordi"
   },
   "menu": {
     "edit": "Muuda",

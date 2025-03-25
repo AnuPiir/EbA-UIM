@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.export.persistance;
+package ee.ut.eba.domain.io.persistance;
 
 import jakarta.persistence.*;
 import lombok.Getter;

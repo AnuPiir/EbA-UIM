@@ -3,7 +3,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "import": "Import"
   },
   "menu": {
     "edit": "Edit",

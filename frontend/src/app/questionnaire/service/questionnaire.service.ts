@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { QuestionnaireEndpointConstants } from '../../constants/questionnaire-endpoint-constants';
 import { QuestionnaireResponse } from '../model/questionnaire-response';
@@ -47,5 +47,14 @@ export class QuestionnaireService {
       responseType: 'blob' as 'json'
     };
     return this.http.get<any>(`http://localhost:8080/api/export/json/questionnaire/${id}`, httpOptions);
+  }
+
+  public importQuestionnaireFromJson(jsonData: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post<any>(`http://localhost:8080/api/import/json`, jsonData, httpOptions);
   }
 }

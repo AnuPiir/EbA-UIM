@@ -41,6 +41,11 @@ table {
   gap: 1rem;
 }
 
+.import-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .add-project-input {
   display: flex;
   flex-direction: column;
@@ -55,6 +60,16 @@ table {
   justify-content: right;
   align-items: flex-end;
   width: 100%;
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.import-project-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+  flex-grow: 2;
   gap: 1rem;
 }
 

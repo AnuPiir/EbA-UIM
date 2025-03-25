@@ -35,4 +35,8 @@ public class FeatureService {
       ).setAnswer(answer).setCustomId(customId)
     );
   }
+
+  public int save(Feature feature) {
+    return featureRepository.save(feature).getId();
+  }
 }

@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.export.model.json;
+package ee.ut.eba.domain.io.model.json;
 
 public record FeaturePreconditionJson (
     Integer id,

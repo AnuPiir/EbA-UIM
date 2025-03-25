@@ -1,8 +1,8 @@
-package ee.ut.eba.domain.export.service;
+package ee.ut.eba.domain.io.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.ut.eba.domain.export.model.ExcelCell;
-import ee.ut.eba.domain.export.model.json.*;
+import ee.ut.eba.domain.io.model.ExcelCell;
+import ee.ut.eba.domain.io.model.json.*;
 import ee.ut.eba.domain.featuregroup.service.FeatureGroupService;
 import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
@@ -21,7 +21,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExcelExportService {
+public class ExportService {
     private final ValidationAnswerService validationAnswerService;
 
     private final ExcelColumnService excelColumnService;

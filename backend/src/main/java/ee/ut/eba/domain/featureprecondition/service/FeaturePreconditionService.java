@@ -22,6 +22,11 @@ public class FeaturePreconditionService {
 
     return featurePreconditionRepository.save(new FeaturePrecondition().setAnswer(answer));
   }
+  public int save(FeaturePrecondition featurePrecondition) {
+    log.info("Saving feature precondition with answer: {}", featurePrecondition.getAnswer());
+
+    return featurePreconditionRepository.save(featurePrecondition).getId();
+  }
 
   public FeaturePrecondition update(FeaturePrecondition featurePrecondition) {
     log.info("Updating feature precondition to be: {}", featurePrecondition);

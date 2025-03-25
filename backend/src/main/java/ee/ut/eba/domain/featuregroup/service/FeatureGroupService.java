@@ -16,32 +16,37 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class FeatureGroupService {
 
-  private final FeatureGroupRepository featureGroupRepository;
-  private final QuestionnaireService questionnaireService;
+    private final FeatureGroupRepository featureGroupRepository;
+    private final QuestionnaireService questionnaireService;
 
-  public FeatureGroup create(CreateParameters createParams) {
-    log.info("Creating feature group with params: {}", createParams);
+    public FeatureGroup create(CreateParameters createParams) {
+        log.info("Creating feature group with params: {}", createParams);
 
-    return featureGroupRepository.save(
-      new FeatureGroup()
-        .setName(createParams.name())
-        .setQuestionnaire(questionnaireService.get(createParams.questionnaireId()))
-    );
-  }
+        return featureGroupRepository.save(
+                new FeatureGroup()
+                        .setName(createParams.name())
+                        .setQuestionnaire(questionnaireService.get(createParams.questionnaireId()))
+        );
+    }
 
-  public List<FeatureGroup> getByQuestionnaireId(Integer id) {
-    return featureGroupRepository.findAll(FeatureGroupSpecification.questionnaireId(id));
-  }
+    public int create(FeatureGroup featureGroup) {
+        return featureGroupRepository.save(featureGroup).getId();
+    }
 
-  public FeatureGroup get(Integer id) {
-    return featureGroupRepository.findById(id).orElseThrow(
-      () -> new NoSuchElementException("Feature group not found with id:" + id)
-    );
-  }
+    public List<FeatureGroup> getByQuestionnaireId(Integer id) {
+        return featureGroupRepository.findAll(FeatureGroupSpecification.questionnaireId(id));
+    }
 
-  public void delete(Integer id) {
-    featureGroupRepository.deleteById(id);
-  }
+    public FeatureGroup get(Integer id) {
+        return featureGroupRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Feature group not found with id:" + id)
+        );
+    }
 
-  public record CreateParameters(String name, Integer questionnaireId) {}
+    public void delete(Integer id) {
+        featureGroupRepository.deleteById(id);
+    }
+
+    public record CreateParameters(String name, Integer questionnaireId) {
+    }
 }

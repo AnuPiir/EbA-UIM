@@ -1,9 +1,6 @@
-package ee.ut.eba.domain.export.model.json;
-
-import lombok.Value;
+package ee.ut.eba.domain.io.model.json;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public record QuestionaireJson(
         String name,

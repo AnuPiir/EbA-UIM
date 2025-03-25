@@ -1,7 +1,7 @@
-package ee.ut.eba.domain.export.service;
+package ee.ut.eba.domain.io.service;
 
-import ee.ut.eba.domain.export.persistance.ExcelColumn;
-import ee.ut.eba.domain.export.persistance.ExcelColumnRepository;
+import ee.ut.eba.domain.io.persistance.ExcelColumn;
+import ee.ut.eba.domain.io.persistance.ExcelColumnRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

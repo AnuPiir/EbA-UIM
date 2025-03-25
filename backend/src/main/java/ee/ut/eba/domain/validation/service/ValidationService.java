@@ -23,4 +23,8 @@ public class ValidationService {
   public Validation getById(Integer id) {
     return validationRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Validation not found with id:" + id));
   }
+
+  public int save(Validation validation) {
+    return validationRepository.save(validation).getId();
+  }
 }
