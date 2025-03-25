@@ -19,6 +19,7 @@ import { FeaturePreConditionService } from '../feature/service/feature-pre-condi
 import { MenuComponent } from '../menus/menu.component';
 import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
+import { HttpClient } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -65,7 +66,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private featurePreconditionService: FeaturePreConditionService,
     private el: ElementRef,
     private renderer: Renderer2,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private http: HttpClient
   ) {
     this.onLanguageChanged();
   }
@@ -141,36 +143,41 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   getValidationAnswers(): void {
     this.validationService.getValidationAnswersByFeatureGroupId(this.featureGroup.id).subscribe(
-        next => {
-          if (next.length === 0) {
-            this.addValidationRow();
-          } else {
-            // Map validation answers to rows
-            this.validationRowValues = this.mapValidationAnswersToRows(next)
-                .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id ||
-                    a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
-                    a.rowId - b.rowId);
+      next => {
+        console.log("Validation Answers from Backend: ", next);
+        if (next.length === 0) {
+          this.addValidationRow();
+        } else {
+          this.validationRowValues = this.mapValidationAnswersToRows(next)
+            .map(row => ({
+              ...row,
+              answers: row.answers.map(answer => ({
+                ...answer,
+                backgroundColor: answer.backgroundColor || '#F7F1E6' // default (beige) color - ensures that every row has one
+              }))
+            }))
+            .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
-            // Fix missing stakeholder objects from backend
-            this.fixStakeholderReferences();
+          // Fix missing stakeholder objects from backend
+          this.fixStakeholderReferences();
 
-            // Ensure stakeholder consistency
-            this.ensureStakeholdersConsistency();
+          // Ensure stakeholder consistency
+          this.ensureStakeholdersConsistency();
 
-            // Map spans for UI rendering
-            this.mapFeatureRowSpans();
+          // Map spans for UI rendering
+          this.mapFeatureRowSpans();
 
-            // Force reapply all stakeholders with a short delay
-            setTimeout(() => {
-              this.forceReapplyAllStakeholders();
-            }, 1000);
-          }
+          // Force reapply all stakeholders with a short delay
+          setTimeout(() => {
+             this.forceReapplyAllStakeholders();
+          }, 1000);
+        }
 
-          this.loading = false;
-        },
-        error => {
-          console.error("Error loading validation answers:", error);
-          this.loading = false;
+        this.loading = false;
+      },
+      error => {
+         console.error("Error loading validation answers:", error);
+         this.loading = false;
         }
     );
   }
@@ -1038,6 +1045,62 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   getValidationValue(answer: string): ValidationValue {
     return (<any>ValidationValue)[answer];
+  }
+
+  /*onColorChange(event: Event, validationRowAnswer: ValidationAnswer): void {
+    const inputElement = event.target as HTMLInputElement;
+    const newColor = inputElement.value;
+
+    if (!validationRowAnswer) {
+      console.error("ValidationRowAnswer is undefined");
+      return;
+    }
+
+    validationRowAnswer.backgroundColor = newColor; // Local UI
+
+    // Saving the validation answer
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe({
+      next: () => console.log("Background color updated successfully"),
+      error: (error: any) => console.error("Error updating background color", error)
+    });
+  }*/
+
+  colorOptions = [
+    { name: 'Beige', value: 'var(--light-beige)' },
+    { name: 'Grey', value: 'var(--light-grey)' },
+    { name: 'Green', value: 'var(--light-green)' },
+    { name: 'Yellow', value: 'var(--light-yellow)' },
+    { name: 'Orange', value: 'var(--light-orange)' },
+    { name: 'Red', value: 'var(--light-red)' },
+    { name: 'Blue', value: 'var(--light-blue)' }
+
+  ];
+  onColorChange(event: Event | string, validationRowAnswer: ValidationAnswer): void {
+    // Check if the event is a string (predefined color click) or Event (color picker change)
+    const newColor = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
+
+    if (!validationRowAnswer) {
+      console.error("ValidationRowAnswer is undefined");
+      return;
+    }
+
+    validationRowAnswer.backgroundColor = newColor; // Update Local UI
+
+    // Save the new background color to the backend
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe({
+      next: () => console.log("Background color updated successfully"),
+      error: (error: any) => console.error("Error updating background color", error)
+    });
+  }
+
+  showColorSelection: boolean = false;
+  // Keep track of which rows have the color selection menu open
+  showColorSelectionMap: Record<number, boolean> = {};
+
+// Toggle the color selection menu for a specific row
+  toggleColorSelection(rowId: number): void {
+    // Toggle visibility for the specific row
+    this.showColorSelectionMap[rowId] = !this.showColorSelectionMap[rowId];
   }
 
   getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
