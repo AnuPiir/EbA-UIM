@@ -5,19 +5,42 @@
       <tr>
         <th>
         </th>
-        <th *ngFor="let validation of validations; index as i" [ngClass]="getStickyClassByIndex(i, true)">
+        <!-- <th *ngFor="let validation of validations; index as i" [ngClass]="getStickyClassByIndex(i, true)">
           <div class="header">{{getTranslation(validation)}}
             <mat-icon *ngIf="validation.tooltipEt"   matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"   matTooltipClass="tooltip" class="material-symbols-outlined overflow-unset">info</mat-icon>
           </div>
-        </th>
+        </th> -->
+
+          <!-- Looping through columns -->
+          <ng-container *ngFor="let validation of validations; index as i">
+            <!-- Always show the column header (with just the button if hidden) -->
+            <ng-container *ngIf="!isColumnHidden(i)"><th [ngClass]="getStickyClassByIndex(i, true)">
+              <div class="header">
+                <!-- Hide button (only for column 14) -->
+                <ng-container *ngIf="(i === 13 && !isColumnHidden(13)) || (i === 12 && isColumnHidden(13))">
+                  <button (click)="toggleColumnVisibility(13)" class="toggle-column-btn">
+                    {{ isColumnHidden(13) ? 'Show Column' : 'Hide' }}
+                  </button>
+                </ng-container>
+                <!-- Only showing the title of the columns if it's visible -->
+                <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
+
+                <mat-icon *ngIf="validation.tooltipEt"
+                          matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"
+                          matTooltipClass="tooltip"
+                          class="material-symbols-outlined overflow-unset">info</mat-icon>
+              </div>
+            </ng-container>
+          </ng-container>
         <th class="content-cell-sixteenth-child">
-        </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let validationRowValue of validationRowValues; index as j">
         <td class="id-cell background-beige">{{ j  + 1 }}</td>
         <ng-container *ngFor="let validation of validations; index as i">
+            <!-- Only show the column if it's not hidden -->
+            <ng-container *ngIf="!isColumnHidden(i)">
           <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
             <div class="selection" *ngIf="isValidationSelectable(validation)">
               <app-select
@@ -110,6 +133,7 @@
               </span>
             </div>
           </td>
+        </ng-container>
         </ng-container>
         <td  class="delete-row">
           <button class="delete-row-button button-icon" (click)="deleteRow(validationRowValue.rowId)">

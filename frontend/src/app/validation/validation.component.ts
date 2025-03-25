@@ -895,6 +895,20 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.sanitizer.bypassSecurityTrustHtml(formattedSentence);
   }
 
+  // Just in case keeping track of the columns which are currently hidden
+  hiddenColumns: Set<number> = new Set();
+  isColumnHidden(index: number): boolean {
+    return this.hiddenColumns.has(index);
+  }
+
+  toggleColumnVisibility(index: number) {
+    if (this.hiddenColumns.has(index)) {
+      this.hiddenColumns.delete(index);
+    } else {
+      this.hiddenColumns.add(index);
+    }
+  }
+
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {
     return <ValidationAnswer>validationRow.answers.find(a => a.type === ValidationType.FEATURE_PRECONDITION);
   }
