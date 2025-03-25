@@ -91,3 +91,10 @@
 .DONT_KNOW:hover {
   background-color: var(--blue);
 }
+
+.select-button.disabled {
+  background-color: var(--brown);
+  color: var(--text-color);
+  cursor: not-allowed;
+  border-color: var(--dark-brown);
+}

@@ -1,14 +1,13 @@
 <div class="select-component">
-  <button class="select-button {{selectedValue}}" (click)="toggleSelect()"> 
+  <button class="select-button {{selectedValue}}" [class.disabled]="isDisabled" (click)="toggleSelect()">
     <span>{{customSelectionValue() | translate}}</span>
     <span class="material-symbols-outlined icon">arrow_drop_down</span>
   </button>
-  <div *ngIf=isToggled class="options">
+  <div *ngIf="isToggled && !isDisabled" class="options">
     <button 
       *ngFor="let validationValue of validationValues"
       class="select-option-button {{validationValue}}" 
-      (click)="onValueChange(validationValue)"
-    >
+      (click)="onValueChange(validationValue)">
       {{'select.' + validationValue2LabelMapping[validationValue] | translate}}
     </button>
   </div>

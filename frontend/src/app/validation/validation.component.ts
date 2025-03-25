@@ -21,6 +21,7 @@ import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
 import { Renderer2 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ChangeDetectorRef, NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-validation',
@@ -64,8 +65,10 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private featureService: FeatureService,
     private featurePreconditionService: FeaturePreConditionService,
     private el: ElementRef,
-    private renderer: Renderer2,
-    private sanitizer: DomSanitizer
+    //private renderer: Renderer2,
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {
     this.onLanguageChanged();
   }
@@ -1035,4 +1038,81 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       },
     ];
   }
+
+  // Store the ID of the prioritized row for each precondition
+  prioritizedRows: { [preconditionId: string]: string | null } = {};
+
+  // Check if the current row is prioritized
+  isPrioritized(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
+  }
+
+
+  // Check if the current precondition has more than one example
+  hasMultipleExamples(preconditionId: number): boolean {
+    const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
+        row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
+    );
+    return rowsWithSamePrecondition.length > 1;
+  }
+
+
+  /*onCheckboxChange(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const rowId = String(validationRowValue.rowId);
+
+    // Using NgZone to trigger proper change detection
+    this.zone.run(() => {
+      if (this.prioritizedRows[preconditionId] === rowId) {
+        // Uncheck the current row (make all rows active again)
+        this.prioritizedRows[preconditionId] = null;
+      } else {
+        // Otherwise, set the current row as prioritized
+        this.prioritizedRows[preconditionId] = rowId;
+      }
+
+      // Trigger UI refresh to properly uncheck the previous checkbox
+      this.cdr.detectChanges();
+    });
+  }*/
+
+  onCheckboxChange(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const rowId = String(validationRowValue.rowId);
+
+    // Using NgZone to trigger proper change detection
+    this.zone.run(() => {
+      if (this.prioritizedRows[preconditionId] === rowId) {
+        // Uncheck the current row (make all rows active again)
+        this.prioritizedRows[preconditionId] = null;
+      } else {
+        // Otherwise, set the current row as prioritized
+        this.prioritizedRows[preconditionId] = rowId;
+      }
+
+      // Trigger UI refresh to properly uncheck the previous checkbox
+      this.cdr.detectChanges();
+    });
+  }
+
+  // Check if the current row should be disabled (greyed out)
+  /*isRowDisabled(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const prioritizedRowId = this.prioritizedRows[preconditionId];
+    return prioritizedRowId !== null && prioritizedRowId !== String(validationRowValue.rowId);
+  }*/
+
+  isRowDisabled(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const prioritizedRowId = this.prioritizedRows[preconditionId];
+
+    if (!prioritizedRowId) return false; // Nothing is prioritized, so no rows should be disabled
+
+    return String(validationRowValue.rowId) !== prioritizedRowId; // Disable all rows except the prioritized one
+  }
+
+
+
+
 }

@@ -15,6 +15,8 @@ export class SelectComponent {
 
   @Input() selectedValue: ValidationValue; // Unique identifier for each instance
   @Output() selectionChange: EventEmitter<ValidationValue> = new EventEmitter<ValidationValue>();
+  @Input() isDisabled: boolean = false;
+
 
   constructor(
     private elementRef: ElementRef,
@@ -22,7 +24,9 @@ export class SelectComponent {
   ) {}
 
   toggleSelect(): void {
-    this.isToggled = !this.isToggled;
+    if (!this.isDisabled) {
+      this.isToggled = !this.isToggled;
+    }
   }
 
   customSelectionValue(): string {
@@ -36,9 +40,11 @@ export class SelectComponent {
   }
 
   onValueChange(validationValue: ValidationValue): void {
-    this.selectedValue = validationValue;
-    this.selectionChange.emit(validationValue)
-    this.toggleSelect();
+    if (!this.isDisabled) {
+      this.selectedValue = validationValue;
+      this.selectionChange.emit(validationValue)
+      this.toggleSelect();
+    }
   }
 
   @HostListener('document:click', ['$event'])

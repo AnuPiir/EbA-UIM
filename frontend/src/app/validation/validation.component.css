@@ -232,6 +232,11 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   gap: 0.5rem;
 }
 
+/*.menu-row .menu:hover {
+  background-color: lightblue;
+  color: white;
+}*/
+
 .cell-with-menu-stakeholder {
   display: flex;
   flex-direction: row;
