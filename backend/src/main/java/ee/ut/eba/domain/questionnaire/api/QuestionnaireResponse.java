@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -18,5 +19,6 @@ public class QuestionnaireResponse {
 
   private Integer id;
   private String name;
+  private LocalDateTime lastModified;
   private List<ValidationAnswerResponse> validationAnswers;
 }

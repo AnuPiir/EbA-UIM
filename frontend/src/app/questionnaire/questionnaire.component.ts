@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { QuestionnaireService } from './service/questionnaire.service';
 import { QuestionnaireResponse } from './model/questionnaire-response';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -7,7 +6,7 @@ import { DeleteModalComponent } from './modal/delete-modal/delete-modal.componen
 import { EditModalComponent } from './modal/edit-modal/edit-modal.component';
 import { formatDate } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import {firstValueFrom} from "rxjs";
+import { formatTimeAgo, formatFullDate } from '../utils/date.utils';
 
 @Component({
   selector: 'app-questionnaire',
@@ -30,7 +29,6 @@ export class QuestionnaireComponent implements OnInit {
 
 
   constructor(
-      private router: Router,
       private questionnaireService: QuestionnaireService,
       private modalService: BsModalService,
       private translateService: TranslateService
@@ -44,87 +42,33 @@ export class QuestionnaireComponent implements OnInit {
     this.loading = true;
     this.questionnaireService.getQuestionnaires().subscribe(
         next => {
-          this.questionnaires = next;
+          this.questionnaires = next.sort((a, b) => {
+            // Sort by last modified date, newest first
+            return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+          });
           this.loading = false;
         }, () => {
           setTimeout(() => {
             this.questionnaireService.getQuestionnaires().subscribe(
                 next => {
-                  this.questionnaires = next;
+                  this.questionnaires = next.sort((a, b) => {
+                    // Sort by last modified date, newest first
+                    return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+                  });
                   this.loading = false;
                 })
           }, this.TIMEOUT_BEFORE_RETRYING);}
     );
   }
 
-  async addNewQuestionnaire(questionnaireName: string) {
-    if (!questionnaireName || questionnaireName.trim() === '') {
-      return;
-    }
-
-    try {
-      this.loading = true;
-      console.log('Creating new questionnaire:', questionnaireName);
-
-      // Step 1: Get list of projects before creation
-      const beforeList = await firstValueFrom(this.questionnaireService.getQuestionnaires());
-      const beforeIds = new Set(beforeList.map(q => q.id));
-      console.log('Questionnaires before:', beforeList.map(q => q.id));
-
-      // Step 2: Create the new project
-      await firstValueFrom(this.questionnaireService.saveQuestionnaire({id: null, name: questionnaireName}));
-      console.log('Creation request sent');
-
-      // Step 3: Wait a bit to ensure the project is created in the database
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Step 4: Get the updated list of projects
-      const afterList = await firstValueFrom(this.questionnaireService.getQuestionnaires());
-      console.log('Questionnaires after:', afterList.map(q => q.id));
-
-      // Step 5: Find the new project by comparing the lists or by name
-      let newQuestionnaire = afterList.find(q => !beforeIds.has(q.id));
-
-      if (!newQuestionnaire) {
-        // Fallback to finding by name if ID comparison doesn't work
-        newQuestionnaire = afterList.find(q => q.name === questionnaireName);
-      }
-
-      if (newQuestionnaire) {
-        console.log('Found new questionnaire:', newQuestionnaire);
-
-        // Use Angular Router for navigation instead of direct URL manipulation
-        // This works correctly in both browser and Electron environments
-        this.router.navigate(['/validation'], {
-          queryParams: {
-            questionnaireId: newQuestionnaire.id
-          }
-        });
-      } else {
-        console.error('Could not find newly created questionnaire');
-        // If we can't find the new project, just get the latest one
-        const latestQuestionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires());
-        if (latestQuestionnaires.length > 0) {
-          // Sort by ID to get the newest one (assuming IDs are auto-incrementing)
-          const sortedQuestionnaires = latestQuestionnaires.sort((a, b) => b.id - a.id);
-          console.log('Using latest questionnaire as fallback:', sortedQuestionnaires[0]);
-
-          this.router.navigate(['/validation'], {
-            queryParams: {
-              questionnaireId: sortedQuestionnaires[0].id
-            }
-          });
-        } else {
-          this.loading = false;
-          console.error('No questionnaires found');
+  addNewQuestionnaire(questionnaireName: string) {
+    this.questionnaireService.saveQuestionnaire({id: null, name: questionnaireName}).subscribe(
+        next => {
+          this.questionnaireName = '';
+          this.toggleAddNewQuistionnaire();
+          this.getQuestionnaires();
         }
-      }
-    } catch (error) {
-      console.error('Error in creating questionnaire:', error);
-      this.loading = false;
-      // Try to refresh the list
-      this.getQuestionnaires();
-    }
+    )
   }
 
   toggleAddNewQuistionnaire(): void {
@@ -172,6 +116,7 @@ export class QuestionnaireComponent implements OnInit {
               const questionnaireToEdit = this.questionnaires.find(q => q.id === questionnaire.id);
               if (questionnaireToEdit){
                 questionnaireToEdit.name = result.newValue;
+                questionnaireToEdit.lastModified = new Date().toISOString();
               }
               this.loading = false;
 
@@ -183,13 +128,11 @@ export class QuestionnaireComponent implements OnInit {
 
   downloadQuestionnaire(questionnaire: QuestionnaireResponse) {
     this.questionnaireService.exportQuestionnaire(questionnaire.id, this.translateService.currentLang).subscribe((data) => {
-
       const downloadURL = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = downloadURL;
       link.download = questionnaire.name + "_" + formatDate(new Date(), 'yyyy-MM-dd', 'en-US') + ".xlsx";
       link.click();
-
     });
   }
 
@@ -199,5 +142,14 @@ export class QuestionnaireComponent implements OnInit {
       {name: "menu.delete", icon: 'delete', onClick: () => this.deleteQuestionnaire(questionnaire)},
       {name: "menu.download", icon: 'download', onClick: () => this.downloadQuestionnaire(questionnaire)},
     ];
+  }
+
+  // Date formatting functions
+  formatTimeAgo(date: string): string {
+    return formatTimeAgo(date, this.translateService.currentLang);
+  }
+
+  formatFullDate(date: string): string {
+    return formatFullDate(date, this.translateService.currentLang);
   }
 }
