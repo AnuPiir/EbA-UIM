@@ -263,6 +263,11 @@
     "buttonLabel": "Back to Top",
     "ariaLabel": "Button for scrolling back to the top. Press Enter, Space, or use Ctrl + Up Arrow to activate."
   },
+  "hidePanels": {
+    "hide": "Hide",
+    "unhide": "Unhide",
+    "ariaLabel": "Button to toggle visibility of project tabs. Press Enter, Space, or use Ctrl + Up Arrow to activate."
+  },
   "questionnaires": "Questionnaires",
   "et": "EST",
   "en": "ENG"

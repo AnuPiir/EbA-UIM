@@ -29,6 +29,7 @@ export class FeatureGroupComponent implements OnInit {
   isToggledStakeholderList: boolean = true;
   featureGroupName: string;
   stakeholderName: string;
+  showProjectsWrapper: boolean = true;
   @ViewChild('featureGroupTabs', {static: false}) tab: MatTabGroup;
   modalRef: BsModalRef;
 
@@ -234,4 +235,9 @@ export class FeatureGroupComponent implements OnInit {
   getStakeholderDeleteAction(stakeholder: any):any {
     return () => this.openStakeholderDeleteModal(stakeholder);
   }
+
+  toggleProjectsWrapper() {
+    this.showProjectsWrapper = !this.showProjectsWrapper;
+  }
+
 }
