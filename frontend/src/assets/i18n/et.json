@@ -266,6 +266,11 @@
     "buttonLabel": "Tagasi üles",
     "ariaLabel": "Nupp lehe algusesse liikumiseks. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt."
   },
+  "hidePanels": {
+    "hide": "Peida",
+    "unhide": "Näita",
+    "ariaLabel": "Nupp projektide vahekaartide nähtavuse muutmiseks. Vajutage Enter, tühikut või kasutage Ctrl + Üles-nooleklahvi aktiveerimiseks."
+  },
   "questionnaires": "Küsimustikud",
   "et": "EST",
   "en": "ENG"
