@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,8 +25,9 @@ public class QuestionnaireService {
     return questionnaireRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Questionnare not found with id:" + id));
   }
 
-  public save(Questionnaire questionnaire) {
-    //wasnt returning anything
+  public Questionnaire save(Questionnaire questionnaire) {
+
+    questionnaire.setLastModified(LocalDateTime.now());
     return questionnaireRepository.save(questionnaire);
   }
 
