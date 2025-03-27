@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.feature.api;
+package ee.ut.eba.domain.featuregroup.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureResponse {
+public class FeatureGroupResponse {
 
-  private Integer id;
-  private String answer;
-  private String customId;
+	private Integer id;
+	private String name;
 }

@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.stakeholder.api;
+package ee.ut.eba.domain.stakeholder.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class StakeholderResponse {
 
-  private Integer id;
-  private String name;
+	private Integer id;
+	private String name;
 }

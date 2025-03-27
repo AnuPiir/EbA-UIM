@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ValidationCombinationRepository extends JpaRepository<ValidationCombination, Integer>, JpaSpecificationExecutor<ValidationCombination> {}
+public interface ValidationCombinationRepository
+		extends
+			JpaRepository<ValidationCombination, Integer>,
+			JpaSpecificationExecutor<ValidationCombination> {
+}

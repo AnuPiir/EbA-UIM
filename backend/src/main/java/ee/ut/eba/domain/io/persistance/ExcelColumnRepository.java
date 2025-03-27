@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ExcelColumnRepository extends JpaRepository<ExcelColumn, Integer>, JpaSpecificationExecutor<ExcelColumn> {}
+public interface ExcelColumnRepository
+		extends
+			JpaRepository<ExcelColumn, Integer>,
+			JpaSpecificationExecutor<ExcelColumn> {
+}

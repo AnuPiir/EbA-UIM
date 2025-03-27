@@ -18,21 +18,21 @@ import lombok.experimental.Accessors;
 @Entity
 @Getter
 @Setter
-@Table(name= Stakeholder.TABLE)
+@Table(name = Stakeholder.TABLE)
 @ToString
 @Accessors(chain = true)
 public class Stakeholder {
 
-  public static final String TABLE = "stakeholder";
+	public static final String TABLE = "stakeholder";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column
-  private String name;
+	@Column
+	private String name;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="questionnaire_id")
-  private Questionnaire questionnaire;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "questionnaire_id")
+	private Questionnaire questionnaire;
 }

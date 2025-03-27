@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.featuregroup.api;
+package ee.ut.eba.domain.stakeholder.model;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,11 +12,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureGroupCreateRequest {
+public class StakeholderUpdateRequest {
 
-  @NotNull
-  private String name;
-
-  @NotNull
-  private Integer questionnaireId;
+	@NotNull
+	private String name;
 }

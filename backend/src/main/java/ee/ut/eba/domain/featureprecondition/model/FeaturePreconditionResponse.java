@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.featureprecondition.api;
+package ee.ut.eba.domain.featureprecondition.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class FeaturePreconditionResponse {
 
-  private Integer id;
-  private String answer;
+	private Integer id;
+	private String answer;
 }

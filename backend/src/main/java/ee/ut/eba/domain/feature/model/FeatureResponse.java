@@ -1,6 +1,5 @@
-package ee.ut.eba.domain.stakeholder.api;
+package ee.ut.eba.domain.feature.model;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class StakeholderUpdateRequest {
+public class FeatureResponse {
 
-  @NotNull
-  private String name;
+	private Integer id;
+	private String answer;
+	private String customId;
 }

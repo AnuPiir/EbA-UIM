@@ -13,16 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FeaturePreconditionDeleteService {
 
-  private final FeaturePreconditionRepository featurePreconditionRepository;
-  private final ValidationAnswerService validationAnswerService;
+	private final FeaturePreconditionRepository featurePreconditionRepository;
+	private final ValidationAnswerService validationAnswerService;
 
+	public void deleteAndDeleteValidationAnswersRelatedToPreconditionId(Integer id) {
+		validationAnswerService.deleteByFeaturePreconditionId(id);
+		delete(id);
+	}
 
-  public void deleteAndDeleteValidationAnswersRelatedToPreconditionId(Integer id) {
-    validationAnswerService.deleteByFeaturePreconditionId(id);
-    delete(id);
-  }
-
-  public void delete(Integer id) {
-    featurePreconditionRepository.deleteById(id);
-  }
+	public void delete(Integer id) {
+		featurePreconditionRepository.deleteById(id);
+	}
 }

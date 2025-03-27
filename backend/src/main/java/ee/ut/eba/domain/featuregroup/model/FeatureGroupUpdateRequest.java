@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.featureprecondition.api;
+package ee.ut.eba.domain.featuregroup.model;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeaturePreconditionRequest {
+public class FeatureGroupUpdateRequest {
 
-  @NotNull
-  private String answer;
+	@NotNull
+	private String name;
 }

@@ -17,30 +17,30 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@Table(name= ValidationAutofill.TABLE)
+@Table(name = ValidationAutofill.TABLE)
 @ToString
 public class ValidationAutofill {
 
-  public static final String TABLE = "validation_autofill";
+	public static final String TABLE = "validation_autofill";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column
-  private Integer weight;
+	@Column
+	private Integer weight;
 
-  @Column
-  private String placeholder;
+	@Column
+	private String placeholder;
 
-  @Column
-  private String type;
+	@Column
+	private String type;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="validation_to_fill_id")
-  private Validation validationToFill;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "validation_to_fill_id")
+	private Validation validationToFill;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="validation_filled_by_id")
-  private Validation validationFilledBy;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "validation_filled_by_id")
+	private Validation validationFilledBy;
 }

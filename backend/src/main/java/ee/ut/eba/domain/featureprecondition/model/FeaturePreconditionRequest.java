@@ -1,4 +1,4 @@
-package ee.ut.eba.domain.stakeholder.api;
+package ee.ut.eba.domain.featureprecondition.model;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,11 +12,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class StakeholderCreateRequest {
+public class FeaturePreconditionRequest {
 
-  @NotNull
-  private String name;
-
-  @NotNull
-  private Integer questionnaireId;
+	@NotNull
+	private String answer;
 }

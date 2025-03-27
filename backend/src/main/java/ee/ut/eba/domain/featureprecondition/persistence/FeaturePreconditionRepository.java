@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FeaturePreconditionRepository extends JpaRepository<FeaturePrecondition, Integer>, JpaSpecificationExecutor<FeaturePrecondition> {}
+public interface FeaturePreconditionRepository
+		extends
+			JpaRepository<FeaturePrecondition, Integer>,
+			JpaSpecificationExecutor<FeaturePrecondition> {
+}

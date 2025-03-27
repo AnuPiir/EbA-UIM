@@ -12,131 +12,122 @@ import ee.ut.eba.domain.stakeholder.service.StakeholderService;
 import ee.ut.eba.domain.validation.persistence.Validation;
 import ee.ut.eba.domain.validation.service.ValidationService;
 import ee.ut.eba.domain.validationanswer.service.ValidationAnswerService;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImportService {
 
-    final private QuestionnaireService questionnaireService;
-    final private ValidationService validationService;
-    final private FeatureGroupService featureGroupService;
-    final private FeaturePreconditionService featurePreconditionService;
-    final private FeatureService featureService;
-    final private StakeholderService stakeholderService;
-    final private ValidationAnswerService validationAnswerService;
+	private final QuestionnaireService questionnaireService;
+	private final ValidationService validationService;
+	private final FeatureGroupService featureGroupService;
+	private final FeaturePreconditionService featurePreconditionService;
+	private final FeatureService featureService;
+	private final StakeholderService stakeholderService;
+	private final ValidationAnswerService validationAnswerService;
 
-    final private Map<Integer, Integer> savedValidations = new HashMap<>();
-    final private Map<Integer, Integer> savedFeatureGroups = new HashMap<>();
-    final private Map<Integer, Integer> savedFeaturePreconditions = new HashMap<>();
-    final private Map<Integer, Integer> savedFeatures = new HashMap<>();
-    final private Map<Integer, Integer> savedStakeholders = new HashMap<>();
+	private final Map<Integer, Integer> savedValidations = new HashMap<>();
+	private final Map<Integer, Integer> savedFeatureGroups = new HashMap<>();
+	private final Map<Integer, Integer> savedFeaturePreconditions = new HashMap<>();
+	private final Map<Integer, Integer> savedFeatures = new HashMap<>();
+	private final Map<Integer, Integer> savedStakeholders = new HashMap<>();
 
+	@Transactional
+	public int importQuestionnaire(QuestionaireJson jsonData) {
+		emptyMemory();
+		int questionnaireId = saveQuestionnaire(jsonData);
+		for (ValidationAnswerJson validationAnswer : jsonData.validationAnswers()) {
+			int validationId = validationAnswer.validation().id();
+			int featureGroupId = saveFeatureGroup(validationAnswer.featureGroup(), questionnaireId);
+			int featurePreconditionId = saveFeaturePrecondition(validationAnswer.featurePrecondition());
+			int featureId = saveFeature(validationAnswer.feature());
+			int stakeholderId = saveStakeholder(validationAnswer.stakeholder(), questionnaireId);
 
-    @Transactional
-    public int importQuestionnaire(QuestionaireJson jsonData) {
-        emptyMemory();
-        int questionnaireId = saveQuestionnaire(jsonData);
-        for (ValidationAnswerJson validationAnswer : jsonData.validationAnswers()) {
-            int validationId = validationAnswer.validation().id();
-            int featureGroupId = saveFeatureGroup(validationAnswer.featureGroup(), questionnaireId);
-            int featurePreconditionId = saveFeaturePrecondition(validationAnswer.featurePrecondition());
-            int featureId = saveFeature(validationAnswer.feature());
-            int stakeholderId = saveStakeholder(validationAnswer.stakeholder(), questionnaireId);
+			validationAnswerService.save(new ValidationAnswerService.SaveParameters(null, validationAnswer.rowId(),
+					validationAnswer.answer(), validationAnswer.type(), questionnaireId, validationId,
+					featurePreconditionId, featureGroupId, featureId, stakeholderId,
+					validationAnswer.backgroundColor()));
+		}
+		return questionnaireId;
+	}
 
-            validationAnswerService.save(new ValidationAnswerService.SaveParameters(
-                    null,
-                    validationAnswer.rowId(),
-                    validationAnswer.answer(),
-                    validationAnswer.type(),
-                    questionnaireId,
-                    validationId,
-                    featurePreconditionId,
-                    featureGroupId,
-                    featureId,
-                    stakeholderId,
-                    validationAnswer.backgroundColor()
-            ));
-        }
-        return questionnaireId;
-    }
+	private void emptyMemory() {
+		savedValidations.clear();
+		savedFeatureGroups.clear();
+		savedFeaturePreconditions.clear();
+		savedFeatures.clear();
+		savedStakeholders.clear();
+	}
 
-    private void emptyMemory() {
-        savedValidations.clear();
-        savedFeatureGroups.clear();
-        savedFeaturePreconditions.clear();
-        savedFeatures.clear();
-        savedStakeholders.clear();
-    }
+	private int saveQuestionnaire(QuestionaireJson jsonData) {
+		return questionnaireService.save(new Questionnaire().setName(jsonData.name() + " (import)")).getId();
+	}
 
-    private int saveQuestionnaire(QuestionaireJson jsonData) {
-        return questionnaireService.save(new Questionnaire().setName(jsonData.name()+" (import)"));
-    }
+	private int saveValidation(ValidationJson valJson) {
+		if (savedValidations.containsKey(valJson.id())) {
+			return savedValidations.get(valJson.id());
+		}
 
-    private int saveValidation(ValidationJson valJson) {
-        if (savedValidations.containsKey(valJson.id())) {
-            return savedValidations.get(valJson.id());
-        }
+		Validation val = new Validation();
+		val.setNameEt(valJson.nameEt());
+		val.setNameEn(valJson.nameEn());
+		val.setTooltipEt(valJson.tooltipEt());
+		val.setTooltipEn(valJson.tooltipEn());
+		val.setWeight(valJson.weight());
+		val.setType(valJson.type());
 
-        Validation val = new Validation();
-        val.setNameEt(valJson.nameEt());
-        val.setNameEn(valJson.nameEn());
-        val.setTooltipEt(valJson.tooltipEt());
-        val.setTooltipEn(valJson.tooltipEn());
-        val.setWeight(valJson.weight());
-        val.setType(valJson.type());
+		int newId = validationService.save(val);
+		savedValidations.put(valJson.id(), newId);
 
-        int newId = validationService.save(val);
-        savedValidations.put(valJson.id(), newId);
+		return newId;
+	}
 
-        return newId;
-    }
+	private int saveFeatureGroup(FeatureGroupJson featureGroup, int questionnaireId) {
+		if (savedFeatureGroups.containsKey(featureGroup.id())) {
+			return savedFeatureGroups.get(featureGroup.id());
+		}
+		int newId = featureGroupService
+				.create(new FeatureGroupService.CreateParameters(featureGroup.name(), questionnaireId)).getId();
+		savedFeatureGroups.put(featureGroup.id(), newId);
+		return newId;
+	}
 
-    private int saveFeatureGroup(FeatureGroupJson featureGroup, int questionnaireId) {
-        if (savedFeatureGroups.containsKey(featureGroup.id())) {
-            return savedFeatureGroups.get(featureGroup.id());
-        }
-        int newId = featureGroupService.create(new FeatureGroupService.CreateParameters(featureGroup.name(), questionnaireId)).getId();
-        savedFeatureGroups.put(featureGroup.id(), newId);
-        return newId;
-    }
+	private int saveFeaturePrecondition(FeaturePreconditionJson featurePrecondition) {
+		if (savedFeaturePreconditions.containsKey(featurePrecondition.id())) {
+			return savedFeaturePreconditions.get(featurePrecondition.id());
+		}
+		int newId = featurePreconditionService.save(new FeaturePrecondition().setAnswer(featurePrecondition.answer()));
+		savedFeaturePreconditions.put(featurePrecondition.id(), newId);
+		return newId;
+	}
 
-    private int saveFeaturePrecondition(FeaturePreconditionJson featurePrecondition) {
-        if (savedFeaturePreconditions.containsKey(featurePrecondition.id())) {
-            return savedFeaturePreconditions.get(featurePrecondition.id());
-        }
-        int newId = featurePreconditionService.save(new FeaturePrecondition().setAnswer(featurePrecondition.answer()));
-        savedFeaturePreconditions.put(featurePrecondition.id(), newId);
-        return newId;
-    }
+	private int saveFeature(FeatureJson featureJson) {
+		if (savedFeatures.containsKey(featureJson.id())) {
+			return savedFeatures.get(featureJson.id());
+		}
 
-    private int saveFeature(FeatureJson featureJson) {
-        if (savedFeatures.containsKey(featureJson.id())) {
-            return savedFeatures.get(featureJson.id());
-        }
+		Feature feature = new Feature();
+		feature.setAnswer(featureJson.answer());
+		feature.setCustomId(featureJson.customId());
 
-        Feature feature = new Feature();
-        feature.setAnswer(featureJson.answer());
-        feature.setCustomId(featureJson.customId());
+		int newId = featureService.save(feature);
+		savedFeatures.put(featureJson.id(), newId);
+		return newId;
+	}
 
-        int newId = featureService.save(feature);
-        savedFeatures.put(featureJson.id(), newId);
-        return newId;
-    }
-
-    private int saveStakeholder(StakeholderJson stakeholder, int questionnaireId) {
-        if (savedStakeholders.containsKey(stakeholder.id())) {
-            return savedStakeholders.get(stakeholder.id());
-        }
-        int newId = stakeholderService.create(new StakeholderService.CreateParameters(stakeholder.name(), questionnaireId)).getId();
-        savedStakeholders.put(stakeholder.id(), newId);
-        return newId;
-    }
+	private int saveStakeholder(StakeholderJson stakeholder, int questionnaireId) {
+		if (savedStakeholders.containsKey(stakeholder.id())) {
+			return savedStakeholders.get(stakeholder.id());
+		}
+		int newId = stakeholderService
+				.create(new StakeholderService.CreateParameters(stakeholder.name(), questionnaireId)).getId();
+		savedStakeholders.put(stakeholder.id(), newId);
+		return newId;
+	}
 }

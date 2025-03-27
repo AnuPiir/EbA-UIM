@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StakeholderRepository extends JpaRepository<Stakeholder, Integer>, JpaSpecificationExecutor<Stakeholder> {}
+public interface StakeholderRepository
+		extends
+			JpaRepository<Stakeholder, Integer>,
+			JpaSpecificationExecutor<Stakeholder> {
+}

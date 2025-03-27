@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/import", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ImportController {
 
-    private final ImportService importService;
+	private final ImportService importService;
 
-    @PostMapping(value = "json")
-    public ResponseEntity<String> importQuestionnaire(@RequestBody QuestionaireJson jsonData) {
-        int id = importService.importQuestionnaire(jsonData);
-        return ResponseEntity.ok("Questionnaire imported successfully!");
-    }
+	@PostMapping(value = "json")
+	public ResponseEntity<String> importQuestionnaire(@RequestBody QuestionaireJson jsonData) {
+		int id = importService.importQuestionnaire(jsonData);
+		return ResponseEntity.ok("Questionnaire imported successfully!");
+	}
 }

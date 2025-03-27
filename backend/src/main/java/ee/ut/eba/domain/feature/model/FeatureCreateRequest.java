@@ -1,5 +1,6 @@
-package ee.ut.eba.domain.featuregroup.api;
+package ee.ut.eba.domain.feature.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureGroupResponse {
+public class FeatureCreateRequest {
 
-  private Integer id;
-  private String name;
+	@NotNull
+	private String answer;
+
+	private String customId;
 }

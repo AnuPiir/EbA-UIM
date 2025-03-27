@@ -10,12 +10,12 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@Table(name= ValidationValue.TABLE)
+@Table(name = ValidationValue.TABLE)
 @ToString
 public class ValidationValue {
 
-  public static final String TABLE = "validation_value";
+	public static final String TABLE = "validation_value";
 
-  @Id
-  private String name;
+	@Id
+	private String name;
 }

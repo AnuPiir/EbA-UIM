@@ -14,15 +14,15 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ExcelColumn {
 
-    public static final String TABLE = "excel_column";
+	public static final String TABLE = "excel_column";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column
-    private String name_et;
+	@Column
+	private String name_et;
 
-    @Column
-    private String name_en;
+	@Column
+	private String name_en;
 }
