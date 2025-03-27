@@ -1,19 +1,13 @@
 package ee.ut.eba.domain.questionnaire.persistence;
 
 import ee.ut.eba.domain.validationanswer.persistence.ValidationAnswer;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +27,9 @@ public class Questionnaire {
 
   @Column
   private String name;
+
+  @Column
+  private LocalDateTime lastModified;
 
   @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "questionnaire")
   private List<ValidationAnswer> validationAnswers = new ArrayList<>();

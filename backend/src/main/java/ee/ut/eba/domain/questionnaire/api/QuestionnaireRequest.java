@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -20,4 +22,7 @@ public class QuestionnaireRequest {
 
   @NotNull
   private String name;
+
+  //Added for completeness, not exactly needed
+  private LocalDateTime lastModified;
 }

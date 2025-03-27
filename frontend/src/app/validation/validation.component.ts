@@ -705,8 +705,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           // Find the stakeholder from the row
           const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
           const stakeholderName = stakeholderAnswer?.stakeholder?.name || 'Unknown Stakeholder';
-          // Append stakeholder to the combined answer
-          correctAnswer.answer = `${this.getTranslation(combinationResult)} (${stakeholderName})`;
+
+          // Append stakeholder to the combined answer - IF you need to debug it
+          //correctAnswer.answer = `${this.getTranslation(combinationResult)} (${stakeholderName})`;
+
+          // DONT append the stakeholder
+          correctAnswer.answer = this.getTranslation(combinationResult);
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
           });

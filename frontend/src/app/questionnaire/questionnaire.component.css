@@ -1,7 +1,20 @@
-table {
-  background-color: var(--beige);
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
+.project-name {
+  font-weight: 500;
+}
+
+.project-last-modified {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* Rest of the existing CSS */
 .projects-wrapper {
   margin-top: 5rem;
   height: fit-content;
@@ -75,6 +88,7 @@ table {
 
 table {
   border-radius: 0.625rem;
+  background-color: var(--beige);
 }
 
 .projects-table {
@@ -104,7 +118,7 @@ table {
   align-items: center;
   gap: 1rem;
 }
-  
+
 .action-button-cell {
   padding: 2rem;
   width: 31.25rem;
@@ -126,4 +140,3 @@ table {
 .see-more-button:hover {
   background-color: var(--green);
 }
-

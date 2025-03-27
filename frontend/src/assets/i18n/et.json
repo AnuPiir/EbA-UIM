@@ -6,6 +6,13 @@
     "cancel": "Loobu",
     "import": "Impordi"
   },
+  "addGroup": {
+    "title": "Lisa tabeli vahekaart",
+    "list": "Olemasolevad tabeli vahekaardid",
+    "input": "Tabeli vahekaardi nimetus",
+    "placeholder": "Sisesta tunnuse ID või lühend",
+    "defaultTabName": "Vahekaart 1"
+  },
   "menu": {
     "edit": "Muuda",
     "delete":"Kustuta",
@@ -64,12 +71,6 @@
   "editStakeholderModal": {
     "title": "Muuda sidusrühma nimetust",
     "input": "Sidusrühma nimetus"
-  },
-  "addGroup": {
-    "title": "Lisa tabeli vahekaart",
-    "list": "Olemasolevad tabeli vahekaardid",
-    "input": "Tabeli vahekaardi nimetus",
-    "placeholder": "Sisesta tunnuse ID või lühend"
   },
   "addStakeholder": {
     "title": "Lisa uus sidusrühm",

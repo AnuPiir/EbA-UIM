@@ -1,21 +1,21 @@
 <div class="menu-component">
-  <button class="menu-button button-icon {{icon}} " (click)="toggleMenu(toggle)">
-    <span class="material-symbols-outlined {{icon}}-icon">{{icon}}</span>
-  </button>
-  <div *ngIf=isToggled class="dropdown-menu {{icon}}-menu">
-    <button *ngIf="isStakeholdersCell" class="menu-row" (click)="toggleMenu('Stakeholders')">
-      <span class="material-symbols-outlined icon small-icon">add</span> 
-      <span class="action-label">{{"menu.addStakeholder" | translate}}</span>
+    <button class="menu-button button-icon {{icon}} " (click)="toggleMenu(toggle)">
+        <span class="material-symbols-outlined {{icon}}-icon">{{icon}}</span>
     </button>
-    <button *ngFor="let action of actions" (click)="action.onClick()" class="menu-row {{action.name}}">
-      <span class="material-symbols-outlined icon small-icon">{{action.icon}}</span>
-      <span class="action-label">{{action.name | translate}}</span>
-    </button>
-  </div>
-  <div class="dropdown-menu {{icon}}-menu stakeholder-list" *ngIf=stakeholderListToggled>
-    <app-stakeholderselect [stakeholders]="stakeholders" [closeAction]="stakeHolderCloseAction()" [action]="stakeHolderAction()"></app-stakeholderselect>
-  </div>
-  <div *ngIf=colorListToggled class="dropdown-menu color-menu color-selection">
-    <app-color-select></app-color-select>
-  </div>
+    <div *ngIf=isToggled class="dropdown-menu {{icon}}-menu">
+        <button *ngIf="isStakeholdersCell" class="menu-row" (click)="toggleMenu('Stakeholders')">
+            <span class="material-symbols-outlined icon small-icon">add</span>
+            <span class="action-label">{{"menu.addStakeholder" | translate}}</span>
+        </button>
+        <button *ngFor="let action of actions" (click)="action.onClick()" class="menu-row {{action.name}}">
+            <span class="material-symbols-outlined icon small-icon">{{action.icon}}</span>
+            <span class="action-label">{{action.name | translate}}</span>
+        </button>
+    </div>
+    <div class="dropdown-menu {{icon}}-menu stakeholder-list" *ngIf=stakeholderListToggled>
+        <app-stakeholderselect [stakeholders]="stakeholders" [closeAction]="stakeHolderCloseAction()" [action]="stakeHolderAction()"></app-stakeholderselect>
+    </div>
+    <div *ngIf=colorListToggled class="dropdown-menu color-menu color-selection">
+        <app-color-select></app-color-select>
+    </div>
 </div>

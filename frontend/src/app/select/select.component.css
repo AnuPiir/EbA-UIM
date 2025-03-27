@@ -6,7 +6,7 @@
 }
 
 
-.select-button {  
+.select-button {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -23,7 +23,7 @@
   background-color: gainsboro;
 }
 
- 
+
 .options {
   display: block;
   flex-direction: column;
@@ -36,13 +36,21 @@
   border: 1px solid;
   border-radius: 0.625rem;
   border-color: var(--text-color);
-  background: none;
-  z-index: 2;
+  background-color: var(--beige);
+  z-index: 99;
   color: var(--text-color);
-  overflow: hidden;
+  overflow: visible;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
-.select-option-button {  
+.options-flip-up {
+  position: absolute;
+  bottom: 4.5rem;
+  top: auto !important;
+}
+
+.select-option-button {
   display: block;
   display: inline-block;
   padding: 0.5rem;
