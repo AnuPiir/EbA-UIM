@@ -4,7 +4,7 @@ export interface QuestionnaireResponse {
 
   id: number;
   name: string;
-  lastModified: string; //ISO format
+  lastModified: string | null; //ISO format
   validationAnswers: ValidationAnswer[];
 }
 

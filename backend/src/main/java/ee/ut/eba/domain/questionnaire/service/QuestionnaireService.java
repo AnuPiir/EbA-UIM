@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,7 +19,12 @@ public class QuestionnaireService {
   private final QuestionnaireRepository questionnaireRepository;
 
   public List<Questionnaire> get() {
-    return questionnaireRepository.findAll();
+    List<Questionnaire> questionnaires = questionnaireRepository.findAll();
+    log.info("Retrieved questionnaires with lastModified values: {}",
+            questionnaires.stream()
+                    .map(q -> q.getId() + ":" + q.getLastModified())
+                    .collect(Collectors.joining(", ")));
+    return questionnaires;
   }
 
   public Questionnaire get(Integer id) {
@@ -26,7 +32,6 @@ public class QuestionnaireService {
   }
 
   public Questionnaire save(Questionnaire questionnaire) {
-
     questionnaire.setLastModified(LocalDateTime.now());
     return questionnaireRepository.save(questionnaire);
   }

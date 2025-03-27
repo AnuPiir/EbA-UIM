@@ -1,5 +1,6 @@
 package ee.ut.eba.domain.questionnaire.api;
 
+import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireDeleteService;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import jakarta.validation.Valid;
@@ -45,7 +46,8 @@ public class QuestionnaireController {
     @PutMapping
     public QuestionnaireResponse putQuestionnaire(@RequestBody @Valid QuestionnaireRequest questionnaire) {
         log.info("Saving questionnaire: {}", questionnaire);
-        return QuestionnaireMapper.toResponse(questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire)));
+        Questionnaire saved = questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire));
+        return QuestionnaireMapper.toResponse(saved);
     }
 
     @DeleteMapping(value = "/{id}")

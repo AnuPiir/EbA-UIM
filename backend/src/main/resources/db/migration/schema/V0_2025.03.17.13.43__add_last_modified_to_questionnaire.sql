@@ -6,3 +6,5 @@ UPDATE questionnaire SET last_modified = CURRENT_TIMESTAMP;
 
 -- Set a default value for the "Example-Eng" project (Jan 17, 2025)
 UPDATE questionnaire SET last_modified = '2025-01-17 14:30:00' WHERE name LIKE '%Example ENG%';
+-- updating everything else
+UPDATE questionnaire SET last_modified = CURRENT_TIMESTAMP WHERE last_modified IS NULL;

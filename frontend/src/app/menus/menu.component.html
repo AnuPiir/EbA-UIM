@@ -2,7 +2,7 @@
     <button class="menu-button button-icon {{icon}} " (click)="toggleMenu(toggle)">
         <span class="material-symbols-outlined {{icon}}-icon">{{icon}}</span>
     </button>
-    <div *ngIf="isToggled" class="dropdown-menu {{icon}}-menu" #dropdownMenu [ngClass]="{'menu-flip-up': isFlippedUp}">
+    <div *ngIf=isToggled class="dropdown-menu {{icon}}-menu">
         <button *ngIf="isStakeholdersCell" class="menu-row" (click)="toggleMenu('Stakeholders')">
             <span class="material-symbols-outlined icon small-icon">add</span>
             <span class="action-label">{{"menu.addStakeholder" | translate}}</span>
@@ -12,10 +12,10 @@
             <span class="action-label">{{action.name | translate}}</span>
         </button>
     </div>
-    <div class="dropdown-menu {{icon}}-menu stakeholder-list" *ngIf="stakeholderListToggled" [ngClass]="{'menu-flip-up': isFlippedUp}">
+    <div class="dropdown-menu {{icon}}-menu stakeholder-list" *ngIf=stakeholderListToggled>
         <app-stakeholderselect [stakeholders]="stakeholders" [closeAction]="stakeHolderCloseAction()" [action]="stakeHolderAction()"></app-stakeholderselect>
     </div>
-    <div *ngIf="colorListToggled" class="dropdown-menu color-menu color-selection" [ngClass]="{'menu-flip-up': isFlippedUp}">
+    <div *ngIf=colorListToggled class="dropdown-menu color-menu color-selection">
         <app-color-select></app-color-select>
     </div>
 </div>

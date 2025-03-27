@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -20,7 +21,7 @@ public class QuestionnaireMapper {
                 questionnaire.getId(),
                 questionnaire.getName(),
                 questionnaire.getLastModified() != null
-                        ? questionnaire.getLastModified().toString()
+                        ? questionnaire.getLastModified()
                         : null,
                 questionnaire.getValidationAnswers().stream().map(ValidationAnswerMapper::toResponse).toList()
         );
