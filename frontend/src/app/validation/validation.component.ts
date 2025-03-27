@@ -634,9 +634,26 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
-    if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
+    // To verify whether an answer is the default one (CHOOSE_OPTION)
+    const requiredAnswers = validationFilledByAnswer.validationAutofillList.map(v =>
+        validationRowValue.answers.find(a => a.validationId === v.validationFilledById)
+    );
+    // allAnswersValid will be true only if every required answer exists, has a value, and is not "CHOOSE_OPTION"
+    const allAnswersValid = requiredAnswers.every(a => a && a.answer && a.answer !== 'CHOOSE_OPTION');
+    const autofillAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
+
+    // If not all answers are valid, clear the autofill answer and exit
+    if (!allAnswersValid) {
+      if (autofillAnswer && autofillAnswer.answer !== '') {
+        autofillAnswer.answer = '';
+        this.validationService.saveValidationAnswer(autofillAnswer).subscribe();
+      }
       return;
     }
+
+    /*if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
+      return;
+    }*/
 
     const answerValues = []
     let isAutofillTypeCombination = true;
@@ -698,6 +715,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   updateCombinationAutoFillAnswers(answerValuesSortedByWeight: any[], validationRowValue: ValidationRow, validationFilledByAnswer: Validation) {
+    let foundMatch = false;
     for (let combinationResult of this.validationCombinationResults) {
       if (this.hasMatchingCombination(combinationResult, answerValuesSortedByWeight)) {
         const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
@@ -711,11 +729,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
           // DONT append the stakeholder
           correctAnswer.answer = this.getTranslation(combinationResult);
+
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
           });
         }
-        return;
+        foundMatch = true;
+        break;
+      }
+    }
+    // If no matching combination was found (e.g. one or more answers are invalid/default), clear the autofill answer.
+    if (!foundMatch) {
+      const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
+      if (correctAnswer && correctAnswer.answer !== '') {
+        correctAnswer.answer = '';
+        this.validationService.saveValidationAnswer(correctAnswer).subscribe();
       }
     }
   }

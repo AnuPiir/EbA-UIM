@@ -87,13 +87,14 @@
     "cancelEdit": "Cancel editing"
   },
   "select": {
-    "chooseOption": "Choose",
+    "chooseOption": "Select",
     "yes": "Yes",
     "no": "No",
     "dontKnow": "Don't know",
     "partly": "Partly"
   },
   "methodCombinations": {
+    "CHOOSE_OPTION": "Select",
     "YES": "Yes",
     "NO": "No",
     "DONT_KNOW": "Don't know",

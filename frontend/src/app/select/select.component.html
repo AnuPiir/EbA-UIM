@@ -5,11 +5,10 @@
     </button>
     <div *ngIf="isToggled" class="options" #optionContainer [ngClass]="{'options-flip-up': isFlippedUp}">
         <button
-                *ngFor="let validationValue of validationValues"
-                class="select-option-button {{validationValue}}"
-                (click)="onValueChange(validationValue)"
-        >
-            {{'select.' + validationValue2LabelMapping[validationValue] | translate}}
+            *ngFor="let validationValue of validationValues"
+            class="select-option-button {{validationValue}}"
+            (click)="onValueChange(validationValue)">
+                {{'select.' + validationValue2LabelMapping[validationValue] | translate}}
         </button>
     </div>
 </div>
