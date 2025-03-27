@@ -40,6 +40,7 @@ export class FeatureGroupComponent implements OnInit {
   modalRef: BsModalRef;
   validations: Validation[] = [];
   defaultTabName: string = "Vahekaart 1";
+  showProjectsWrapper: boolean = true;
 
   constructor(
       private featureGroupService: FeatureGroupService,
@@ -73,6 +74,10 @@ export class FeatureGroupComponent implements OnInit {
     });
 
     this.getData();
+  }
+
+  toggleProjectsWrapper() {
+    this.showProjectsWrapper = !this.showProjectsWrapper;
   }
 
   toggleAddNewGroup(): void {

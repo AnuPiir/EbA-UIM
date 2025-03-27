@@ -207,16 +207,75 @@ export class QuestionnaireComponent implements OnInit {
         });
     }
 
-    downloadQuestionnaire(questionnaire: QuestionnaireResponse) {
-        this.questionnaireService.exportQuestionnaire(questionnaire.id, this.translateService.currentLang).subscribe((data) => {
-
+    downloadQuestionnaireAsExcel(questionnaire: QuestionnaireResponse) {
+        this.questionnaireService.exportQuestionnaireAsExcel(questionnaire.id, this.translateService.currentLang).subscribe((data) => {
             const downloadURL = window.URL.createObjectURL(data);
             const link = document.createElement('a');
             link.href = downloadURL;
             link.download = questionnaire.name + "_" + formatDate(new Date(), 'yyyy-MM-dd', 'en-US') + ".xlsx";
             link.click();
-
+            window.URL.revokeObjectURL(downloadURL);
         });
+    }
+
+    downloadQuestionnaireAsJson(questionnaire: QuestionnaireResponse) {
+        this.questionnaireService.exportQuestionnaireAsJson(questionnaire.id).subscribe((data) => {
+            const downloadURL = window.URL.createObjectURL(data);
+            const link = document.createElement('a');
+            link.href = downloadURL;
+            link.download = `${questionnaire.name}_${formatDate(new Date(), 'yyyy-MM-dd', 'en-US')}.json`;
+            link.click();
+            window.URL.revokeObjectURL(downloadURL);
+        });
+    }
+
+    getActions(questionnaire: QuestionnaireResponse): { name: string, icon: string, onClick: () => void }[] {
+        return [
+            {name: "menu.edit", icon: 'edit', onClick: () => this.editQuestionnaire(questionnaire)},
+            {name: "menu.delete", icon: 'delete', onClick: () => this.deleteQuestionnaire(questionnaire)},
+            {
+                name: "menu.downloadExcel",
+                icon: 'download',
+                onClick: () => this.downloadQuestionnaireAsExcel(questionnaire)
+            },
+            {
+                name: "menu.downloadJson",
+                icon: 'download',
+                onClick: () => this.downloadQuestionnaireAsJson(questionnaire)
+            },
+        ];
+    }
+
+    importProject() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+
+        input.onchange = (event: any) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const jsonData = JSON.parse(e.target?.result as string);
+                    this.questionnaireService.importQuestionnaireFromJson(jsonData).subscribe(
+                        () => {
+                            console.log('Questionnaire imported successfully');
+                        },
+                        (error) => {
+                            console.error('Failed to import questionnaire:', error);
+                        }
+                    );
+                } catch (error) {
+                    console.error('Invalid JSON file:', error);
+                }
+            };
+
+            reader.readAsText(file);
+        };
+
+        input.click();
     }
 
     // Normalize dates to ensure all questionnaires have a lastModified value
@@ -276,13 +335,6 @@ export class QuestionnaireComponent implements OnInit {
         return formatTimeAgo(lastModified);
     }
 
-    getActions(questionnaire: any): { name: string, icon: string, onClick: any }[] {
-        return [
-            {name: "menu.edit", icon: 'edit', onClick: () => this.editQuestionnaire(questionnaire)},
-            {name: "menu.delete", icon: 'delete', onClick: () => this.deleteQuestionnaire(questionnaire)},
-            {name: "menu.download", icon: 'download', onClick: () => this.downloadQuestionnaire(questionnaire)},
-        ];
-    }
 
     protected readonly formatFullDate = formatFullDate;
     protected readonly formatTimeAgo = formatTimeAgo;
