@@ -38,5 +38,43 @@ describe('Electron Testing', () => {
         const firstMenuAction = await $('//app-menu//button[1]')
         await expect(firstMenuAction).toBeDisplayed()
     })
+    it('should toggle column visibility', async () => {
+        const toggleButton = await browser.$('.toggle-column-btn');
+        await expect(toggleButton).toBeDisplayed();
+        await toggleButton.click();
+        await browser.pause(1000);
+    });
 
+    it('should change row color selection', async () => {
+        const changeColorButton = await browser.$('.toggle-button');
+        await expect(changeColorButton).toBeDisplayed();
+        await changeColorButton.click();
+        const colorOption = await browser.$('.textarea-color-option');
+        await colorOption.click();
+    });
+
+    it('should add and delete a row', async () => {
+        const addRowButton = await browser.$('.add-row-button');
+        await expect(addRowButton).toBeDisplayed();
+        await addRowButton.click();
+
+        const deleteRowButton = await browser.$('.delete-row-button');
+        await expect(deleteRowButton).toBeDisplayed();
+        await deleteRowButton.click();
+    });
+
+    it('should toggle project panel visibility', async () => {
+        const toggleProjectsButton = await browser.$('button[aria-label*="hidePanels.ariaLabel"]');
+        await expect(toggleProjectsButton).toBeDisplayed();
+        await toggleProjectsButton.click();
+    });
+
+    it('should switch tabs', async () => {
+        const tabs = await browser.$$('.tabs');
+        if (tabs.length > 1) {
+            await tabs[1].click();
+            await browser.pause(1000);
+            await tabs[0].click();
+        }
+    });
 })
