@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Validated
 @RestController
@@ -20,8 +23,11 @@ public class ImportController {
 	private final ImportService importService;
 
 	@PostMapping(value = "json")
-	public ResponseEntity<String> importQuestionnaire(@RequestBody QuestionaireJson jsonData) {
+	public ResponseEntity<Map<String, Object>> importQuestionnaire(@RequestBody QuestionaireJson jsonData) {
 		int id = importService.importQuestionnaire(jsonData);
-		return ResponseEntity.ok("Questionnaire imported successfully!");
+		Map<String, Object> response = new HashMap<>();
+		response.put("message", "Questionnaire imported successfully!");
+		response.put("id", id);
+		return ResponseEntity.ok(response);
 	}
 }

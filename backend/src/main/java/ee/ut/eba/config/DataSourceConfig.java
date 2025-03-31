@@ -9,48 +9,45 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Properties;
 
 @Configuration
 @EntityScan("ee.ut.eba.*")
 @EnableJpaRepositories(value = "ee.ut.eba.*")
 public class DataSourceConfig {
 
-  @Autowired
-  Environment env;
+	@Autowired
+	Environment env;
 
-  @Bean
-  public DataSource dataSource() {
-    DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName("org.sqlite.JDBC");
+	@Bean
+	public DataSource dataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("org.sqlite.JDBC");
 
-    // Create a user-writable path for the database
-    String userHome = System.getProperty("user.home");
-    String appDataDir = Paths.get(userHome, "Documents", "EBAM").toString();
+		// Create a user-writable path for the database
+		String userHome = System.getProperty("user.home");
+		String appDataDir = Paths.get(userHome, "Documents", "EBAM").toString();
 
-    // Ensure the directory exists
-    File directory = new File(appDataDir);
-    if (!directory.exists()) {
-      directory.mkdirs();
-    }
+		// Ensure the directory exists
+		File directory = new File(appDataDir);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
 
-    String dbPath = Paths.get(appDataDir, "database.db").toString();
-    dataSource.setUrl("jdbc:sqlite:" + dbPath);
+		String dbPath = Paths.get(appDataDir, "database.db").toString();
+		dataSource.setUrl("jdbc:sqlite:" + dbPath);
 
-    // Remove username/password (not needed for SQLite)
-    // dataSource.setUsername("sa");
-    // dataSource.setPassword("sa");
+		// Remove username/password (not needed for SQLite)
+		// dataSource.setUsername("sa");
+		// dataSource.setPassword("sa");
 
-    return dataSource;
-  }
-  @Bean("transactionManager")
-  public JpaTransactionManager transactionManager() {
-    return new JpaTransactionManager();
-  }
+		return dataSource;
+	}
+	@Bean("transactionManager")
+	public JpaTransactionManager transactionManager() {
+		return new JpaTransactionManager();
+	}
 }

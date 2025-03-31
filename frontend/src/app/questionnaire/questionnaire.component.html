@@ -19,6 +19,13 @@
                 <button [disabled]="questionnaireName.length <= 0" (click)="addNewQuestionnaire(questionnaireName)" formtarget="_blank" class="button add-button">{{'button.add' | translate}}</button>
             </div>
         </div>
+        <div *ngIf="isToggled" class="add-project-row import-row">
+            <div class="import-project-button">
+                <button (click)="importProject()" class="button blue">
+                    {{ 'button.import' | translate }}
+                </button>
+            </div>
+        </div>
     </div>
     <div class="projects-table">
         <table *ngIf="!loading && questionnaires.length > 0">

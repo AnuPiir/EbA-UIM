@@ -11,6 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {formatFullDate, formatTimeAgo, getIdBasedTimestamp} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'app-questionnaire',
@@ -27,19 +28,22 @@ export class QuestionnaireComponent implements OnInit {
     currentlyEditingQuestionnaires: any[] = [];
     TIMEOUT_BEFORE_RETRYING = 5000;
     validationPath = "/validation"
-    // @ts-ignore
+
     modalRef: BsModalRef;
     menuIcon: string = "more_vert";
 
-    // Sorting properties
-    sortField: 'name' | 'lastModified' = 'lastModified'; // Default to last modified
-    sortDirection: 'asc' | 'desc' = 'desc'; // Default to newest first
+    sortField: 'name' | 'lastModified' = 'lastModified';
+    sortDirection: 'asc' | 'desc' = 'desc';
+
+    notificationVisible = false;
+    notificationMessage = '';
 
     constructor(
         private questionnaireService: QuestionnaireService,
         private modalService: BsModalService,
         private translateService: TranslateService,
-        private router: Router
+        private router: Router,
+        private cdr: ChangeDetectorRef
     ) {
     }
 
@@ -56,6 +60,7 @@ export class QuestionnaireComponent implements OnInit {
                 this.normalizeDates();
                 this.sortQuestionnaires();
                 this.loading = false;
+                this.cdr.detectChanges();
             },
             error => {
                 console.error('Error fetching questionnaires:', error);
@@ -259,16 +264,20 @@ export class QuestionnaireComponent implements OnInit {
             reader.onload = (e) => {
                 try {
                     const jsonData = JSON.parse(e.target?.result as string);
+                    console.log(jsonData);
                     this.questionnaireService.importQuestionnaireFromJson(jsonData).subscribe(
-                        () => {
-                            console.log('Questionnaire imported successfully');
-                        },
-                        (error) => {
-                            console.error('Failed to import questionnaire:', error);
+                        response => {
+                            if (response) {
+                                this.router.navigate(['/validation'], {
+                                    queryParams: {
+                                        questionnaireId: response.id
+                                    }
+                                });
+                            }
                         }
                     );
                 } catch (error) {
-                    console.error('Invalid JSON file:', error);
+                    console.log('error importing projectImportFailed', error);
                 }
             };
 
