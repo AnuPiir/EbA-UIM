@@ -276,6 +276,9 @@
     "unhide": "Näita",
     "ariaLabel": "Nupp projektide vahekaartide nähtavuse muutmiseks. Vajutage Enter, tühikut või kasutage Ctrl + Üles-nooleklahvi aktiveerimiseks."
   },
+  "prioritizationNotice": {
+    "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅."
+  },
   "questionnaires": "Küsimustikud",
   "et": "EST",
   "en": "ENG"

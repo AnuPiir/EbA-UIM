@@ -22,6 +22,7 @@ import { ValidationValue } from './model/validation-value';
 import { HttpClient } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ChangeDetectorRef, NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-validation',
@@ -67,7 +68,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private el: ElementRef,
     private renderer: Renderer2,
     private sanitizer: DomSanitizer,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {
     this.onLanguageChanged();
   }
@@ -518,6 +521,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
+            if (validation.type === ValidationType.SELECT) {
+              this.checkAndShowPrioritizationNotice(validationRowValue);
+            }
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -767,6 +773,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   deleteRow(rowId: number) {
+    // Finding the precondition ID of the row to delete
+    const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
+    if (!rowToDelete) return;
+    const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
+
+    // Removing rowId from prioritizedRows before actually deleting
+    if (this.prioritizedRows[preconditionId]) {
+      this.prioritizedRows[preconditionId].delete(String(rowId));
+
+      // It is optional but just in case cleaning up empty sets to avoid memory waste
+      if (this.prioritizedRows[preconditionId].size === 0) {
+        delete this.prioritizedRows[preconditionId];
+      }
+    }
+
     this.validationService.deleteValidationAnswersByQuestionnaireIdAndRowId(this.questionnaireId, rowId).subscribe(
         next => {
           this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
@@ -1144,4 +1165,91 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       },
     ];
   }
+
+  // To keep track of which rows are prioritized for each precondition
+  prioritizedRows: { [preconditionId: string]: Set<string> } = {};
+
+  // Check if the current row is prioritized
+  isPrioritized(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
+    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;
+  }
+
+
+  // Check if the current precondition has more than one example
+  hasMultipleExamples(preconditionId: number): boolean {
+    const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
+        row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
+    );
+    return rowsWithSamePrecondition.length > 1;
+  }
+
+  onCheckboxChange(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const rowId = String(validationRowValue.rowId);
+
+    this.zone.run(() => {
+      if (!this.prioritizedRows[preconditionId]) {
+        this.prioritizedRows[preconditionId] = new Set<string>();
+      }
+
+      const set = this.prioritizedRows[preconditionId];
+
+      if (set.has(rowId)) {
+        set.delete(rowId); // Uncheck
+      } else {
+        set.add(rowId); // Check
+      }
+
+      this.cdr.detectChanges();
+    });
+
+  }
+
+  isRowDisabled(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const prioritizedSet = this.prioritizedRows[preconditionId];
+
+    return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
+  }
+
+  // Notification state
+  showNotification: boolean = false;
+  notificationMessage: string = '';
+  private notifiedPreconditionIds: Set<number> = new Set<number>();
+
+  checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
+    // Skip if the notice has already been shown for this precondition
+    if (this.notifiedPreconditionIds.has(preconditionId)) return;
+
+    // Skip if the notice has already been shown for this precondition
+    const exampleRows = this.validationRowValues.filter(row =>
+        row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
+    );
+    // Check if there are now 2+ examples with 4 dropdowns filled
+    if (exampleRows.length >= 2) {
+      const allAnswersFilled = exampleRows.every(row =>
+          row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
+          row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
+      );
+      // If valid, show notification and remember this precondition to avoid future duplicates
+      if (allAnswersFilled) {
+        this.notifiedPreconditionIds.add(preconditionId);
+        this.notificationMessage = 'prioritizationNotice.message';
+        this.showNotification = true;
+      }
+    }
+  }
+
+  shouldGrayOut(validation: Validation): boolean {
+    return this.isValidationExample(validation) ||
+        this.isValidationSelectable(validation) ||
+        this.isValidationAutofill(validation) ||
+        this.isValidationTextField(validation)
+        //this.isValidationDoField(validation);
+  }
+
 }

@@ -105,7 +105,16 @@
   border-color: #5B5B5B;
   color: #5B5B5B;
 }
-.select-option-button.CHOOSE_OPTION:hover  {
+
+.select-option-button.CHOOSE_OPTION:hover {
   background-color: #b2b2b2;
   color: #505050;
+}
+
+.select-button.disabled {
+  background-color: var(--brown);
+  color: var(--text-color);
+  cursor: not-allowed;
+  border-color: var(--dark-brown);
+
 }

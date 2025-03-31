@@ -270,6 +270,9 @@
     "unhide": "Unhide",
     "ariaLabel": "Button to toggle visibility of project tabs. Press Enter, Space, or use Ctrl + Up Arrow to activate."
   },
+  "prioritizationNotice": {
+    "message": "Multiple situations have been added under this precondition. They can be prioritized by using the checkbox ✅."
+  },
   "questionnaires": "Questionnaires",
   "et": "EST",
   "en": "ENG"
