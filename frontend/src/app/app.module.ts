@@ -37,7 +37,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SanitizeHtmlPipe } from '../sanitize-html.pipe'; // Import the pipe here
 import { ColorSchemeService } from '../color-scheme.service';
 import { CombinationViewComponent } from './combination-view/combination-view.component';
-import { BackToTopComponent } from './back-to-top/back-to-top.component'; // Import your service here
+import { BackToTopComponent } from './back-to-top/back-to-top.component';
+import { NotificationComponent } from './notification/notification.component'; // Import your service here
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -67,6 +68,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SanitizeHtmlPipe,
     CombinationViewComponent,
     BackToTopComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,

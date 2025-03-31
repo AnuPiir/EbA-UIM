@@ -11,6 +11,7 @@
     --highlight: #D0E5CA;
     --table-head: #D0E5CA;
     --beige: #F7F1E6;
+    --light-brown: #f1e2d6;
     --brown: #DACDBD;
     --dark-brown: #443E37;
     --light-red: #F5948A;
@@ -52,7 +53,7 @@
 }
 
 .scheme2 {
-    --text-color: #2c3849;
+    --text-color: #1a222c;
     --bg-color: #8091a4;
     --container: #687d93;
     --highlight: #a9c6d6;

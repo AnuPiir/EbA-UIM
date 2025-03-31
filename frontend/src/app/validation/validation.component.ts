@@ -514,6 +514,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
+            if (validation.type === ValidationType.SELECT) {
+              this.checkAndShowPrioritizationNotice(validationRowValue);
+            }
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -731,6 +734,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   deleteRow(rowId: number) {
+    // Finding the precondition ID of the row to delete
+    const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
+    if (!rowToDelete) return;
+    const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
+
+    // Removing rowId from prioritizedRows before actually deleting
+    if (this.prioritizedRows[preconditionId]) {
+      this.prioritizedRows[preconditionId].delete(String(rowId));
+
+      // It is optional but just in case cleaning up empty sets to avoid memory waste
+      if (this.prioritizedRows[preconditionId].size === 0) {
+        delete this.prioritizedRows[preconditionId];
+      }
+    }
+
     this.validationService.deleteValidationAnswersByQuestionnaireIdAndRowId(this.questionnaireId, rowId).subscribe(
         next => {
           this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
@@ -1039,13 +1057,14 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     ];
   }
 
-  // Store the ID of the prioritized row for each precondition
-  prioritizedRows: { [preconditionId: string]: string | null } = {};
+  // To keep track of which rows are prioritized for each precondition
+  prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
   // Check if the current row is prioritized
   isPrioritized(validationRowValue: ValidationRow): boolean {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-    return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
+    //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
+    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;
   }
 
 
@@ -1057,62 +1076,71 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return rowsWithSamePrecondition.length > 1;
   }
 
-
-  /*onCheckboxChange(validationRowValue: ValidationRow): void {
-    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-    const rowId = String(validationRowValue.rowId);
-
-    // Using NgZone to trigger proper change detection
-    this.zone.run(() => {
-      if (this.prioritizedRows[preconditionId] === rowId) {
-        // Uncheck the current row (make all rows active again)
-        this.prioritizedRows[preconditionId] = null;
-      } else {
-        // Otherwise, set the current row as prioritized
-        this.prioritizedRows[preconditionId] = rowId;
-      }
-
-      // Trigger UI refresh to properly uncheck the previous checkbox
-      this.cdr.detectChanges();
-    });
-  }*/
-
   onCheckboxChange(validationRowValue: ValidationRow): void {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
     const rowId = String(validationRowValue.rowId);
 
-    // Using NgZone to trigger proper change detection
     this.zone.run(() => {
-      if (this.prioritizedRows[preconditionId] === rowId) {
-        // Uncheck the current row (make all rows active again)
-        this.prioritizedRows[preconditionId] = null;
-      } else {
-        // Otherwise, set the current row as prioritized
-        this.prioritizedRows[preconditionId] = rowId;
+      if (!this.prioritizedRows[preconditionId]) {
+        this.prioritizedRows[preconditionId] = new Set<string>();
       }
 
-      // Trigger UI refresh to properly uncheck the previous checkbox
+      const set = this.prioritizedRows[preconditionId];
+
+      if (set.has(rowId)) {
+        set.delete(rowId); // Uncheck
+      } else {
+        set.add(rowId); // Check
+      }
+
       this.cdr.detectChanges();
     });
-  }
 
-  // Check if the current row should be disabled (greyed out)
-  /*isRowDisabled(validationRowValue: ValidationRow): boolean {
-    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-    const prioritizedRowId = this.prioritizedRows[preconditionId];
-    return prioritizedRowId !== null && prioritizedRowId !== String(validationRowValue.rowId);
-  }*/
+  }
 
   isRowDisabled(validationRowValue: ValidationRow): boolean {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-    const prioritizedRowId = this.prioritizedRows[preconditionId];
+    const prioritizedSet = this.prioritizedRows[preconditionId];
 
-    if (!prioritizedRowId) return false; // Nothing is prioritized, so no rows should be disabled
-
-    return String(validationRowValue.rowId) !== prioritizedRowId; // Disable all rows except the prioritized one
+    return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
   }
 
+  // Notification state
+  showNotification: boolean = false;
+  notificationMessage: string = '';
+  private notifiedPreconditionIds: Set<number> = new Set<number>();
 
+  checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
 
+    // Skip if the notice has already been shown for this precondition
+    if (this.notifiedPreconditionIds.has(preconditionId)) return;
+
+    // Skip if the notice has already been shown for this precondition
+    const exampleRows = this.validationRowValues.filter(row =>
+        row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
+    );
+    // Check if there are now 2+ examples with 4 dropdowns filled
+    if (exampleRows.length >= 2) {
+      const allAnswersFilled = exampleRows.every(row =>
+          row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
+          row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
+      );
+      // If valid, show notification and remember this precondition to avoid future duplicates
+      if (allAnswersFilled) {
+        this.notifiedPreconditionIds.add(preconditionId);
+        this.notificationMessage = 'prioritizationNotice.message';
+        this.showNotification = true;
+      }
+    }
+  }
+
+  shouldGrayOut(validation: Validation): boolean {
+    return this.isValidationExample(validation) ||
+        this.isValidationSelectable(validation) ||
+        this.isValidationAutofill(validation) ||
+        this.isValidationTextField(validation)
+        //this.isValidationDoField(validation);
+  }
 
 }

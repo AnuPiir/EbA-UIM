@@ -105,6 +105,22 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   background-color: var(--brown);
 }
 
+.gray-out-cell {
+  background-color: var(--light-brown) !important;
+  /*opacity: 0.6;*/
+  /*filter: brightness(0.5);*/
+  color: var(--text-color) !important;
+}
+
+.gray-out-cell textarea,
+.gray-out-cell select,
+.gray-out-cell .select-button {
+  pointer-events: none;
+  color: var(--text-color) !important;
+  background-color: transparent !important;
+  border-color: var(--container);
+}
+
 .id-cell {
   position: sticky;
   left: 0;
