@@ -41,6 +41,7 @@
                 <td class="project-cell">
                     <span>{{questionnaire.name}}</span>
                     <a [routerLink]="validationPath" [queryParams]="{questionnaireId: questionnaire.id}" class="see-more-button">{{'projectsTable.seeMore' | translate}}</a>
+                    <p>{{ questionnaire.lastModified | date: 'dd.MM.yyyy HH:mm' : 'et-EE' }}</p>
                 </td>
                 <td class="action-button-cell">
                     <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getActions(questionnaire)"></app-menu>

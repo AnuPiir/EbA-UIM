@@ -1,9 +1,10 @@
 package ee.ut.eba.domain.questionnaire.model;
 
 import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
-import ee.ut.eba.domain.validationanswer.model.ValidationAnswerMapper;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -16,22 +17,12 @@ public class QuestionnaireMapper {
 
 	public static QuestionnaireResponse toResponse(Questionnaire questionnaire) {
 		return new QuestionnaireResponse(questionnaire.getId(), questionnaire.getName(),
-				questionnaire.getLastModified() != null ? questionnaire.getLastModified() : null,
-				questionnaire.getValidationAnswers().stream().map(ValidationAnswerMapper::toResponse).toList());
+				questionnaire.getLastModified() != null ? questionnaire.getLastModified() : null, new ArrayList<>());
 	}
 
 	public static Questionnaire toQuestionnaire(QuestionnaireRequest questionnaire) {
-		Questionnaire entity = new Questionnaire().setId(questionnaire.getId()).setName(questionnaire.getName());
 
-		// Preserve last modified if it exists, otherwise set to now
-		if (questionnaire.getId() != null) {
-			// Update
-			entity.setLastModified(LocalDateTime.now());
-		} else {
-			// New questionnaire
-			entity.setLastModified(LocalDateTime.now());
-		}
-
-		return entity;
+		return new Questionnaire().setId(questionnaire.getId()).setName(questionnaire.getName())
+				.setLastModified(LocalDateTime.now());
 	}
 }

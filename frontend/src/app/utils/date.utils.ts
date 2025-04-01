@@ -57,16 +57,3 @@ export function formatFullDate(date: Date | string | number, currentLang: string
         return `${year}-${month}-${day} ${hours}:${minutes}`;
     }
 }
-
-/**
- * Get a fallback timestamp from an ID
- * (for when lastModified is null but we want to sort chronologically)
- */
-export function getIdBasedTimestamp(id: number): string {
-    // Create a date based on ID (assuming higher IDs are newer)
-    // Start from a base date and add minutes based on ID
-    const baseDate = new Date('2020-01-01T00:00:00Z');
-    const minutesToAdd = id * 10; // 10 minutes per ID increment
-    const timestamp = new Date(baseDate.getTime() + minutesToAdd * 60000);
-    return timestamp.toISOString();
-}

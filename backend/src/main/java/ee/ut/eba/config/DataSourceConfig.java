@@ -40,10 +40,6 @@ public class DataSourceConfig {
 		String dbPath = Paths.get(appDataDir, "database.db").toString();
 		dataSource.setUrl("jdbc:sqlite:" + dbPath);
 
-		// Remove username/password (not needed for SQLite)
-		// dataSource.setUsername("sa");
-		// dataSource.setPassword("sa");
-
 		return dataSource;
 	}
 	@Bean("transactionManager")

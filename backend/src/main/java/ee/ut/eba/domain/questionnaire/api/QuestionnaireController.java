@@ -1,7 +1,6 @@
 package ee.ut.eba.domain.questionnaire.api;
 
 import ee.ut.eba.domain.questionnaire.model.QuestionnaireMapper;
-import ee.ut.eba.domain.questionnaire.model.QuestionnaireRequest;
 import ee.ut.eba.domain.questionnaire.model.QuestionnaireResponse;
 import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireDeleteService;
@@ -34,9 +33,9 @@ public class QuestionnaireController {
 	private final QuestionnaireDeleteService questionnaireDeleteService;
 
 	@GetMapping
-	public List<QuestionnaireResponse> getQuestionnaires() {
+	public List<Questionnaire> getQuestionnaires() {
 		log.info("Getting all questionnaires");
-		return QuestionnaireMapper.toResponse(questionnaireService.get());
+		return questionnaireService.get();
 	}
 
 	@GetMapping(value = "/{id}")
@@ -46,10 +45,9 @@ public class QuestionnaireController {
 	}
 
 	@PutMapping
-	public QuestionnaireResponse putQuestionnaire(@RequestBody @Valid QuestionnaireRequest questionnaire) {
+	public Questionnaire putQuestionnaire(@RequestBody @Valid Questionnaire questionnaire) {
 		log.info("Saving questionnaire: {}", questionnaire);
-		Questionnaire saved = questionnaireService.save(QuestionnaireMapper.toQuestionnaire(questionnaire));
-		return QuestionnaireMapper.toResponse(saved);
+		return questionnaireService.save(questionnaire);
 	}
 
 	@DeleteMapping(value = "/{id}")

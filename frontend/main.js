@@ -29,26 +29,26 @@ function createWindow() {
 
     if (!developerMode) {
         const backendPath = app.isPackaged
-            ? path.join(process.resourcesPath, "app", "jars", "backend-1.1.0.jar")
-            : path.join(__dirname, "jars", "backend-1.1.0.jar");
+            ? path.join(process.resourcesPath, "app", "jars", "backend-1.2.0.jar")
+            : path.join(__dirname, "jars", "backend-1.2.0.jar");
 
-        log.info(`Starting backend from: ${backendPath}`); // Use electron-log for logging
+        log.info(`Starting backend from: ${backendPath}`);
 
         backendProcess = spawn("java", ["-jar", backendPath], {
             detached: false,
-            stdio: ['pipe', 'pipe', 'pipe'], // Captures stdout, stderr
+            stdio: ['pipe', 'pipe', 'pipe'],
         });
 
         backendProcess.stdout.on('data', (data) => {
-            log.info(`Backend stdout: ${data}`); // Log stdout
+            log.info(`Backend stdout: ${data}`);
         });
 
         backendProcess.stderr.on('data', (data) => {
-            log.error(`Backend stderr: ${data}`); // Log stderr as errors
+            log.error(`Backend stderr: ${data}`);
         });
 
         backendProcess.on('error', (err) => {
-            log.error('Error spawning backend:', err); // Log spawning errors
+            log.error('Error spawning backend:', err);
         });
 
 

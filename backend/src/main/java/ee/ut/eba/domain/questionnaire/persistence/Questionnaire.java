@@ -1,10 +1,7 @@
 package ee.ut.eba.domain.questionnaire.persistence;
 
-import ee.ut.eba.domain.validationanswer.persistence.ValidationAnswer;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,6 +27,13 @@ public class Questionnaire {
 	@Column
 	private LocalDateTime lastModified;
 
-	@OneToMany(cascade = {CascadeType.ALL}, mappedBy = "questionnaire")
-	private List<ValidationAnswer> validationAnswers = new ArrayList<>();
+	@PreUpdate
+	public void onUpdate() {
+		lastModified = LocalDateTime.now();
+	}
+
+	@PrePersist
+	public void onCreate() {
+		lastModified = LocalDateTime.now();
+	}
 }

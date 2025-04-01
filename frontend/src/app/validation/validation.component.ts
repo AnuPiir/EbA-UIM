@@ -48,6 +48,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   isAddingNewRow: boolean = false;
   private inputSubject: Subject<TextareaInputChange> = new Subject<TextareaInputChange>();
   private inputSubscription: Subscription;
+  showColorSelection: boolean = false;
+  showColorSelectionMap: Record<number, boolean> = {};
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
@@ -57,6 +59,17 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @Input() featureGroup: FeatureGroupResponse;
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
+
+
+  colorOptions = [
+    { name: 'Beige', value: 'var(--light-beige)' },
+    { name: 'Grey', value: 'var(--light-grey)' },
+    { name: 'Green', value: 'var(--light-green)' },
+    { name: 'Yellow', value: 'var(--light-yellow)' },
+    { name: 'Orange', value: 'var(--light-orange)' },
+    { name: 'Red', value: 'var(--light-red)' },
+    { name: 'Blue', value: 'var(--light-blue)' }
+  ];
 
   constructor(
     private validationService: ValidationService,
@@ -1100,59 +1113,18 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return (<any>ValidationValue)[answer];
   }
 
-  /*onColorChange(event: Event, validationRowAnswer: ValidationAnswer): void {
-    const inputElement = event.target as HTMLInputElement;
-    const newColor = inputElement.value;
-
-    if (!validationRowAnswer) {
-      console.error("ValidationRowAnswer is undefined");
-      return;
-    }
-
-    validationRowAnswer.backgroundColor = newColor; // Local UI
-
-    // Saving the validation answer
-    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe({
-      next: () => console.log("Background color updated successfully"),
-      error: (error: any) => console.error("Error updating background color", error)
-    });
-  }*/
-
-  colorOptions = [
-    { name: 'Beige', value: 'var(--light-beige)' },
-    { name: 'Grey', value: 'var(--light-grey)' },
-    { name: 'Green', value: 'var(--light-green)' },
-    { name: 'Yellow', value: 'var(--light-yellow)' },
-    { name: 'Orange', value: 'var(--light-orange)' },
-    { name: 'Red', value: 'var(--light-red)' },
-    { name: 'Blue', value: 'var(--light-blue)' }
-
-  ];
   onColorChange(event: Event | string, validationRowAnswer: ValidationAnswer): void {
-    // Check if the event is a string (predefined color click) or Event (color picker change)
     const newColor = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
 
     if (!validationRowAnswer) {
-      console.error("ValidationRowAnswer is undefined");
       return;
     }
 
-    validationRowAnswer.backgroundColor = newColor; // Update Local UI
-
-    // Save the new background color to the backend
-    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe({
-      next: () => console.log("Background color updated successfully"),
-      error: (error: any) => console.error("Error updating background color", error)
-    });
+    validationRowAnswer.backgroundColor = newColor;
+    this.validationService.saveValidationAnswer(validationRowAnswer)
   }
 
-  showColorSelection: boolean = false;
-  // Keep track of which rows have the color selection menu open
-  showColorSelectionMap: Record<number, boolean> = {};
-
-// Toggle the color selection menu for a specific row
   toggleColorSelection(rowId: number): void {
-    // Toggle visibility for the specific row
     this.showColorSelectionMap[rowId] = !this.showColorSelectionMap[rowId];
   }
 

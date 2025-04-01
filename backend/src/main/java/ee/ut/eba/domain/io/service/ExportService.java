@@ -88,10 +88,11 @@ public class ExportService {
 	}
 
 	public QuestionaireJson mapToJson(Questionnaire questionnaire) {
-		return new QuestionaireJson(questionnaire.getName(),
-				questionnaire.getValidationAnswers().stream().map(validationAnswer -> new ValidationAnswerJson(
-						validationAnswer.getId(), validationAnswer.getAnswer(), validationAnswer.getRowId(),
-						validationAnswer.getType(), validationAnswer.getQuestionnaire().getId(),
+		return new QuestionaireJson(questionnaire.getName(), validationAnswerService
+				.findByQuestionnaireId(questionnaire.getId()).stream()
+				.map(validationAnswer -> new ValidationAnswerJson(validationAnswer.getId(),
+						validationAnswer.getAnswer(), validationAnswer.getRowId(), validationAnswer.getType(),
+						validationAnswer.getQuestionnaire().getId(),
 						new ValidationJson(validationAnswer.getValidation().getId(),
 								validationAnswer.getValidation().getNameEt(),
 								validationAnswer.getValidation().getNameEn(),
@@ -112,7 +113,8 @@ public class ExportService {
 								validationAnswer.getStakeholder() != null
 										? validationAnswer.getStakeholder().getName()
 										: null),
-						validationAnswer.getBackgroundColor())).toList());
+						validationAnswer.getBackgroundColor()))
+				.toList());
 	}
 
 	private HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> getAnswers(Integer questionnaireId) {

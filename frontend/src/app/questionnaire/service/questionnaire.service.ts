@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { QuestionnaireEndpointConstants } from '../../constants/questionnaire-endpoint-constants';
-import { QuestionnaireResponse } from '../model/questionnaire-response';
+import { Questionnaire } from '../model/questionnaire';
 import { QuestionnaireRequest } from '../model/questionnaire-request';
 
 @Injectable({
@@ -12,14 +12,14 @@ export class QuestionnaireService {
 
   constructor(private http: HttpClient) {}
 
-  public getQuestionnaires(): Observable<QuestionnaireResponse[]> {
-      return this.http.get<QuestionnaireResponse[]>(
+  public getQuestionnaires(): Observable<Questionnaire[]> {
+      return this.http.get<Questionnaire[]>(
         QuestionnaireEndpointConstants.getQuestionnairesUri()
       );
   }
 
-  public getQuestionnaire(id: number): Observable<QuestionnaireResponse> {
-    return this.http.get<QuestionnaireResponse>(
+  public getQuestionnaire(id: number): Observable<Questionnaire> {
+    return this.http.get<Questionnaire>(
       QuestionnaireEndpointConstants.getQuestionnaireUri(id)
     );
   }
@@ -28,8 +28,8 @@ export class QuestionnaireService {
     return this.http.delete(QuestionnaireEndpointConstants.getQuestionnaireUri(id));
   }
 
-  public saveQuestionnaire(body: QuestionnaireRequest): Observable<QuestionnaireResponse> {
-    return this.http.put<QuestionnaireResponse>(
+  public saveQuestionnaire(body: QuestionnaireRequest): Observable<Questionnaire> {
+    return this.http.put<Questionnaire>(
       QuestionnaireEndpointConstants.saveQuestionnaireUri(),
       body
     );

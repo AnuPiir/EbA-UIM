@@ -5,7 +5,6 @@ import ee.ut.eba.domain.questionnaire.persistence.QuestionnaireRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,10 +17,8 @@ public class QuestionnaireService {
 	private final QuestionnaireRepository questionnaireRepository;
 
 	public List<Questionnaire> get() {
-		List<Questionnaire> questionnaires = questionnaireRepository.findAll();
-		log.info("Retrieved questionnaires with lastModified values: {}", questionnaires.stream()
-				.map(q -> q.getId() + ":" + q.getLastModified()).collect(Collectors.joining(", ")));
-		return questionnaires;
+		log.info("Getting all questionnaires.");
+		return questionnaireRepository.findAll();
 	}
 
 	public Questionnaire get(Integer id) {

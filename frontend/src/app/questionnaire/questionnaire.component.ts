@@ -2,14 +2,14 @@
 
 import {Component, OnInit} from '@angular/core';
 import {QuestionnaireService} from './service/questionnaire.service';
-import {QuestionnaireResponse} from './model/questionnaire-response';
+import {Questionnaire} from './model/questionnaire';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DeleteModalComponent} from './modal/delete-modal/delete-modal.component';
 import {EditModalComponent} from './modal/edit-modal/edit-modal.component';
 import {formatDate} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
-import {formatFullDate, formatTimeAgo, getIdBasedTimestamp} from "../utils/date.utils";
+import {formatFullDate, formatTimeAgo} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -23,7 +23,7 @@ export class QuestionnaireComponent implements OnInit {
     loading: boolean = true;
     isToggled: boolean = false;
     isOpen: boolean = false
-    questionnaires: QuestionnaireResponse[] = [];
+    questionnaires: Questionnaire[] = [];
     questionnaireName: string = '';
     currentlyEditingQuestionnaires: any[] = [];
     TIMEOUT_BEFORE_RETRYING = 5000;
@@ -44,39 +44,19 @@ export class QuestionnaireComponent implements OnInit {
         private translateService: TranslateService,
         private router: Router,
         private cdr: ChangeDetectorRef
-    ) {
-    }
+    ) {}
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.getQuestionnaires();
     }
 
-    getQuestionnaires(): void {
+    async getQuestionnaires() {
         this.loading = true;
-        this.questionnaireService.getQuestionnaires().subscribe(
-            next => {
-                console.log('Raw questionnaires from backend:', next);
-                this.questionnaires = next;
-                this.normalizeDates();
-                this.sortQuestionnaires();
-                this.loading = false;
-                this.cdr.detectChanges();
-            },
-            error => {
-                console.error('Error fetching questionnaires:', error);
-                setTimeout(() => {
-                    this.questionnaireService.getQuestionnaires().subscribe(
-                        next => {
-                            this.questionnaires = next;
-                            this.normalizeDates();
-                            this.sortQuestionnaires();
-                            this.loading = false;
-                        },
-                        () => this.loading = false
-                    );
-                }, this.TIMEOUT_BEFORE_RETRYING);
-            }
-        );
+        this.questionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires())
+        console.log(this.questionnaires)
+        this.sortQuestionnaires();
+        this.loading = false;
+        this.cdr.detectChanges();
     }
 
     async addNewQuestionnaire(questionnaireName: string) {
@@ -84,75 +64,21 @@ export class QuestionnaireComponent implements OnInit {
             return;
         }
 
-        try {
-            this.loading = true;
-            console.log('Creating new questionnaire:', questionnaireName);
+        this.loading = true;
+        let newQuestionnaire = await firstValueFrom(this.questionnaireService.saveQuestionnaire({id: null, name: questionnaireName}));
 
-            // Step 1: Get list of projects before creation
-            const beforeList = await firstValueFrom(this.questionnaireService.getQuestionnaires());
-            const beforeIds = new Set(beforeList.map(q => q.id));
-            console.log('Questionnaires before:', beforeList.map(q => q.id));
+        if (newQuestionnaire) {
 
-            // Step 2: Create the new project
-            await firstValueFrom(this.questionnaireService.saveQuestionnaire({id: null, name: questionnaireName}));
-            console.log('Creation request sent');
+            this.questionnaireName = '';
+            this.isToggled = false;
 
-            // Step 3: Wait a bit to ensure the project is created in the database
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Step 4: Get the updated list of projects
-            const afterList = await firstValueFrom(this.questionnaireService.getQuestionnaires());
-            console.log('Questionnaires after:', afterList.map(q => q.id));
-
-            // Step 5: Find the new project by comparing the lists or by name
-            let newQuestionnaire = afterList.find(q => !beforeIds.has(q.id));
-
-            if (!newQuestionnaire) {
-                // Fallback to finding by name if ID comparison doesn't work
-                newQuestionnaire = afterList.find(q => q.name === questionnaireName);
-            }
-
-            if (newQuestionnaire) {
-                console.log('Found new questionnaire:', newQuestionnaire);
-
-                // Reset form state
-                this.questionnaireName = '';
-                this.isToggled = false;
-
-                this.router.navigate(['/validation'], {
-                    queryParams: {
-                        questionnaireId: newQuestionnaire.id
-                    }
-                });
-            } else {
-                console.error('Could not find newly created questionnaire');
-                // If we can't find the new project, just get the latest one
-                const latestQuestionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires());
-                if (latestQuestionnaires.length > 0) {
-                    // Sort by ID to get the newest one (assuming IDs are auto-incrementing)
-                    const sortedQuestionnaires = latestQuestionnaires.sort((a, b) => b.id - a.id);
-                    console.log('Using latest questionnaire as fallback:', sortedQuestionnaires[0]);
-
-                    // Reset form state
-                    this.questionnaireName = '';
-                    this.isToggled = false;
-
-                    this.router.navigate(['/validation'], {
-                        queryParams: {
-                            questionnaireId: sortedQuestionnaires[0].id
-                        }
-                    });
-                } else {
-                    this.loading = false;
-                    console.error('No questionnaires found');
+            await this.router.navigate(['/validation'], {
+                queryParams: {
+                    questionnaireId: newQuestionnaire.id
                 }
-            }
-        } catch (error) {
-            console.error('Error in creating questionnaire:', error);
-            this.loading = false;
-            // Try to refresh the list
-            this.getQuestionnaires();
+            }).finally(() => this.loading = false);
         }
+
     }
 
     toggleAddNewQuestionnaire(): void {
@@ -163,7 +89,7 @@ export class QuestionnaireComponent implements OnInit {
         this.isOpen = !this.isOpen;
     }
 
-    deleteQuestionnaire(questionnaire: QuestionnaireResponse) {
+    deleteQuestionnaire(questionnaire: Questionnaire) {
         const initialState = {
             isProject: true,
             questionnaireName: questionnaire.name
@@ -184,7 +110,7 @@ export class QuestionnaireComponent implements OnInit {
         });
     }
 
-    editQuestionnaire(questionnaire: QuestionnaireResponse) {
+    editQuestionnaire(questionnaire: Questionnaire) {
         const initialState = {
             name: questionnaire.name,
             titleTranslationKey: 'editProjectModal.title',
@@ -212,7 +138,7 @@ export class QuestionnaireComponent implements OnInit {
         });
     }
 
-    downloadQuestionnaireAsExcel(questionnaire: QuestionnaireResponse) {
+    downloadQuestionnaireAsExcel(questionnaire: Questionnaire) {
         this.questionnaireService.exportQuestionnaireAsExcel(questionnaire.id, this.translateService.currentLang).subscribe((data) => {
             const downloadURL = window.URL.createObjectURL(data);
             const link = document.createElement('a');
@@ -223,7 +149,7 @@ export class QuestionnaireComponent implements OnInit {
         });
     }
 
-    downloadQuestionnaireAsJson(questionnaire: QuestionnaireResponse) {
+    downloadQuestionnaireAsJson(questionnaire: Questionnaire) {
         this.questionnaireService.exportQuestionnaireAsJson(questionnaire.id).subscribe((data) => {
             const downloadURL = window.URL.createObjectURL(data);
             const link = document.createElement('a');
@@ -234,7 +160,7 @@ export class QuestionnaireComponent implements OnInit {
         });
     }
 
-    getActions(questionnaire: QuestionnaireResponse): { name: string, icon: string, onClick: () => void }[] {
+    getActions(questionnaire: Questionnaire): { name: string, icon: string, onClick: () => void }[] {
         return [
             {name: "menu.edit", icon: 'edit', onClick: () => this.editQuestionnaire(questionnaire)},
             {name: "menu.delete", icon: 'delete', onClick: () => this.deleteQuestionnaire(questionnaire)},
@@ -287,19 +213,6 @@ export class QuestionnaireComponent implements OnInit {
         input.click();
     }
 
-    // Normalize dates to ensure all questionnaires have a lastModified value
-    normalizeDates(): void {
-        this.questionnaires.forEach(q => {
-            // If lastModified is missing, use ID-based timestamp
-            if (!q.lastModified) {
-                // For display purposes only, doesn't modify the backend
-                q.lastModified = getIdBasedTimestamp(q.id);
-                console.log(`Generated fallback timestamp for ID ${q.id}: ${q.lastModified}`);
-            }
-        });
-    }
-
-    // Sort questionnaires based on current sort field and direction
     sortQuestionnaires(): void {
         this.questionnaires.sort((a, b) => {
             if (this.sortField === 'name') {
@@ -307,13 +220,7 @@ export class QuestionnaireComponent implements OnInit {
                     ? a.name.localeCompare(b.name)
                     : b.name.localeCompare(a.name);
             } else {
-                // Parse ISO date strings to timestamps
-                const dateA = a.lastModified ? new Date(a.lastModified).getTime() : 0;
-                const dateB = b.lastModified ? new Date(b.lastModified).getTime() : 0;
-
-                return this.sortDirection === 'asc'
-                    ? dateA - dateB
-                    : dateB - dateA;
+                return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime()
             }
         });
     }

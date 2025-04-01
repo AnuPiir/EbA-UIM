@@ -22,6 +22,5 @@ public class QuestionnaireRequest {
 	@NotNull
 	private String name;
 
-	// Added for completeness, not exactly needed
 	private LocalDateTime lastModified;
 }
