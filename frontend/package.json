@@ -1,5 +1,7 @@
 {
-  "name": "frontend",
+  "name": "EbAM",
+  "author": "EbA team",
+  "description": "This project was generated with Electron and Angular CLI version 16.2.10.",
   "version": "1.1.0",
   "main": "main.js",
   "scripts": {
@@ -12,9 +14,12 @@
     "btf": "copy ..\\backend\\target\\*.jar ..\\frontend\\jars\\",
     "electron": "electron .",
     "electron-build": "ng build && electron .",
-    "package-mac": "electron-packager . EbA-meetod --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-mac": "electron-packager . EBAM --overwrite --platform=darwin --arch=x64 --out=release-builds",
     "package-win": "electron-packager . EBAM --overwrite --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds",
-    "package-linux": "electron-packager . EBAM --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
+    "package-linux": "electron-packager . EBAM --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "package-everything": "electron-packager . EBAM --platform=win32,linux,darwin --arch=x64 --out=release-builds --overwrite",
+    "efm": "electron-forge make",
+    "wdio": "wdio run ./wdio.conf.ts"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +37,7 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "bootstrap": "^5.3.1",
+    "electron-log": "^5.3.2",
     "electron-packager": "^17.1.2",
     "ng": "^0.0.0",
     "ngx-bootstrap": "11.0.2",
@@ -43,14 +49,32 @@
     "@angular-devkit/build-angular": "^16.2.10",
     "@angular/cli": "~16.2.10",
     "@angular/compiler-cli": "^16.2.12",
+    "@badisi/wdio-harness": "^4.1.2",
+    "@electron-forge/cli": "7.7.0",
+    "@electron-forge/maker-dmg": "7.7.0",
+    "@electron-forge/maker-zip": "7.7.0",
+    "electron-forge-maker-nsis": "25.1.8",
+    "electron-forge-maker-appimage": "25.1.8",
+    "@electron-forge/maker-deb": "7.7.0",
     "@types/jasmine": "~4.3.0",
+    "@wdio/cli": "^9.12.1",
+    "@wdio/local-runner": "^9.12.1",
+    "@wdio/mocha-framework": "^9.12.1",
+    "@wdio/spec-reporter": "^9.11.0",
     "electron": "^34.0.2",
+    "electron-builder": "^25.1.8",
+    "electron-log": "^5.3.2",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.9.4"
+    "typescript": "~4.9.4",
+    "wdio-electron-service": "^8.0.2",
+    "wdio-wait-for": "^3.1.0"
+  },
+  "config": {
+    "forge": "./config.forge.js"
   }
 }

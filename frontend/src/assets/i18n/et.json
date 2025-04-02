@@ -3,7 +3,8 @@
     "delete": "Kustuta",
     "edit": "Muuda",
     "add": "Lisa",
-    "cancel": "Loobu"
+    "cancel": "Loobu",
+    "import": "Impordi"
   },
   "menu": {
     "edit": "Muuda",
@@ -68,7 +69,8 @@
     "title": "Lisa tabeli vahekaart",
     "list": "Olemasolevad tabeli vahekaardid",
     "input": "Tabeli vahekaardi nimetus",
-    "placeholder": "Sisesta tunnuse ID või lühend"
+    "placeholder": "Sisesta tunnuse ID või lühend",
+    "defaultTabName": "Vahekaart 1"
   },
   "addStakeholder": {
     "title": "Lisa uus sidusrühm",
@@ -92,6 +94,7 @@
     "partly": "Osaliselt"
   },
   "methodCombinations": {
+    "CHOOSE_OPTION": "Vali",
     "YES": "Jah",
     "NO": "Ei",
     "DONT_KNOW": "Ei tea",
@@ -267,6 +270,14 @@
   "backToTop": {
     "buttonLabel": "Tagasi üles",
     "ariaLabel": "Nupp lehe algusesse liikumiseks. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt."
+  },
+  "hidePanels": {
+    "hide": "Peida",
+    "unhide": "Näita",
+    "ariaLabel": "Nupp projektide vahekaartide nähtavuse muutmiseks. Vajutage Enter, tühikut või kasutage Ctrl + Üles-nooleklahvi aktiveerimiseks."
+  },
+  "prioritizationNotice": {
+    "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅."
   },
   "noExampleModal": {
     "title": "Kinnita 'Situatsiooni ei ole'",

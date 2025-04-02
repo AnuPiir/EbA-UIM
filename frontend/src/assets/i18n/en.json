@@ -3,7 +3,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "import": "Import"
   },
   "menu": {
     "edit": "Edit",
@@ -68,7 +69,8 @@
     "title": "Add a new table tab",
     "list": "Existing table tabs",
     "input": "Table tab name",
-    "placeholder": "Enter feature ID or abbreviation"
+    "placeholder": "Enter feature ID or abbreviation",
+    "defaultTabName": "Tab 1"
   },
   "addStakeholder": {
     "title": "Add a new stakeholder",
@@ -85,13 +87,14 @@
     "cancelEdit": "Cancel editing"
   },
   "select": {
-    "chooseOption": "Choose",
+    "chooseOption": "Select",
     "yes": "Yes",
     "no": "No",
     "dontKnow": "Don't know",
     "partly": "Partly"
   },
   "methodCombinations": {
+    "CHOOSE_OPTION": "Select",
     "YES": "Yes",
     "NO": "No",
     "DONT_KNOW": "Don't know",
@@ -270,6 +273,14 @@
   },
   "noExampleNotification": {
     "message": "The example has been marked as 'No situation'"
+  },
+  "hidePanels": {
+    "hide": "Hide",
+    "unhide": "Unhide",
+    "ariaLabel": "Button to toggle visibility of project tabs. Press Enter, Space, or use Ctrl + Up Arrow to activate."
+  },
+  "prioritizationNotice": {
+    "message": "Multiple situations have been added under this precondition. They can be prioritized by using the checkbox ✅."
   },
   "questionnaires": "Questionnaires",
   "et": "EST",

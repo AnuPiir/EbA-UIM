@@ -6,7 +6,7 @@
 }
 
 
-.select-button {  
+.select-button {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -23,7 +23,7 @@
   background-color: gainsboro;
 }
 
- 
+
 .options {
   display: block;
   flex-direction: column;
@@ -36,13 +36,21 @@
   border: 1px solid;
   border-radius: 0.625rem;
   border-color: var(--text-color);
-  background: none;
-  z-index: 2;
+  background-color: var(--beige);
+  z-index: 99;
   color: var(--text-color);
-  overflow: hidden;
+  overflow: visible;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
-.select-option-button {  
+.options-flip-up {
+  position: absolute;
+  bottom: 4.5rem;
+  top: auto !important;
+}
+
+.select-option-button {
   display: block;
   display: inline-block;
   padding: 0.5rem;
@@ -90,4 +98,23 @@
 
 .DONT_KNOW:hover {
   background-color: var(--blue);
+}
+
+.select-option-button.CHOOSE_OPTION  {
+  background-color: lightgray;
+  border-color: #5B5B5B;
+  color: #5B5B5B;
+}
+
+.select-option-button.CHOOSE_OPTION:hover {
+  background-color: #b2b2b2;
+  color: #505050;
+}
+
+.select-button.disabled {
+  background-color: var(--brown);
+  color: var(--text-color);
+  cursor: not-allowed;
+  border-color: var(--dark-brown);
+
 }

@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ValidationAutoFillRepository extends JpaRepository<ValidationAutofill, Integer>, JpaSpecificationExecutor<ValidationAutofill> {}
+public interface ValidationAutoFillRepository
+		extends
+			JpaRepository<ValidationAutofill, Integer>,
+			JpaSpecificationExecutor<ValidationAutofill> {
+}

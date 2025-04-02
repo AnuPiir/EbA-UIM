@@ -105,6 +105,22 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   background-color: var(--brown);
 }
 
+.gray-out-cell {
+  background-color: var(--light-brown) !important;
+  /*opacity: 0.6;*/
+  /*filter: brightness(0.5);*/
+  color: var(--text-color) !important;
+}
+
+.gray-out-cell textarea,
+.gray-out-cell select,
+.gray-out-cell .select-button {
+  pointer-events: none;
+  color: var(--text-color) !important;
+  background-color: transparent !important;
+  border-color: var(--container);
+}
+
 .id-cell {
   position: sticky;
   left: 0;
@@ -232,6 +248,11 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   gap: 0.5rem;
 }
 
+/*.menu-row .menu:hover {
+  background-color: lightblue;
+  color: white;
+}*/
+
 .cell-with-menu-stakeholder {
   display: flex;
   flex-direction: row;
@@ -295,4 +316,52 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 
 .overflow-unset {
   overflow: unset;
+}
+
+/* Color selection menu specifically for textareas */
+.textarea-color-selection-container {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* Style for each color option specifically for textareas */
+.textarea-color-option {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 0.09rem;
+  border-radius: 0.3rem;
+  transition: border 0.2s;
+}
+
+.textarea-color-option:hover {
+  border: 0.125rem solid #000; /* Adds a subtle border when hovering */
+}
+
+/* Styling for the colored textarea */
+.textarea-colored {
+  width: 100%;
+  height: auto;
+  resize: none;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.toggle-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-button:hover {
+  background-color: #e0e0e0;
 }

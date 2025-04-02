@@ -1,17 +1,9 @@
 package ee.ut.eba;
 
+import java.util.Collections;
+import javax.swing.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.Collections;
 
 @SpringBootApplication
 public class SpringAngularDemoApplication {
@@ -21,5 +13,4 @@ public class SpringAngularDemoApplication {
 		app.setDefaultProperties(Collections.singletonMap("server.port", "8080"));
 		app.run(args);
 	}
-
 }

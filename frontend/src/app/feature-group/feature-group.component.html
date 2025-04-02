@@ -1,7 +1,20 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
-<div *ngIf="!loading" class="page-body">
+<div *ngIf="!loading" class="page-body" [ngClass]="{'compressed-page-body': !showProjectsWrapper}">
   <div class="modals">
-    <div class="projects-wrapper">
+      <!-- Hide/Show Button -->
+      <div class="wrapper1">
+      <div class="toggle-wrapper">
+          <button
+             (click)="toggleProjectsWrapper()"
+             class="toggle-button"
+             [attr.aria-label]="'hidePanels.ariaLabel' | translate"
+             tabindex="0">
+              <span *ngIf="showProjectsWrapper">{{ 'hidePanels.hide' | translate }}</span>
+              <span *ngIf="!showProjectsWrapper">{{ 'hidePanels.unhide' | translate }}</span>
+          </button>
+      </div>
+      <div class="wrapper2">
+      <div *ngIf="showProjectsWrapper" class="projects-wrapper">
       <div class="add-project">
         <div class="add-project-header">
           <h2>{{'addGroup.title' | translate}}</h2>
@@ -34,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="projects-wrapper">
+    <div *ngIf="showProjectsWrapper" class="projects-wrapper">
       <div class="add-project">
         <div class="add-project-header">
           <h2>{{'addStakeholder.title' | translate}}</h2>
@@ -68,6 +81,8 @@
       </div>
     </div>
   </div>
+  </div>
+</div>
   <!-- <div>
       <mat-accordion>
         <mat-expansion-panel #mep="matExpansionPanel">
@@ -117,4 +132,5 @@
         <app-validation [featureGroup]="featureGroup" [stakeholders]="stakeholders" [tabIndex]="i"></app-validation>
       </mat-tab>
     </mat-tab-group>
+  </div>
 </div>

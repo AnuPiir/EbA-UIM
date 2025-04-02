@@ -18,21 +18,21 @@ import lombok.experimental.Accessors;
 @Entity
 @Getter
 @Setter
-@Table(name= FeatureGroup.TABLE)
+@Table(name = FeatureGroup.TABLE)
 @ToString
 @Accessors(chain = true)
 public class FeatureGroup {
 
-  public static final String TABLE = "feature_group";
+	public static final String TABLE = "feature_group";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column
-  private String name;
+	@Column
+	private String name;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="questionnaire_id")
-  private Questionnaire questionnaire;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "questionnaire_id")
+	private Questionnaire questionnaire;
 }

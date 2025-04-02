@@ -11,16 +11,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FeatureDeleteService {
 
-  private final FeatureRepository featureRepository;
-  private final ValidationAnswerService validationAnswerService;
+	private final FeatureRepository featureRepository;
+	private final ValidationAnswerService validationAnswerService;
 
+	public void delete(Integer id) {
+		featureRepository.deleteById(id);
+	}
 
-  public void delete(Integer id) {
-    featureRepository.deleteById(id);
-  }
-
-  public void deleteAndRemoveValidationAnswersRelatedToFeature(Integer id) {
-    validationAnswerService.deleteByFeatureId(id);
-    delete(id);
-  }
+	public void deleteAndRemoveValidationAnswersRelatedToFeature(Integer id) {
+		validationAnswerService.deleteByFeatureId(id);
+		delete(id);
+	}
 }

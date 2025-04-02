@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface QuestionnaireRepository extends JpaRepository<Questionnaire, Integer>, JpaSpecificationExecutor<Questionnaire> {}
+public interface QuestionnaireRepository
+		extends
+			JpaRepository<Questionnaire, Integer>,
+			JpaSpecificationExecutor<Questionnaire> {
+}

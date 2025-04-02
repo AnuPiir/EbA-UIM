@@ -14,20 +14,20 @@ import lombok.experimental.Accessors;
 @Entity
 @Getter
 @Setter
-@Table(name= Feature.TABLE)
+@Table(name = Feature.TABLE)
 @ToString
 @Accessors(chain = true)
 public class Feature {
 
-  public static final String TABLE = "feature";
+	public static final String TABLE = "feature";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column
-  private String answer;
+	@Column
+	private String answer;
 
-  @Column
-  private String customId;
+	@Column
+	private String customId;
 }

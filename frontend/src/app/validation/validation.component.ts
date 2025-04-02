@@ -19,8 +19,10 @@ import { FeaturePreConditionService } from '../feature/service/feature-pre-condi
 import { MenuComponent } from '../menus/menu.component';
 import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
+import { HttpClient } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ChangeDetectorRef, NgZone } from '@angular/core';
 import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
@@ -48,6 +50,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   isAddingNewRow: boolean = false;
   private inputSubject: Subject<TextareaInputChange> = new Subject<TextareaInputChange>();
   private inputSubscription: Subscription;
+  showColorSelection: boolean = false;
+  showColorSelectionMap: Record<number, boolean> = {};
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
@@ -57,6 +61,17 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @Input() featureGroup: FeatureGroupResponse;
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
+
+
+  colorOptions = [
+    { name: 'Beige', value: 'var(--light-beige)' },
+    { name: 'Grey', value: 'var(--light-grey)' },
+    { name: 'Green', value: 'var(--light-green)' },
+    { name: 'Yellow', value: 'var(--light-yellow)' },
+    { name: 'Orange', value: 'var(--light-orange)' },
+    { name: 'Red', value: 'var(--light-red)' },
+    { name: 'Blue', value: 'var(--light-blue)' }
+  ];
 
   constructor(
     private validationService: ValidationService,
@@ -68,7 +83,10 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private el: ElementRef,
     private renderer: Renderer2,
     private sanitizer: DomSanitizer,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {
     this.onLanguageChanged();
   }
@@ -144,36 +162,37 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   getValidationAnswers(): void {
     this.validationService.getValidationAnswersByFeatureGroupId(this.featureGroup.id).subscribe(
-        next => {
-          if (next.length === 0) {
-            this.addValidationRow();
-          } else {
-            // Map validation answers to rows
-            this.validationRowValues = this.mapValidationAnswersToRows(next)
-                .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id ||
-                    a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
-                    a.rowId - b.rowId);
+      next => {
+        console.log("Validation Answers from Backend: ", next);
+        if (next.length === 0) {
+          this.addValidationRow();
+        } else {
+          this.validationRowValues = this.mapValidationAnswersToRows(next)
+            .map(row => ({
+              ...row,
+              answers: row.answers.map(answer => ({
+                ...answer,
+                backgroundColor: answer.backgroundColor || '#F7F1E6' // default (beige) color - ensures that every row has one
+              }))
+            }))
+            .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
-            // Fix missing stakeholder objects from backend
-            this.fixStakeholderReferences();
+          this.fixStakeholderReferences();
 
-            // Ensure stakeholder consistency
-            this.ensureStakeholdersConsistency();
+          this.ensureStakeholdersConsistency();
 
-            // Map spans for UI rendering
-            this.mapFeatureRowSpans();
+          this.mapFeatureRowSpans();
 
-            // Force reapply all stakeholders with a short delay
-            setTimeout(() => {
-              this.forceReapplyAllStakeholders();
-            }, 1000);
-          }
+          setTimeout(() => {
+             this.forceReapplyAllStakeholders();
+          }, 1000);
+        }
 
-          this.loading = false;
-        },
-        error => {
-          console.error("Error loading validation answers:", error);
-          this.loading = false;
+        this.loading = false;
+      },
+      error => {
+         console.error("Error loading validation answers:", error);
+         this.loading = false;
         }
     );
   }
@@ -185,18 +204,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   private fixStakeholderReferences(): void {
     let fixCount: number = 0;
 
-    // For each validation row, ensure stakeholder references are complete
     for (const row of this.validationRowValues) {
       for (const answer of row.answers) {
         if (answer.type === ValidationType.STAKEHOLDER) {
-          // Try to match stakeholder by name from the answer field
           if (answer.answer && answer.answer.trim() !== '') {
             const matchingStakeholder = this.stakeholders.find((s: StakeholderResponse) =>
                 s.name === answer.answer || s.id.toString() == answer.answer
             );
 
             if (matchingStakeholder) {
-              // Recreate the stakeholder object
               answer.stakeholder = matchingStakeholder;
               fixCount++;
             }
@@ -210,7 +226,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
    * Ensure stakeholder consistency across all rows with the same precondition
    */
   ensureStakeholdersConsistency(): void {
-    // Group rows by precondition ID
     const preconditionGroups = new Map<number, ValidationRow[]>();
 
     for (const row of this.validationRowValues) {
@@ -223,9 +238,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }
     }
 
-    // For each precondition group, find a stakeholder and apply it to all rows
     for (const [preconditionId, rows] of preconditionGroups.entries()) {
-      // Find a stakeholder in any row of this group
       let stakeholder: StakeholderResponse | undefined;
 
       for (const row of rows) {
@@ -236,7 +249,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         }
       }
 
-      // If a stakeholder was found, apply it to all rows in this group
       if (stakeholder) {
         for (const row of rows) {
           const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
@@ -244,7 +256,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             stakeholderAnswer.stakeholder = stakeholder;
             stakeholderAnswer.answer = stakeholder.name;
 
-            // Save the updated stakeholder answer
             this.validationService.saveValidationAnswer(stakeholderAnswer).subscribe();
           }
         }
@@ -260,7 +271,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return;
     }
 
-    // Find the stakeholder validation type
     const stakeholderValidation = this.validations.find(v => v.type === ValidationType.STAKEHOLDER);
     if (!stakeholderValidation) {
       return;
@@ -514,6 +524,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
+            if (validation.type === ValidationType.SELECT) {
+              this.checkAndShowPrioritizationNotice(validationRowValue);
+            }
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -593,76 +606,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  //NEW SetNoExampleAnswer
   private setNoExampleAnswer(validationRowValue: ValidationRow) {
-
-    const initialState = {
-      title: this.translateService.instant('noExampleModal.title'),
-      message: this.translateService.instant('noExampleModal.message'),
-      confirmButton: this.translateService.instant('noExampleModal.confirm'),
-      cancelButton: this.translateService.instant('noExampleModal.cancel')
-    };
-
-    // Open confirmation dialog
-    const modalRef = this.modalService.show(NoSituationModalComponent, {
-      class: 'modal-box modal-md', initialState
-    });
-
-    // Handle user response - adding a safety check for content
-    if (modalRef && modalRef.content) {
-      modalRef.content.onClose.subscribe((result: any): void => {
-        if (result.confirmed) {
-          // User confirmed, proceed with resetting answers
-          this.resetExampleAnswers(validationRowValue);
-        }
-      });
-    }
-  }
-
-  // NEW method to reset the 4-answers
-  private resetExampleAnswers(validationRowValue: ValidationRow) {
-    let exampleAnswer = '';
-    let combinationAnswer = '';
-
-    if (this.isCurrentLangEt) {
-      exampleAnswer = 'Näidet pole';
-      combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length-1].resultEt;
-    } else {
-      exampleAnswer = 'No example';
-      combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length-1].resultEn;
-    }
-
-    const exampleValidationAnswer = validationRowValue.answers.find(a => a.type === ValidationType.EXAMPLE);
-    const exampleValidation = this.validations.find(v => v.type === ValidationType.EXAMPLE);
-
-    if (exampleValidationAnswer && exampleValidation) {
-      exampleValidationAnswer.answer = exampleAnswer;
-      this.validationService.saveValidationAnswer(exampleValidationAnswer).subscribe(
-          () => {
-            console.log('Example answer reset successfully');
-          },
-          error => {
-            console.error('Error resetting example answer:', error);
-          }
-      );
-    }
-    // Reset
-    const selectAnswers = validationRowValue.answers.filter(a => a.type === ValidationType.SELECT);
-    for (const selectAnswer of selectAnswers) {
-      selectAnswer.answer = ValidationValue.DONT_KNOW;
-      this.validationService.saveValidationAnswer(selectAnswer).subscribe(
-          () => {
-            console.log('Selection reset successfully');
-          },
-          error => {
-            console.error('Error resetting selection:', error);
-          }
-      );
-    }
-  }
-
-    // OLD SetNoExampleAnswer
-/*  private setNoExampleAnswer(validationRowValue: ValidationRow) {
     let exampleAnswer = '';
     let combinationAnswer = '';
 
@@ -696,12 +640,29 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           validationRowValue
       )
     }
-  }*/
+  }
 
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
-    if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
+    // To verify whether an answer is the default one (CHOOSE_OPTION)
+    const requiredAnswers = validationFilledByAnswer.validationAutofillList.map(v =>
+        validationRowValue.answers.find(a => a.validationId === v.validationFilledById)
+    );
+    // allAnswersValid will be true only if every required answer exists, has a value, and is not "CHOOSE_OPTION"
+    const allAnswersValid = requiredAnswers.every(a => a && a.answer && a.answer !== 'CHOOSE_OPTION');
+    const autofillAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
+
+    // If not all answers are valid, clear the autofill answer and exit
+    if (!allAnswersValid) {
+      if (autofillAnswer && autofillAnswer.answer !== '') {
+        autofillAnswer.answer = '';
+        this.validationService.saveValidationAnswer(autofillAnswer).subscribe();
+      }
       return;
     }
+
+    /*if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
+      return;
+    }*/
 
     const answerValues = []
     let isAutofillTypeCombination = true;
@@ -763,6 +724,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   updateCombinationAutoFillAnswers(answerValuesSortedByWeight: any[], validationRowValue: ValidationRow, validationFilledByAnswer: Validation) {
+    let foundMatch = false;
     for (let combinationResult of this.validationCombinationResults) {
       if (this.hasMatchingCombination(combinationResult, answerValuesSortedByWeight)) {
         const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
@@ -770,13 +732,27 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           // Find the stakeholder from the row
           const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
           const stakeholderName = stakeholderAnswer?.stakeholder?.name || 'Unknown Stakeholder';
-          // Append stakeholder to the combined answer
-          correctAnswer.answer = `${this.getTranslation(combinationResult)} (${stakeholderName})`;
+
+          // Append stakeholder to the combined answer - IF you need to debug it
+          //correctAnswer.answer = `${this.getTranslation(combinationResult)} (${stakeholderName})`;
+
+          // DONT append the stakeholder
+          correctAnswer.answer = this.getTranslation(combinationResult);
+
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
           });
         }
-        return;
+        foundMatch = true;
+        break;
+      }
+    }
+    // If no matching combination was found (e.g. one or more answers are invalid/default), clear the autofill answer.
+    if (!foundMatch) {
+      const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
+      if (correctAnswer && correctAnswer.answer !== '') {
+        correctAnswer.answer = '';
+        this.validationService.saveValidationAnswer(correctAnswer).subscribe();
       }
     }
   }
@@ -800,6 +776,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   deleteRow(rowId: number) {
+    // Finding the precondition ID of the row to delete
+    const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
+    if (!rowToDelete) return;
+    const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
+
+    // Removing rowId from prioritizedRows before actually deleting
+    if (this.prioritizedRows[preconditionId]) {
+      this.prioritizedRows[preconditionId].delete(String(rowId));
+
+      // It is optional but just in case cleaning up empty sets to avoid memory waste
+      if (this.prioritizedRows[preconditionId].size === 0) {
+        delete this.prioritizedRows[preconditionId];
+      }
+    }
+
     this.validationService.deleteValidationAnswersByQuestionnaireIdAndRowId(this.questionnaireId, rowId).subscribe(
         next => {
           this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
@@ -967,6 +958,20 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.sanitizer.bypassSecurityTrustHtml(formattedSentence);
   }
 
+  // Just in case keeping track of the columns which are currently hidden
+  hiddenColumns: Set<number> = new Set();
+  isColumnHidden(index: number): boolean {
+    return this.hiddenColumns.has(index);
+  }
+
+  toggleColumnVisibility(index: number) {
+    if (this.hiddenColumns.has(index)) {
+      this.hiddenColumns.delete(index);
+    } else {
+      this.hiddenColumns.add(index);
+    }
+  }
+
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {
     return <ValidationAnswer>validationRow.answers.find(a => a.type === ValidationType.FEATURE_PRECONDITION);
   }
@@ -1098,6 +1103,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return (<any>ValidationValue)[answer];
   }
 
+  onColorChange(event: Event | string, validationRowAnswer: ValidationAnswer): void {
+    const newColor = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
+
+    if (!validationRowAnswer) {
+      return;
+    }
+
+    validationRowAnswer.backgroundColor = newColor;
+    this.validationService.saveValidationAnswer(validationRowAnswer)
+  }
+
+  toggleColorSelection(rowId: number): void {
+    this.showColorSelectionMap[rowId] = !this.showColorSelectionMap[rowId];
+  }
+
   getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
     return [
       {
@@ -1107,4 +1127,91 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       },
     ];
   }
+
+  // To keep track of which rows are prioritized for each precondition
+  prioritizedRows: { [preconditionId: string]: Set<string> } = {};
+
+  // Check if the current row is prioritized
+  isPrioritized(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
+    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;
+  }
+
+
+  // Check if the current precondition has more than one example
+  hasMultipleExamples(preconditionId: number): boolean {
+    const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
+        row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
+    );
+    return rowsWithSamePrecondition.length > 1;
+  }
+
+  onCheckboxChange(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const rowId = String(validationRowValue.rowId);
+
+    this.zone.run(() => {
+      if (!this.prioritizedRows[preconditionId]) {
+        this.prioritizedRows[preconditionId] = new Set<string>();
+      }
+
+      const set = this.prioritizedRows[preconditionId];
+
+      if (set.has(rowId)) {
+        set.delete(rowId); // Uncheck
+      } else {
+        set.add(rowId); // Check
+      }
+
+      this.cdr.detectChanges();
+    });
+
+  }
+
+  isRowDisabled(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    const prioritizedSet = this.prioritizedRows[preconditionId];
+
+    return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
+  }
+
+  // Notification state
+  showNotification: boolean = false;
+  notificationMessage: string = '';
+  private notifiedPreconditionIds: Set<number> = new Set<number>();
+
+  checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
+    // Skip if the notice has already been shown for this precondition
+    if (this.notifiedPreconditionIds.has(preconditionId)) return;
+
+    // Skip if the notice has already been shown for this precondition
+    const exampleRows = this.validationRowValues.filter(row =>
+        row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
+    );
+    // Check if there are now 2+ examples with 4 dropdowns filled
+    if (exampleRows.length >= 2) {
+      const allAnswersFilled = exampleRows.every(row =>
+          row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
+          row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
+      );
+      // If valid, show notification and remember this precondition to avoid future duplicates
+      if (allAnswersFilled) {
+        this.notifiedPreconditionIds.add(preconditionId);
+        this.notificationMessage = 'prioritizationNotice.message';
+        this.showNotification = true;
+      }
+    }
+  }
+
+  shouldGrayOut(validation: Validation): boolean {
+    return this.isValidationExample(validation) ||
+        this.isValidationSelectable(validation) ||
+        this.isValidationAutofill(validation) ||
+        this.isValidationTextField(validation)
+        //this.isValidationDoField(validation);
+  }
+
 }

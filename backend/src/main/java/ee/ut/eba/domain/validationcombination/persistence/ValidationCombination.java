@@ -16,22 +16,22 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@Table(name= ValidationCombination.TABLE)
+@Table(name = ValidationCombination.TABLE)
 @ToString
 public class ValidationCombination {
 
-  public static final String TABLE = "validation_combination";
+	public static final String TABLE = "validation_combination";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @ManyToOne
-  private ValidationCombinationResult validationCombinationResult;
+	@ManyToOne
+	private ValidationCombinationResult validationCombinationResult;
 
-  @ManyToOne
-  private Validation validation;
+	@ManyToOne
+	private Validation validation;
 
-  @Column
-  private String validationValue;
+	@Column
+	private String validationValue;
 }

@@ -9,32 +9,31 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
-@Table(name= ValidationCombinationResult.TABLE)
+@Table(name = ValidationCombinationResult.TABLE)
 @ToString
 public class ValidationCombinationResult {
 
-  public static final String TABLE = "validation_combination_result";
+	public static final String TABLE = "validation_combination_result";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column
-  private String resultEn;
+	@Column
+	private String resultEn;
 
-  @Column
-  private String resultEt;
+	@Column
+	private String resultEt;
 
-  @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "validationCombinationResult")
-  private List<ValidationCombination> validationCombinations = new ArrayList<>();
+	@OneToMany(cascade = {CascadeType.ALL}, mappedBy = "validationCombinationResult")
+	private List<ValidationCombination> validationCombinations = new ArrayList<>();
 }

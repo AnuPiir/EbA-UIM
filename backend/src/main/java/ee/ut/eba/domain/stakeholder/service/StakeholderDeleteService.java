@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StakeholderDeleteService {
 
-  private final StakeholderRepository stakeholderRepository;
-  private final ValidationAnswerService validationAnswerService;
+	private final StakeholderRepository stakeholderRepository;
+	private final ValidationAnswerService validationAnswerService;
 
-  public void deleteAndRemoveFromValidationAnswers(Integer id) {
-    validationAnswerService.removeStakeHolderById(id);
-    delete(id);
-  }
+	public void deleteAndRemoveFromValidationAnswers(Integer id) {
+		validationAnswerService.removeStakeHolderById(id);
+		delete(id);
+	}
 
-  public void delete(Integer id) {
-    stakeholderRepository.deleteById(id);
-  }
+	public void delete(Integer id) {
+		stakeholderRepository.deleteById(id);
+	}
 }

@@ -1,5 +1,9 @@
 package ee.ut.eba.domain.featureprecondition.api;
 
+import static ee.ut.eba.domain.featureprecondition.model.FeaturePreconditionMapper.toResponse;
+
+import ee.ut.eba.domain.featureprecondition.model.FeaturePreconditionRequest;
+import ee.ut.eba.domain.featureprecondition.model.FeaturePreconditionResponse;
 import ee.ut.eba.domain.featureprecondition.service.FeaturePreconditionDeleteService;
 import ee.ut.eba.domain.featureprecondition.service.FeaturePreconditionService;
 import jakarta.validation.Valid;
@@ -17,42 +21,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static ee.ut.eba.domain.featureprecondition.api.FeaturePreconditionMapper.toResponse;
-
 @Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins =  {"${app.dev.frontend.local}"})
+@CrossOrigin(origins = {"${app.dev.frontend.local}"})
 @RequestMapping(value = "/api/feature-precondition", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FeaturePreconditionController {
 
-  private final FeaturePreconditionService featurePreconditionService;
-  private final FeaturePreconditionDeleteService featurePreconditionDeleteService;
+	private final FeaturePreconditionService featurePreconditionService;
+	private final FeaturePreconditionDeleteService featurePreconditionDeleteService;
 
-  @PostMapping
-  public FeaturePreconditionResponse create(@RequestBody @Valid FeaturePreconditionRequest featurePreconditionRequest) {
-    log.info("Creating feature precondition : {}", featurePreconditionRequest);
+	@PostMapping
+	public FeaturePreconditionResponse create(
+			@RequestBody @Valid FeaturePreconditionRequest featurePreconditionRequest) {
+		log.info("Creating feature precondition : {}", featurePreconditionRequest);
 
-    return toResponse(featurePreconditionService.create(featurePreconditionRequest.getAnswer()));
-  }
+		return toResponse(featurePreconditionService.create(featurePreconditionRequest.getAnswer()));
+	}
 
-  @PutMapping("/{id}")
-  public FeaturePreconditionResponse update(
-    @RequestBody @Valid FeaturePreconditionRequest featurePreconditionRequest,
-    @PathVariable(value = "id") @NotNull Integer id
-  ) {
-    log.info("Updating feature precondition with id: {}, with values: {}",id, featurePreconditionRequest);
+	@PutMapping("/{id}")
+	public FeaturePreconditionResponse update(@RequestBody @Valid FeaturePreconditionRequest featurePreconditionRequest,
+			@PathVariable(value = "id") @NotNull Integer id) {
+		log.info("Updating feature precondition with id: {}, with values: {}", id, featurePreconditionRequest);
 
-    return toResponse(featurePreconditionService.update(id, featurePreconditionRequest.getAnswer()));
-  }
+		return toResponse(featurePreconditionService.update(id, featurePreconditionRequest.getAnswer()));
+	}
 
-  @DeleteMapping("/{id}")
-  public void delete(
-    @PathVariable(value = "id") @NotNull Integer id
-  ) {
-    log.info("Deleting feature precondition by id: {}", id);
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable(value = "id") @NotNull Integer id) {
+		log.info("Deleting feature precondition by id: {}", id);
 
-    featurePreconditionDeleteService.deleteAndDeleteValidationAnswersRelatedToPreconditionId(id);
-  }
+		featurePreconditionDeleteService.deleteAndDeleteValidationAnswersRelatedToPreconditionId(id);
+	}
 }

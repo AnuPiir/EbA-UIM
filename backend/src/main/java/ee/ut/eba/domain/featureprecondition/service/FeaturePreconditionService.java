@@ -2,12 +2,11 @@ package ee.ut.eba.domain.featureprecondition.service;
 
 import ee.ut.eba.domain.featureprecondition.persistence.FeaturePrecondition;
 import ee.ut.eba.domain.featureprecondition.persistence.FeaturePreconditionRepository;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -15,34 +14,37 @@ import java.util.NoSuchElementException;
 @Transactional
 public class FeaturePreconditionService {
 
-  private final FeaturePreconditionRepository featurePreconditionRepository;
+	private final FeaturePreconditionRepository featurePreconditionRepository;
 
-  public FeaturePrecondition create(String answer) {
-    log.info("Creating feature precondition with answer: {}", answer);
+	public FeaturePrecondition create(String answer) {
+		log.info("Creating feature precondition with answer: {}", answer);
 
-    return featurePreconditionRepository.save(new FeaturePrecondition().setAnswer(answer));
-  }
+		return featurePreconditionRepository.save(new FeaturePrecondition().setAnswer(answer));
+	}
 
-  public FeaturePrecondition update(FeaturePrecondition featurePrecondition) {
-    log.info("Updating feature precondition to be: {}", featurePrecondition);
+	public int save(FeaturePrecondition featurePrecondition) {
+		log.info("Saving feature precondition with answer: {}", featurePrecondition.getAnswer());
 
-    return featurePreconditionRepository.save(featurePrecondition);
-  }
+		return featurePreconditionRepository.save(featurePrecondition).getId();
+	}
 
-  public FeaturePrecondition get(Integer id) {
-    log.info("Getting feature precondition with id: {}", id);
+	public FeaturePrecondition update(FeaturePrecondition featurePrecondition) {
+		log.info("Updating feature precondition to be: {}", featurePrecondition);
 
-    return featurePreconditionRepository.findById(id).orElseThrow(
-      () -> new NoSuchElementException("Feature precondition not found with id:" + id)
-    );
-  }
+		return featurePreconditionRepository.save(featurePrecondition);
+	}
 
-  public FeaturePrecondition update(Integer id, String answer) {
+	public FeaturePrecondition get(Integer id) {
+		log.info("Getting feature precondition with id: {}", id);
 
-    return featurePreconditionRepository.save(
-      featurePreconditionRepository.findById(id).orElseThrow(
-        () -> new NoSuchElementException("Feature precondition not found with id:" + id)
-      ).setAnswer(answer)
-    );
-  }
+		return featurePreconditionRepository.findById(id)
+				.orElseThrow(() -> new NoSuchElementException("Feature precondition not found with id:" + id));
+	}
+
+	public FeaturePrecondition update(Integer id, String answer) {
+
+		return featurePreconditionRepository.save(featurePreconditionRepository.findById(id)
+				.orElseThrow(() -> new NoSuchElementException("Feature precondition not found with id:" + id))
+				.setAnswer(answer));
+	}
 }

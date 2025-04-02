@@ -14,17 +14,17 @@ import lombok.experimental.Accessors;
 @Entity
 @Getter
 @Setter
-@Table(name= FeaturePrecondition.TABLE)
+@Table(name = FeaturePrecondition.TABLE)
 @ToString
 @Accessors(chain = true)
 public class FeaturePrecondition {
 
-  public static final String TABLE = "feature_precondition";
+	public static final String TABLE = "feature_precondition";
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column
-  private String answer;
+	@Column
+	private String answer;
 }
