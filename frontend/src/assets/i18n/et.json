@@ -268,6 +268,15 @@
     "buttonLabel": "Tagasi üles",
     "ariaLabel": "Nupp lehe algusesse liikumiseks. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt."
   },
+  "noExampleModal": {
+    "title": "Kinnita 'Situatsiooni ei ole'",
+    "message": "Kas olete kindel, et soovite märkida selle kui 'Situatsiooni ei ole'? See lähtestab kõik selle näite valikud.",
+    "confirm": "Kinnita",
+    "cancel": "Tühista"
+  },
+  "noExampleNotification": {
+    "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
+  },
   "questionnaires": "Küsimustikud",
   "et": "EST",
   "en": "ENG"

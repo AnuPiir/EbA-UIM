@@ -21,6 +21,8 @@ import { TextareaInputChange } from './model/textarea-input-change';
 import { ValidationValue } from './model/validation-value';
 import { Renderer2 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-modal/no-situation-modal.component";
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-validation',
@@ -65,7 +67,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private featurePreconditionService: FeaturePreConditionService,
     private el: ElementRef,
     private renderer: Renderer2,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalService: BsModalService
   ) {
     this.onLanguageChanged();
   }
@@ -590,7 +593,76 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  //NEW SetNoExampleAnswer
   private setNoExampleAnswer(validationRowValue: ValidationRow) {
+
+    const initialState = {
+      title: this.translateService.instant('noExampleModal.title'),
+      message: this.translateService.instant('noExampleModal.message'),
+      confirmButton: this.translateService.instant('noExampleModal.confirm'),
+      cancelButton: this.translateService.instant('noExampleModal.cancel')
+    };
+
+    // Open confirmation dialog
+    const modalRef = this.modalService.show(NoSituationModalComponent, {
+      class: 'modal-box modal-md', initialState
+    });
+
+    // Handle user response - adding a safety check for content
+    if (modalRef && modalRef.content) {
+      modalRef.content.onClose.subscribe((result: any): void => {
+        if (result.confirmed) {
+          // User confirmed, proceed with resetting answers
+          this.resetExampleAnswers(validationRowValue);
+        }
+      });
+    }
+  }
+
+  // NEW method to reset the 4-answers
+  private resetExampleAnswers(validationRowValue: ValidationRow) {
+    let exampleAnswer = '';
+    let combinationAnswer = '';
+
+    if (this.isCurrentLangEt) {
+      exampleAnswer = 'Näidet pole';
+      combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length-1].resultEt;
+    } else {
+      exampleAnswer = 'No example';
+      combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length-1].resultEn;
+    }
+
+    const exampleValidationAnswer = validationRowValue.answers.find(a => a.type === ValidationType.EXAMPLE);
+    const exampleValidation = this.validations.find(v => v.type === ValidationType.EXAMPLE);
+
+    if (exampleValidationAnswer && exampleValidation) {
+      exampleValidationAnswer.answer = exampleAnswer;
+      this.validationService.saveValidationAnswer(exampleValidationAnswer).subscribe(
+          () => {
+            console.log('Example answer reset successfully');
+          },
+          error => {
+            console.error('Error resetting example answer:', error);
+          }
+      );
+    }
+    // Reset
+    const selectAnswers = validationRowValue.answers.filter(a => a.type === ValidationType.SELECT);
+    for (const selectAnswer of selectAnswers) {
+      selectAnswer.answer = ValidationValue.DONT_KNOW;
+      this.validationService.saveValidationAnswer(selectAnswer).subscribe(
+          () => {
+            console.log('Selection reset successfully');
+          },
+          error => {
+            console.error('Error resetting selection:', error);
+          }
+      );
+    }
+  }
+
+    // OLD SetNoExampleAnswer
+/*  private setNoExampleAnswer(validationRowValue: ValidationRow) {
     let exampleAnswer = '';
     let combinationAnswer = '';
 
@@ -624,7 +696,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           validationRowValue
       )
     }
-  }
+  }*/
 
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
     if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
