@@ -578,13 +578,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         )
     );
 
-    // If this is a stakeholder validation, ensure all rows with the same precondition have the same stakeholder
     if (validation.type === ValidationType.STAKEHOLDER) {
       const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
       if (stakeholderAnswer?.stakeholder) {
         const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
 
-        // Update all rows with the same precondition
         for (let row of this.validationRowValues) {
           if (row.rowId !== validationRowValue.rowId &&
               row.answers[0].featurePrecondition.id === preconditionId) {
@@ -607,6 +605,27 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   private setNoExampleAnswer(validationRowValue: ValidationRow) {
+    const initialState = {
+      title: this.translateService.instant('noExampleModal.title'),
+      message: this.translateService.instant('noExampleModal.message'),
+      confirmButton: this.translateService.instant('noExampleModal.confirm'),
+      cancelButton: this.translateService.instant('noExampleModal.cancel')
+    };
+
+    const modalRef = this.modalService.show(NoSituationModalComponent, {
+      class: 'modal-box modal-md', initialState
+    });
+
+    if (modalRef && modalRef.content) {
+      modalRef.content.onClose.subscribe((result: any): void => {
+        if (result.confirmed) {
+          this.resetExampleAnswers(validationRowValue);
+        }
+      });
+    }
+  }
+
+  private resetExampleAnswers(validationRowValue: ValidationRow) {
     let exampleAnswer = '';
     let combinationAnswer = '';
 
@@ -618,7 +637,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length-1].resultEn;
     }
 
-    //Example answer
     const exampleValidationAnswer = validationRowValue.answers.find(a => a.type === ValidationType.EXAMPLE);
     const exampleValidation = this.validations.find(v => v.type === ValidationType.EXAMPLE);
     if (exampleValidationAnswer && exampleValidation) {
@@ -627,18 +645,31 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           exampleValidationAnswer,
           exampleValidation,
           validationRowValue
-      )
+      );
     }
-    //Combination anwer
-    const combinationValidation = this.validations.find(v => v.validationAutofillList.find(vafl => vafl.type === 'COMBINATION'));
-    const combinationValidationAnswer = validationRowValue.answers.find(a => a.validationId === combinationValidation?.id);
+
+    const combinationValidation = this.validations.find(v =>
+        v.validationAutofillList.find(vafl => vafl.type === 'COMBINATION')
+    );
+    const combinationValidationAnswer = validationRowValue.answers.find(a =>
+        a.validationId === combinationValidation?.id
+    );
     if (combinationValidation && combinationValidationAnswer) {
       this.onValidationRowValueChange(
           combinationAnswer,
           combinationValidationAnswer,
           combinationValidation,
           validationRowValue
-      )
+      );
+    }
+
+    const selectAnswers = validationRowValue.answers.filter(a => a.type === ValidationType.SELECT);
+    for (const selectAnswer of selectAnswers) {
+      selectAnswer.answer = ValidationValue.CHOOSE_OPTION;
+      this.validationService.saveValidationAnswer(selectAnswer).subscribe(
+          () => {},
+          error => {}
+      );
     }
   }
 
