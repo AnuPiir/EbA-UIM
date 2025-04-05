@@ -1,0 +1,19 @@
+<!-- frontend/src/app/questionnaire/modal/no-situation-modal/no-situation-modal.component.html -->
+<div class="no-situation-modal">
+    <h2>{{ title }}</h2>
+    <p>{{ message }}</p>
+    <div class="no-situation-modal-actions">
+        <button
+                (click)="cancel()"
+                type="button"
+                class="button cancel-button">
+            {{ cancelButton }}
+        </button>
+        <button
+                (click)="confirm()"
+                type="button"
+                class="button edit-button">
+            {{ confirmButton }}
+        </button>
+    </div>
+</div>

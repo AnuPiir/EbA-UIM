@@ -6,13 +6,6 @@
     "cancel": "Loobu",
     "import": "Impordi"
   },
-  "addGroup": {
-    "title": "Lisa tabeli vahekaart",
-    "list": "Olemasolevad tabeli vahekaardid",
-    "input": "Tabeli vahekaardi nimetus",
-    "placeholder": "Sisesta tunnuse ID või lühend",
-    "defaultTabName": "Vahekaart 1"
-  },
   "menu": {
     "edit": "Muuda",
     "delete":"Kustuta",
@@ -71,6 +64,13 @@
   "editStakeholderModal": {
     "title": "Muuda sidusrühma nimetust",
     "input": "Sidusrühma nimetus"
+  },
+  "addGroup": {
+    "title": "Lisa tabeli vahekaart",
+    "list": "Olemasolevad tabeli vahekaardid",
+    "input": "Tabeli vahekaardi nimetus",
+    "placeholder": "Sisesta tunnuse ID või lühend",
+    "defaultTabName": "Vahekaart 1"
   },
   "addStakeholder": {
     "title": "Lisa uus sidusrühm",
@@ -278,6 +278,15 @@
   },
   "prioritizationNotice": {
     "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅."
+  },
+  "noExampleModal": {
+    "title": "Kinnita 'Situatsiooni ei ole'",
+    "message": "Kas olete kindel, et soovite märkida selle kui 'Situatsiooni ei ole'? See lähtestab kõik selle näite valikud.",
+    "confirm": "Kinnita",
+    "cancel": "Tühista"
+  },
+  "noExampleNotification": {
+    "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
   },
   "questionnaires": "Küsimustikud",
   "et": "EST",

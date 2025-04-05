@@ -23,6 +23,8 @@ import { HttpClient } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
+import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-modal/no-situation-modal.component";
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-validation',
@@ -81,6 +83,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     private el: ElementRef,
     private renderer: Renderer2,
     private sanitizer: DomSanitizer,
+    private modalService: BsModalService,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private zone: NgZone
@@ -174,16 +177,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             }))
             .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
-          // Fix missing stakeholder objects from backend
           this.fixStakeholderReferences();
 
-          // Ensure stakeholder consistency
           this.ensureStakeholdersConsistency();
 
-          // Map spans for UI rendering
           this.mapFeatureRowSpans();
 
-          // Force reapply all stakeholders with a short delay
           setTimeout(() => {
              this.forceReapplyAllStakeholders();
           }, 1000);
@@ -205,18 +204,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   private fixStakeholderReferences(): void {
     let fixCount: number = 0;
 
-    // For each validation row, ensure stakeholder references are complete
     for (const row of this.validationRowValues) {
       for (const answer of row.answers) {
         if (answer.type === ValidationType.STAKEHOLDER) {
-          // Try to match stakeholder by name from the answer field
           if (answer.answer && answer.answer.trim() !== '') {
             const matchingStakeholder = this.stakeholders.find((s: StakeholderResponse) =>
                 s.name === answer.answer || s.id.toString() == answer.answer
             );
 
             if (matchingStakeholder) {
-              // Recreate the stakeholder object
               answer.stakeholder = matchingStakeholder;
               fixCount++;
             }
@@ -230,7 +226,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
    * Ensure stakeholder consistency across all rows with the same precondition
    */
   ensureStakeholdersConsistency(): void {
-    // Group rows by precondition ID
     const preconditionGroups = new Map<number, ValidationRow[]>();
 
     for (const row of this.validationRowValues) {
@@ -243,9 +238,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }
     }
 
-    // For each precondition group, find a stakeholder and apply it to all rows
     for (const [preconditionId, rows] of preconditionGroups.entries()) {
-      // Find a stakeholder in any row of this group
       let stakeholder: StakeholderResponse | undefined;
 
       for (const row of rows) {
@@ -256,7 +249,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         }
       }
 
-      // If a stakeholder was found, apply it to all rows in this group
       if (stakeholder) {
         for (const row of rows) {
           const stakeholderAnswer = row.answers.find(a => a.type === ValidationType.STAKEHOLDER);
@@ -264,7 +256,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             stakeholderAnswer.stakeholder = stakeholder;
             stakeholderAnswer.answer = stakeholder.name;
 
-            // Save the updated stakeholder answer
             this.validationService.saveValidationAnswer(stakeholderAnswer).subscribe();
           }
         }
@@ -280,7 +271,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return;
     }
 
-    // Find the stakeholder validation type
     const stakeholderValidation = this.validations.find(v => v.type === ValidationType.STAKEHOLDER);
     if (!stakeholderValidation) {
       return;
@@ -588,13 +578,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         )
     );
 
-    // If this is a stakeholder validation, ensure all rows with the same precondition have the same stakeholder
     if (validation.type === ValidationType.STAKEHOLDER) {
       const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
       if (stakeholderAnswer?.stakeholder) {
         const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
 
-        // Update all rows with the same precondition
         for (let row of this.validationRowValues) {
           if (row.rowId !== validationRowValue.rowId &&
               row.answers[0].featurePrecondition.id === preconditionId) {
@@ -617,6 +605,27 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   private setNoExampleAnswer(validationRowValue: ValidationRow) {
+    const initialState = {
+      title: this.translateService.instant('noExampleModal.title'),
+      message: this.translateService.instant('noExampleModal.message'),
+      confirmButton: this.translateService.instant('noExampleModal.confirm'),
+      cancelButton: this.translateService.instant('noExampleModal.cancel')
+    };
+
+    const modalRef = this.modalService.show(NoSituationModalComponent, {
+      class: 'modal-box modal-md', initialState
+    });
+
+    if (modalRef && modalRef.content) {
+      modalRef.content.onClose.subscribe((result: any): void => {
+        if (result.confirmed) {
+          this.resetExampleAnswers(validationRowValue);
+        }
+      });
+    }
+  }
+
+  private resetExampleAnswers(validationRowValue: ValidationRow) {
     let exampleAnswer = '';
     let combinationAnswer = '';
 
@@ -628,7 +637,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       combinationAnswer = this.validationCombinationResults[this.validationCombinationResults.length-1].resultEn;
     }
 
-    //Example answer
     const exampleValidationAnswer = validationRowValue.answers.find(a => a.type === ValidationType.EXAMPLE);
     const exampleValidation = this.validations.find(v => v.type === ValidationType.EXAMPLE);
     if (exampleValidationAnswer && exampleValidation) {
@@ -637,18 +645,31 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           exampleValidationAnswer,
           exampleValidation,
           validationRowValue
-      )
+      );
     }
-    //Combination anwer
-    const combinationValidation = this.validations.find(v => v.validationAutofillList.find(vafl => vafl.type === 'COMBINATION'));
-    const combinationValidationAnswer = validationRowValue.answers.find(a => a.validationId === combinationValidation?.id);
+
+    const combinationValidation = this.validations.find(v =>
+        v.validationAutofillList.find(vafl => vafl.type === 'COMBINATION')
+    );
+    const combinationValidationAnswer = validationRowValue.answers.find(a =>
+        a.validationId === combinationValidation?.id
+    );
     if (combinationValidation && combinationValidationAnswer) {
       this.onValidationRowValueChange(
           combinationAnswer,
           combinationValidationAnswer,
           combinationValidation,
           validationRowValue
-      )
+      );
+    }
+
+    const selectAnswers = validationRowValue.answers.filter(a => a.type === ValidationType.SELECT);
+    for (const selectAnswer of selectAnswers) {
+      selectAnswer.answer = ValidationValue.CHOOSE_OPTION;
+      this.validationService.saveValidationAnswer(selectAnswer).subscribe(
+          () => {},
+          error => {}
+      );
     }
   }
 
