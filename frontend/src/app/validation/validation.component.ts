@@ -1131,6 +1131,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
     return [
       {
+        name: "menu.addFeature",
+        icon: 'add',
+        onClick: () => this.addFeatureAfterCurrentFeature(validationRowValue)
+      },
+      {
         name: "menu.deleteFeature",
         icon: 'delete',
         onClick: () => this.deleteFeature(validationRowValue.answers[0].feature.id)
@@ -1138,10 +1143,58 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     ];
   }
 
-  // To keep track of which rows are prioritized for each precondition
+  async addFeatureAfterCurrentFeature(currentRow: ValidationRow) {
+    this.isAddingNewRow = true;
+
+    const currentFeatureId = currentRow.answers[0].feature.id;
+    const currentIndex = this.validationRowValues.findIndex(
+        row => row.answers[0].feature.id === currentFeatureId
+    );
+
+    let insertIndex = this.validationRowValues.length;
+    for (let i = currentIndex + 1; i < this.validationRowValues.length; i++) {
+      if (this.validationRowValues[i].answers[0].feature.id !== currentFeatureId) {
+        insertIndex = i;
+        break;
+      }
+    }
+
+    const newFeature = await firstValueFrom(this.featureService.create(""));
+    const newPrecondition = await firstValueFrom(this.featurePreconditionService.create(""));
+
+    const maxRowId = this.validationRowValues.reduce((max, row) => Math.max(max, row.rowId), 0);
+    const newRowId = maxRowId + 1;
+    const newValidationRow: ValidationAnswer[] = [];
+
+    for (const v of this.validations) {
+      const newAnswer = await firstValueFrom(
+          this.validationService.saveValidationAnswer({
+            id: null,
+            rowId: newRowId,
+            validationId: v.id,
+            answer: this.getPrefilledValidationRowAnswer(v.type, newFeature, newPrecondition),
+            type: v.type,
+            questionnaireId: this.questionnaireId,
+            featureGroupId: this.featureGroup.id,
+            featurePrecondition: newPrecondition,
+            feature: newFeature,
+            stakeholder: undefined,
+            backgroundColor: '#F7F1E6'
+          })
+      );
+      newValidationRow.push(newAnswer);
+    }
+
+    this.validationRowValues.splice(insertIndex, 0, { answers: newValidationRow, rowId: newRowId });
+    this.mapFeatureRowSpans();
+    this.updateRelatedValidationAnswers(<Validation>this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), { answers: newValidationRow, rowId: newRowId });
+    this.isAddingNewRow = false;
+  }
+
+
+
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
-  // Check if the current row is prioritized
   isPrioritized(validationRowValue: ValidationRow): boolean {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
     //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
@@ -1149,7 +1202,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
 
-  // Check if the current precondition has more than one example
   hasMultipleExamples(preconditionId: number): boolean {
     const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
         row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
