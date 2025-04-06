@@ -23,8 +23,11 @@
               <div class="header">
                 <!-- Hide button (only for column 14) -->
                 <ng-container *ngIf="(i === 13 && !isColumnHidden(13)) || (i === 12 && isColumnHidden(13))">
-                  <button (click)="toggleColumnVisibility(13)" class="toggle-column-btn">
-                    {{ isColumnHidden(13) ? 'Show Column' : 'Hide' }}
+                  <button (click)="toggleColumnVisibility(13)" class="toggle-column-btn" [ngClass]="{'toggle-right': (i === 12 && isColumnHidden(13))}">
+                      <mat-icon>
+                          {{ isColumnHidden(13) ? 'visibility' : 'visibility_off' }}
+                      </mat-icon>
+                      {{ isColumnHidden(13) ? ('hideColumn.show' | translate) : ('hideColumn.hide' | translate) }}
                   </button>
                 </ng-container>
                 <!-- Only showing the title of the columns if it's visible -->
@@ -56,18 +59,6 @@
                         [class]="getStickyClassByIndex(i)"
                         [ngClass]="{'gray-out-cell': isRowDisabled(validationRowValue) && shouldGrayOut(validation)}"
                         [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
-              <!-- Condition to apply color changing in the 15th column -->
-              <ng-container *ngIf="i === 14">
-                  <!-- Toggle button for color selection menu -->
-                  <button (click)="toggleColorSelection(validationRowValue.rowId)" class="toggle-button">
-                      {{ showColorSelectionMap[validationRowValue.rowId] ? 'Close' : 'Change Color' }}
-                  </button>
-                  <!-- Color selection menu -->
-                  <div *ngIf="showColorSelectionMap[validationRowValue.rowId]" class="textarea-color-selection-container">
-                      <div *ngFor="let color of colorOptions" class="textarea-color-option" [style.background-color]="color.value" (click)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))" title="{{color.name}}">
-                      </div>
-                  </div>
-              </ng-container>
               <div class="selection" *ngIf="isValidationSelectable(validation)">
               <app-select
                 [selectedValue]="getValidationValue(getValidationRowAnswer(validation, validationRowValue).answer)"
@@ -145,8 +136,7 @@
             <div
               *ngIf="isValidationTextField(validation) && i !== 9"
               class="textfield"
-              [ngClass]="[
-              getStickyClassByIndex(i),
+              [ngClass]="[getStickyClassByIndex(i),
               isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
                 <div class="textarea-border w-100">
                 <textarea (input)="autoGrow($event)"
@@ -157,6 +147,15 @@
                   class="overflow-auto border-0 textarea-min-height">
                 </textarea>
               </div>
+                <!-- Toggle button for color selection menu -->
+                <button (click)="toggleColorSelection(validationRowValue.rowId)" class="toggle-button">
+                    {{ showColorSelectionMap[validationRowValue.rowId] ? ('colorPicker.close' | translate) : ('colorPicker.change' | translate) }}
+                </button>
+                <!-- Color selection menu -->
+                <div *ngIf="showColorSelectionMap[validationRowValue.rowId]" class="textarea-color-selection-container">
+                    <div *ngFor="let color of colorOptions" class="textarea-color-option" [style.background-color]="color.value" (click)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))" [attr.title]="color.name | translate">
+                    </div>
+                </div>
             </div>
             <!--<div *ngIf="isValidationDoField(validation)">-->
             <div *ngIf="isValidationDoField(validation)"
@@ -168,8 +167,7 @@
             </div>
             <!--<div *ngIf="isValidationAutofill(validation)">-->
             <div *ngIf="isValidationAutofill(validation)"
-                 [ngClass]="[
-                    getStickyClassByIndex(i),
+                 [ngClass]="[getStickyClassByIndex(i),
                     isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
               <span *ngIf="getValidationRowAnswer(validation, validationRowValue).answer.length>0" class="answer-stakeholder {{getStakeholderColorClass(getValidationRowAnswer(validation, validationRowValue).answer, i)}}">
                 <!-- Accessing the fourteenth cell to turn stakeholder into bold-->

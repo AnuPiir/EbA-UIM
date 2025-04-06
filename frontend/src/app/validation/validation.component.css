@@ -106,9 +106,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .gray-out-cell {
-  background-color: var(--light-brown) !important;
-  /*opacity: 0.6;*/
-  /*filter: brightness(0.5);*/
+  background-color: #e1e1e1;
   color: var(--text-color) !important;
 }
 
@@ -116,10 +114,12 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 .gray-out-cell select,
 .gray-out-cell .select-button {
   pointer-events: none;
-  color: var(--text-color) !important;
-  background-color: transparent !important;
-  border-color: var(--container);
+  color: var(--text-color) !important; /* ✅ Keep consistent text color */
+  background-color: transparent !important; /* ✅ Match cell background */
+  border-color: var(--container); /* or any border you normally use */
 }
+
+
 
 .id-cell {
   position: sticky;
@@ -364,4 +364,27 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 
 .toggle-button:hover {
   background-color: #e0e0e0;
+}
+
+.toggle-column-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 0.125rem solid;
+  border-radius: 0.25rem;
+  border-color: var(--dark-green);
+  background: var(--light-green);
+  cursor: pointer;
+}
+
+.toggle-column-btn:hover {
+  background: var(--green);
+}
+
+.toggle-right {
+  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
 }

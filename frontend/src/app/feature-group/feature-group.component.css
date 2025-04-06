@@ -136,15 +136,15 @@ mat-tab-group {
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 2rem;
+  padding: 1rem;
   background-color: var(--container);
   border-radius: 0.625rem;
 }
 
 .toggle-wrapper {
-  margin-bottom: 2rem;
+  /*margin-bottom: 2rem;*/
   display: flex;
-  justify-content: center;
+  /*justify-content: center;*/
   align-items: center;
 }
 
@@ -153,8 +153,9 @@ mat-tab-group {
   width: 91.16vw;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  /*justify-content: space-between;*/
+  gap: 2rem;
+  /*align-items: center;*/
 
   @media (max-width: 1500px) {
     align-items: center;
@@ -164,7 +165,16 @@ mat-tab-group {
 }
 
 .wrapper1 {
-  justify-content: space-between;
+  /*justify-content: space-between;*/
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+
+  @media (max-width: 1500px) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .add-project {
@@ -222,21 +232,22 @@ mat-tab-group {
 }
 
 .toggle-button {
-  background-color: var(--beige);
-  color: var(--text-color);
-  padding: 0.5rem 0.7rem;
-  border: 0.08rem solid var(--text-color);
-  border-radius: 0.3rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s;
-  min-width: 4rem;
-  height: 2rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 0.125rem solid;
+  border-radius: 0.25rem;
+  border-color: var(--dark-green);
+  background: #dcffd3;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--dark-green);
+  transition: background 0.2s ease-in-out;
+  white-space: nowrap;
 }
 
 .toggle-button:hover {
-  background-color: var(--highlight);
+  background: #c0e5b9;
 }

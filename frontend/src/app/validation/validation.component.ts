@@ -64,13 +64,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
 
   colorOptions = [
-    { name: 'Beige', value: 'var(--light-beige)' },
-    { name: 'Grey', value: 'var(--light-grey)' },
-    { name: 'Green', value: 'var(--light-green)' },
-    { name: 'Yellow', value: 'var(--light-yellow)' },
-    { name: 'Orange', value: 'var(--light-orange)' },
-    { name: 'Red', value: 'var(--light-red)' },
-    { name: 'Blue', value: 'var(--light-blue)' }
+    { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
+    { name: 'colorPickerExplanation.green', value: 'var(--light-green)' },
+    { name: 'colorPickerExplanation.orange', value: 'var(--light-orange)' },
+    { name: 'colorPickerExplanation.red', value: 'var(--light-red)' },
+    { name: 'colorPickerExplanation.yellow', value: 'var(--light-yellow)' },
+    { name: 'colorPickerExplanation.blue', value: 'var(--light-blue)' },
+    { name: 'colorPickerExplanation.default', value: 'var(--light-beige)' }
   ];
 
   constructor(
@@ -1159,10 +1159,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     ];
   }
 
-  // To keep track of which rows are prioritized for each precondition
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
-  // Check if the current row is prioritized
   isPrioritized(validationRowValue: ValidationRow): boolean {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
     //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
@@ -1170,7 +1168,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
 
-  // Check if the current precondition has more than one example
   hasMultipleExamples(preconditionId: number): boolean {
     const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
         row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
@@ -1207,7 +1204,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
   }
 
-  // Notification state
   showNotification: boolean = false;
   notificationMessage: string = '';
   private notifiedPreconditionIds: Set<number> = new Set<number>();
@@ -1215,20 +1211,16 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
 
-    // Skip if the notice has already been shown for this precondition
     if (this.notifiedPreconditionIds.has(preconditionId)) return;
 
-    // Skip if the notice has already been shown for this precondition
     const exampleRows = this.validationRowValues.filter(row =>
         row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
     );
-    // Check if there are now 2+ examples with 4 dropdowns filled
     if (exampleRows.length >= 2) {
       const allAnswersFilled = exampleRows.every(row =>
           row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
           row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
       );
-      // If valid, show notification and remember this precondition to avoid future duplicates
       if (allAnswersFilled) {
         this.notifiedPreconditionIds.add(preconditionId);
         this.notificationMessage = 'prioritizationNotice.message';
@@ -1238,11 +1230,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   shouldGrayOut(validation: Validation): boolean {
-    return this.isValidationExample(validation) ||
-        this.isValidationSelectable(validation) ||
-        this.isValidationAutofill(validation) ||
+    return this.isValidationAutofill(validation) ||
         this.isValidationTextField(validation)
-        //this.isValidationDoField(validation);
   }
 
 }
