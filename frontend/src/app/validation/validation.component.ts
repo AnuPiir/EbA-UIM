@@ -33,7 +33,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class ValidationComponent implements OnInit, AfterContentChecked {
 
-  private TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE = 400;
+  private TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE = 500;
   questionnaireId: number;
   loading: boolean = true;
   translate: boolean = false;
@@ -116,16 +116,10 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.questionnaireId = +questionnaireId;
     this.getData();
 
-    this.inputSubscription = this.inputSubject.pipe(debounceTime(300)).subscribe(searchTerm => {
+    this.inputSubscription = this.inputSubject.pipe(debounceTime(1_000)).subscribe(searchTerm => {
       this.onValidationRowValueChange(searchTerm.inputValue, searchTerm.validationRowAnswer, searchTerm.validation, searchTerm.validationRowValue);
     });
 
-    // Force stakeholder consistency after initial load
-    setTimeout(() => {
-      if (this.validationRowValues.length > 0 && this.validations.length > 0) {
-        this.forceReapplyAllStakeholders();
-      }
-    }, 2500);
   }
 
   getData(): void {
@@ -163,7 +157,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getValidationAnswers(): void {
     this.validationService.getValidationAnswersByFeatureGroupId(this.featureGroup.id).subscribe(
       next => {
-        console.log("Validation Answers from Backend: ", next);
         if (next.length === 0) {
           this.addValidationRow();
         } else {
@@ -179,13 +172,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
           this.fixStakeholderReferences();
 
-          this.ensureStakeholdersConsistency();
-
           this.mapFeatureRowSpans();
 
-          setTimeout(() => {
-             this.forceReapplyAllStakeholders();
-          }, 1000);
         }
 
         this.loading = false;
@@ -566,7 +554,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE);
           }
         }
-        this.updateRelatedValidationAnswers(validation, validationRow);
       }
     }
   }

@@ -10,24 +10,18 @@
       <tr>
         <th>
         </th>
-        <!-- <th *ngFor="let validation of validations; index as i" [ngClass]="getStickyClassByIndex(i, true)">
-          <div class="header">{{getTranslation(validation)}}
-            <mat-icon *ngIf="validation.tooltipEt"   matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"   matTooltipClass="tooltip" class="material-symbols-outlined overflow-unset">info</mat-icon>
-          </div>
-        </th> -->
 
-          <!-- Looping through columns -->
           <ng-container *ngFor="let validation of validations; index as i">
-            <!-- Always show the column header (with just the button if hidden) -->
+
             <ng-container *ngIf="!isColumnHidden(i)"><th [ngClass]="getStickyClassByIndex(i, true)">
               <div class="header">
-                <!-- Hide button (only for column 14) -->
+
                 <ng-container *ngIf="(i === 13 && !isColumnHidden(13)) || (i === 12 && isColumnHidden(13))">
                   <button (click)="toggleColumnVisibility(13)" class="toggle-column-btn">
                     {{ isColumnHidden(13) ? 'Show Column' : 'Hide' }}
                   </button>
                 </ng-container>
-                <!-- Only showing the title of the columns if it's visible -->
+
                 <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
 
                 <mat-icon *ngIf="validation.tooltipEt"
@@ -41,24 +35,23 @@
       </tr>
     </thead>
     <tbody>
-      <!--<tr *ngFor="let validationRowValue of validationRowValues; index as j" [ngClass]="{'disabled-row': isRowDisabled(validationRowValue)}">-->
-      <tr
-        *ngFor="let validationRowValue of validationRowValues; index as j"
-        [ngClass]="{
+
+      <tr *ngFor="let validationRowValue of validationRowValues; index as j" [ngClass]="{
             'prioritized': isPrioritized(validationRowValue)}">
+
       <td class="id-cell background-beige">{{ j  + 1 }}</td>
         <ng-container *ngFor="let validation of validations; index as i">
-            <!-- Only show the column if it's not hidden -->
+
             <ng-container *ngIf="!isColumnHidden(i)">
-          <!--<td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)" class="background-beige" [ngClass]="getStickyClassByIndex(i)" [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">-->
+
                 <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)"
                         class="background-beige"
                         [class]="getStickyClassByIndex(i)"
                         [ngClass]="{'gray-out-cell': isRowDisabled(validationRowValue) && shouldGrayOut(validation)}"
                         [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
-              <!-- Condition to apply color changing in the 15th column -->
+
               <ng-container *ngIf="i === 14">
-                  <!-- Toggle button for color selection menu -->
+
                   <button (click)="toggleColorSelection(validationRowValue.rowId)" class="toggle-button">
                       {{ showColorSelectionMap[validationRowValue.rowId] ? 'Close' : 'Change Color' }}
                   </button>
