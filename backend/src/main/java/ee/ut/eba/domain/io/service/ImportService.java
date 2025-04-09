@@ -9,8 +9,6 @@ import ee.ut.eba.domain.io.model.json.*;
 import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import ee.ut.eba.domain.stakeholder.service.StakeholderService;
-import ee.ut.eba.domain.validation.persistence.Validation;
-import ee.ut.eba.domain.validation.service.ValidationService;
 import ee.ut.eba.domain.validationanswer.service.ValidationAnswerService;
 import java.util.HashMap;
 import java.util.Map;
