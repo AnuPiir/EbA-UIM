@@ -45,7 +45,7 @@ public class ImportService {
 			int featureGroupId = saveFeatureGroup(validationAnswer.featureGroup(), questionnaireId);
 			int featurePreconditionId = saveFeaturePrecondition(validationAnswer.featurePrecondition());
 			int featureId = saveFeature(validationAnswer.feature());
-			int stakeholderId = saveStakeholder(validationAnswer.stakeholder(), questionnaireId);
+			Integer stakeholderId = saveStakeholder(validationAnswer.stakeholder(), questionnaireId);
 
 			validationAnswerService.save(new ValidationAnswerService.SaveParameters(null, validationAnswer.rowId(),
 					validationAnswer.answer(), validationAnswer.type(), questionnaireId, validationId,
@@ -99,7 +99,10 @@ public class ImportService {
 		return newId;
 	}
 
-	private int saveStakeholder(StakeholderJson stakeholder, int questionnaireId) {
+	private Integer saveStakeholder(StakeholderJson stakeholder, int questionnaireId) {
+		if (stakeholder == null) {
+			return null;
+		}
 		if (savedStakeholders.containsKey(stakeholder.id())) {
 			return savedStakeholders.get(stakeholder.id());
 		}

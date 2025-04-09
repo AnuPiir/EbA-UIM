@@ -51,7 +51,7 @@ public class QuestionnaireCopyService {
 			int featureGroupId = saveFeatureGroup(validationAnswer.getFeatureGroup(), newQuestionnaireId);
 			int featurePreconditionId = saveFeaturePrecondition(validationAnswer.getFeaturePrecondition());
 			int featureId = saveFeature(validationAnswer.getFeature());
-			int stakeholderId = saveStakeholder(validationAnswer.getStakeholder(), newQuestionnaireId);
+			Integer stakeholderId = saveStakeholder(validationAnswer.getStakeholder(), newQuestionnaireId);
 
 			validationAnswerService.save(new ValidationAnswerService.SaveParameters(null, validationAnswer.getRowId(),
 					validationAnswer.getAnswer(), validationAnswer.getType(), newQuestionnaireId, validationId,
@@ -108,7 +108,10 @@ public class QuestionnaireCopyService {
 		return newId;
 	}
 
-	private int saveStakeholder(Stakeholder stakeholder, int questionnaireId) {
+	private Integer saveStakeholder(Stakeholder stakeholder, int questionnaireId) {
+		if (stakeholder == null) {
+			return null;
+		}
 		if (savedStakeholders.containsKey(stakeholder.getId())) {
 			return savedStakeholders.get(stakeholder.getId());
 		}
