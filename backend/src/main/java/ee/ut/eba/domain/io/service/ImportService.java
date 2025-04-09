@@ -25,14 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ImportService {
 
 	private final QuestionnaireService questionnaireService;
-	private final ValidationService validationService;
 	private final FeatureGroupService featureGroupService;
 	private final FeaturePreconditionService featurePreconditionService;
 	private final FeatureService featureService;
 	private final StakeholderService stakeholderService;
 	private final ValidationAnswerService validationAnswerService;
 
-	private final Map<Integer, Integer> savedValidations = new HashMap<>();
 	private final Map<Integer, Integer> savedFeatureGroups = new HashMap<>();
 	private final Map<Integer, Integer> savedFeaturePreconditions = new HashMap<>();
 	private final Map<Integer, Integer> savedFeatures = new HashMap<>();
@@ -58,7 +56,6 @@ public class ImportService {
 	}
 
 	private void emptyMemory() {
-		savedValidations.clear();
 		savedFeatureGroups.clear();
 		savedFeaturePreconditions.clear();
 		savedFeatures.clear();
@@ -67,25 +64,6 @@ public class ImportService {
 
 	private int saveQuestionnaire(QuestionaireJson jsonData) {
 		return questionnaireService.save(new Questionnaire().setName(jsonData.name() + " (import)")).getId();
-	}
-
-	private int saveValidation(ValidationJson valJson) {
-		if (savedValidations.containsKey(valJson.id())) {
-			return savedValidations.get(valJson.id());
-		}
-
-		Validation val = new Validation();
-		val.setNameEt(valJson.nameEt());
-		val.setNameEn(valJson.nameEn());
-		val.setTooltipEt(valJson.tooltipEt());
-		val.setTooltipEn(valJson.tooltipEn());
-		val.setWeight(valJson.weight());
-		val.setType(valJson.type());
-
-		int newId = validationService.save(val);
-		savedValidations.put(valJson.id(), newId);
-
-		return newId;
 	}
 
 	private int saveFeatureGroup(FeatureGroupJson featureGroup, int questionnaireId) {
