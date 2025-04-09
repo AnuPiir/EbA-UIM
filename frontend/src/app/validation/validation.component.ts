@@ -1129,7 +1129,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
 
     validationRowAnswer.backgroundColor = newColor;
-    this.validationService.saveValidationAnswer(validationRowAnswer)
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe()
   }
 
   toggleColorSelection(rowId: number): void {
