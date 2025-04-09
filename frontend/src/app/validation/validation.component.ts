@@ -360,7 +360,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return result;
   }
 
-  async addValidationRow(existingFeature?: FeatureResponse, existingPreCondition?: FeaturePreCondition, stakeholder?: StakeholderResponse) {
+  async addValidationRow(existingFeature?: FeatureResponse, existingPreCondition?: FeaturePreCondition, stakeholder?: StakeholderResponse, customOverrides?: { featureId?: number; rowId?: number }) {
     this.isAddingNewRow = true;
     let validationRow: ValidationAnswer[] = [];
     let maxRowId = 0;
@@ -369,9 +369,16 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         return (prev.rowId > current.rowId) ? prev : current
       }).rowId;
     }
+    // Override rowId if provided
+    const newRowId = customOverrides?.rowId ?? maxRowId + 1;
     const feature = existingFeature ?? await firstValueFrom(
         this.featureService.create("")
     );
+    // Override featureId if provided
+    if (customOverrides?.featureId) {
+      feature.id = customOverrides.featureId;
+    }
+
     const featurePrecondition = existingPreCondition ?? await firstValueFrom(
         this.featurePreconditionService.create("")
     );
@@ -1129,11 +1136,26 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   getFeatureActions(validationRowValue: ValidationRow):{name: string, icon: string, onClick: any}[] {
+    const currentFeatureId = validationRowValue.answers[0].feature.id;
+    const currentFeatureGroupId = validationRowValue.answers[0].featureGroupId;
     return [
-      {
+      /*{
         name: "menu.addFeature",
         icon: 'add',
         onClick: () => this.addFeatureAfterCurrentFeature(validationRowValue)
+      },*/
+      /*{
+        name: "menu.addFeatureAfter",
+        icon: 'add',
+        onClick: () => this.addFeatureAfter(validationRowValue)
+      },*/
+      {
+        name: "menu.addFeatureAfter",
+        icon: 'add',
+        onClick: async () => {
+          // Call the new logic to insert feature after current one
+          await this.addFeatureAfter(currentFeatureId, currentFeatureGroupId);
+        }
       },
       {
         name: "menu.deleteFeature",
@@ -1143,7 +1165,156 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     ];
   }
 
-  async addFeatureAfterCurrentFeature(currentRow: ValidationRow) {
+  async addFeatureAfter(currentFeatureId: number, currentFeatureGroupId: number) {
+    // 🧩 1. Find all rows in the same feature group
+    const currentGroupRows = this.validationRowValues
+        .filter(row => row.answers[0].featureGroupId === currentFeatureGroupId);
+
+    // 🧩 2. Find all rows that belong to the current feature
+    const currentFeatureRows = currentGroupRows
+        .filter(row => row.answers[0].feature.id === currentFeatureId);
+
+    if (currentFeatureRows.length === 0) {
+      console.warn("Feature not found in group.");
+      return;
+    }
+
+    // 🧩 3. Find the highest rowId used by this feature (to insert after it)
+    const maxRowIdOfCurrentFeature = Math.max(...currentFeatureRows.map(row => row.rowId));
+
+    // 🧩 4. Shift all features with higher feature.id in the same group
+    const featuresToShift = currentGroupRows
+        .filter(row => row.answers[0].feature.id > currentFeatureId);
+
+    for (const row of featuresToShift) {
+      row.rowId += 1;
+
+      for (const answer of row.answers) {
+        answer.feature.id += 1;
+
+        // Optional: update backend feature
+        this.featureService.update(answer.feature.id, answer.feature.answer, answer.feature.customId).subscribe();
+
+        // Update backend validationAnswer
+        this.validationService.saveValidationAnswer(answer).subscribe();
+      }
+    }
+
+    // 🧩 5. Add a new feature with custom featureId and rowId
+    const newFeatureId = currentFeatureId + 1;
+    const newRowId = maxRowIdOfCurrentFeature + 1;
+
+    await this.addValidationRow(undefined, undefined, undefined, {
+      featureId: newFeatureId,
+      rowId: newRowId
+    });
+
+    // 🧩 6. Re-sort the table
+    this.validationRowValues = this.validationRowValues.sort((a, b) =>
+        a.answers[0].feature.id - b.answers[0].feature.id ||
+        a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
+        a.rowId - b.rowId
+    );
+
+    // ✅ Reset display tracking so feature/precondition cells are redrawn correctly
+    this.featuresAlreadyDisplayed = [];
+    this.featurePreconditionsAlreadyDisplayed = [];
+  }
+
+
+  /*async addFeatureAfter(currentFeatureId: number) {
+    // Step 1: find all rows that belong to the selected feature
+    const currentFeatureRows = this.validationRowValues
+        .filter(row => row.answers[0].feature.id === currentFeatureId);
+
+    if (currentFeatureRows.length === 0) return;
+
+    // Step 2: find the max rowId of all rows in the current feature group
+    const maxRowIdOfCurrentFeature = Math.max(...currentFeatureRows.map(row => row.rowId));
+
+    // Step 3: add new feature (it gets highest rowId by default)
+    await this.addValidationRow();
+
+    // Step 4: find that newly added row (by highest rowId)
+    const newRow = this.validationRowValues.find(row => row.rowId === Math.max(...this.validationRowValues.map(r => r.rowId)));
+
+    if (!newRow) return;
+
+    // Step 5: set rowId to one after the current feature's max rowId
+    newRow.rowId = maxRowIdOfCurrentFeature + 1;
+
+    // Step 6: re-sort table (this will now place the new feature correctly)
+    this.validationRowValues = this.validationRowValues.sort((a, b) =>
+        a.answers[0].feature.id - b.answers[0].feature.id ||
+        a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
+        a.rowId - b.rowId
+    );
+  }*/
+
+
+
+  /*async addFeatureAfter(referenceRow: ValidationRow) {
+    const referenceFeatureId = referenceRow.answers[0].feature.id;
+
+    // Get all rows of the current feature
+    const featureRows = this.validationRowValues.filter(
+        row => row.answers[0].feature.id === referenceFeatureId
+    );
+
+    // Find the last index in the array where this feature ends
+    const lastIndexOfFeature = this.validationRowValues.findIndex(
+        row => row.rowId === featureRows[featureRows.length - 1].rowId
+    );
+
+    // Create a new feature + 1 precondition + 1 situation
+    const newFeature = await firstValueFrom(this.featureService.create(""));
+    const newPrecondition = await firstValueFrom(this.featurePreconditionService.create(""));
+    const stakeholderAnswer = referenceRow.answers.find(a => a.type === ValidationType.STAKEHOLDER);
+    const stakeholder = stakeholderAnswer?.stakeholder;
+
+    // Temporarily store current state length
+    const beforeLength = this.validationRowValues.length;
+
+    // Add the new row
+    await this.addValidationRow(newFeature, newPrecondition, stakeholder);
+
+    // Determine which rows were added (they will have rowId > all existing ones before insert)
+    const addedRows = this.validationRowValues.slice(beforeLength);
+
+    // Remove added rows from the end
+    this.validationRowValues.splice(beforeLength, addedRows.length);
+
+    // Insert them after the reference feature block
+    this.validationRowValues.splice(lastIndexOfFeature + 1, 0, ...addedRows);
+
+    // Trigger UI update and row span mapping
+    this.mapFeatureRowSpans();
+    this.cdr.detectChanges();
+  }*/
+
+
+  reorderRowsAfterFeatureInsertion(referenceRowId: number) {
+    // Sort again using the intended order
+    this.validationRowValues.sort((a, b) =>
+        a.answers[0].feature.id - b.answers[0].feature.id ||
+        a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
+        a.rowId - b.rowId
+    );
+
+    // Now manually move the new feature's rows right after the reference rowId
+    const newFeatureRows = this.validationRowValues.filter(
+        row => row.rowId > referenceRowId
+    );
+
+    const before = this.validationRowValues.filter(row => row.rowId <= referenceRowId);
+    const after = this.validationRowValues.filter(row => row.rowId <= referenceRowId === false && !newFeatureRows.includes(row));
+
+    this.validationRowValues = [...before, ...newFeatureRows, ...after];
+  }
+
+
+
+  /*async addFeatureAfterCurrentFeature(currentRow: ValidationRow) {
     this.isAddingNewRow = true;
 
     const currentFeatureId = currentRow.answers[0].feature.id;
@@ -1189,7 +1360,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.mapFeatureRowSpans();
     this.updateRelatedValidationAnswers(<Validation>this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), { answers: newValidationRow, rowId: newRowId });
     this.isAddingNewRow = false;
-  }
+  }*/
 
 
 
