@@ -124,7 +124,14 @@ table {
   width: 31.25rem;
   display: flex;
   align-items: center;
-  justify-content: right;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.last-modified {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  text-align: center;
 }
 
 .see-more-button {
@@ -140,3 +147,45 @@ table {
 .see-more-button:hover {
   background-color: var(--green);
 }
+
+.sort-button {
+  cursor: pointer;
+  padding: 0.5rem;
+  display: inline-block;
+  margin-right: 8rem;
+}
+
+.sort-button:hover {
+  opacity: 0.7;
+}
+
+.text-right {
+  text-align: right;
+}
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background-color: var(--beige);
+  border-top-left-radius: 0.625rem;
+  border-top-right-radius: 0.625rem;
+}
+
+
+.sort-button:hover {
+  opacity: 0.7;
+}
+
+.action-button-head {
+  text-align: right;
+  padding: 2rem;
+  width: 31.25rem;
+}
+
+.sort-button {
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 8rem;  /* Align with timestamps */
+}
+

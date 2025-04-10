@@ -34,6 +34,11 @@
                 <th class="projects-table-head">
                     <h2>{{'projectsTable.title' | translate}}</h2>
                 </th>
+                <th class="action-button-head">
+                    <div (click)="toggleSortOrder()" class="sort-button">
+                        {{ isNewestFirst ? '↓' : '↑' }}
+                    </div>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -41,9 +46,9 @@
                 <td class="project-cell">
                     <span>{{questionnaire.name}}</span>
                     <a [routerLink]="validationPath" [queryParams]="{questionnaireId: questionnaire.id}" class="see-more-button">{{'projectsTable.seeMore' | translate}}</a>
-                    <p>{{ questionnaire.lastModified | date: 'dd.MM.yyyy HH:mm' : 'et-EE' }}</p>
                 </td>
                 <td class="action-button-cell">
+                    <span class="last-modified">{{ getTimeAgo(questionnaire.lastModified)}}</span>
                     <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getActions(questionnaire)"></app-menu>
                 </td>
             </tr>
