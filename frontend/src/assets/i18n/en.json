@@ -299,6 +299,9 @@
   "prioritizationNotice": {
     "message": "Multiple situations have been added under this precondition. They can be prioritized by using the checkbox ✅."
   },
+  "conclusion": {
+    "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
+  },
   "questionnaires": "Questionnaires",
   "et": "EST",
   "en": "ENG"

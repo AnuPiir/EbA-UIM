@@ -1,9 +1,9 @@
 <div class="select-component">
-  <button class="select-button {{selectedValue}}" [class.disabled]="isDisabled" (click)="toggleSelect()">
+  <button class="select-button {{selectedValue}}" (click)="toggleSelect()">
     <span>{{customSelectionValue() | translate}}</span>
     <span class="material-symbols-outlined icon">arrow_drop_down</span>
   </button>
-    <div *ngIf="isToggled && !isDisabled" class="options" #optionContainer [ngClass]="{'options-flip-up': isFlippedUp}">
+    <div *ngIf="isToggled" class="options" #optionContainer [ngClass]="{'options-flip-up': isFlippedUp}">
         <button
             *ngFor="let validationValue of validationValues"
             class="select-option-button {{validationValue}}"

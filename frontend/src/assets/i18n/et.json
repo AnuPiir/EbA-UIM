@@ -79,7 +79,7 @@
     "placeholder": "Sisesta nimetus mitmuses"
   },
   "table": {
-    "newRow": "Lisa uus rida",
+    "newRow": "Lisa uus funktsionaalsus",
     "deleteRow": "Ridade kustutamine",
     "delete": "Kustuta",
     "edit": "Muuda",
@@ -295,6 +295,9 @@
   },
   "prioritizationNotice": {
     "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅."
+  },
+  "conclusion": {
+    "changedNotice": "Eelnevat vastust on muudetud. Vajadusel muutke ka tegevuskava."
   },
   "noExampleModal": {
     "title": "Kinnita 'Situatsiooni ei ole'",

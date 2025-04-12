@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div *ngIf="!loading" class="page-body" [ngClass]="{'compressed-page-body': !showProjectsWrapper}">
-  <div class="modals">
+  <div class="modals" [ngClass]="{ 'content-hidden': !showProjectsWrapper }">
       <!-- Hide/Show Button -->
       <div class="wrapper1">
       <div class="toggle-wrapper">
@@ -19,10 +19,10 @@
       </div>
       <div class="wrapper2">
       <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project">
+      <div class="add-project" (click)="toggleAddNewGroup()">
         <div class="add-project-header">
           <h2>{{'addGroup.title' | translate}}</h2>
-          <button (click)="toggleAddNewGroup()" class="button-icon">
+          <button class="button-icon">
             <span *ngIf=!isToggledGroupAdding class="material-symbols-outlined icon">expand_more</span>
             <span *ngIf=isToggledGroupAdding class="material-symbols-outlined icon">expand_less</span>
           </button>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project">
+      <div class="add-project" (click)="toggleAddNewStakeholder()">
         <div class="add-project-header">
           <h2>{{'addStakeholder.title' | translate}}</h2>
-          <button (click)="toggleAddNewStakeholder()" class="button-icon">
+          <button class="button-icon">
             <span *ngIf=!isToggledStakeholderAdding class="material-symbols-outlined icon">expand_more</span>
             <span *ngIf=isToggledStakeholderAdding class="material-symbols-outlined icon">expand_less</span>
           </button>

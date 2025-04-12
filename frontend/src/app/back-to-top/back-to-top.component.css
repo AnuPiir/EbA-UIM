@@ -3,11 +3,11 @@
     bottom: 20px;
     right: 20px;
     padding: 8px 12px;
-    background-color: #dcffd3;
-    color: var(--dark-green);
+    background-color: var(--text-color);
+    color: white;
     border: 0.125rem solid;
-    border-radius: 0.25rem;
-    border-color: var(--dark-green);
+    border-radius: 1rem;
+    border-color: #1a222c;
     cursor: pointer;
     font-size: 18px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -26,7 +26,7 @@
 
 .back-to-top:hover,
 .back-to-top:focus {
-    background-color: #c0e5b9;
-    color: var(--dark-green);
+    background-color: #263826FF;
+    color: white;
     outline: none;
 }

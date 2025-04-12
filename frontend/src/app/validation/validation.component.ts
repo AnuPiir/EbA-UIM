@@ -52,6 +52,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   private inputSubscription: Subscription;
   showColorSelection: boolean = false;
   showColorSelectionMap: Record<number, boolean> = {};
+  conclusionChangedMap: Record<number, boolean> = {};
+  hasWrittenConclusionMap: Record<number, boolean> = {};
+  conclusionValidationId: number | null = null;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
@@ -70,7 +73,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     { name: 'colorPickerExplanation.red', value: 'var(--light-red)' },
     { name: 'colorPickerExplanation.yellow', value: 'var(--light-yellow)' },
     { name: 'colorPickerExplanation.blue', value: 'var(--light-blue)' },
-    { name: 'colorPickerExplanation.default', value: 'var(--light-beige)' }
+    { name: 'colorPickerExplanation.default', value: 'var(--beige)' }
   ];
 
   constructor(
@@ -149,6 +152,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         .getValidations()
         .subscribe((next) => {
           this.validations = next.sort((a,b) => a.weight - b.weight);
+          const conclusionValidation = this.validations.find(
+              v => v.type === ValidationType.TEXT &&
+                  v.nameEn && v.nameEn.toLowerCase().includes('conclusion')
+          );
+          if (conclusionValidation) {
+            this.conclusionValidationId = conclusionValidation.id;
+          }
           subscriber.next(this.validations);
         });
   }
@@ -177,6 +187,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             }))
             .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
+          this.validationRowValues.forEach(row => {
+            const conclusionAnswer = row.answers.find(a => a.type === ValidationType.TEXT);
+            if (conclusionAnswer?.answer?.trim()) {
+              this.hasWrittenConclusionMap[row.rowId] = true;
+            }
+          });
           this.fixStakeholderReferences();
 
           this.ensureStakeholdersConsistency();
@@ -502,9 +518,31 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       validation: validation,
       validationRowValue: validationRowValue
     })
+    if (validation.type === ValidationType.TEXT && eventValue.trim()) {
+      const rowId = validationRowValue.rowId;
+
+      if (!this.hasWrittenConclusionMap[rowId]) {
+        this.hasWrittenConclusionMap[rowId] = true;
+      }
+    }
   }
 
   async onValidationRowValueChange(eventValue: any, validationRowAnswer: ValidationAnswer, validation: Validation, validationRowValue: ValidationRow) {
+    const rowId = validationRowValue.rowId;
+
+    if (validation.type === ValidationType.SELECT) {
+      if (this.conclusionValidationId !== null) {
+        const conclusionAnswer = validationRowValue.answers.find(
+            a => a.validationId === this.conclusionValidationId
+        );
+        if (conclusionAnswer && conclusionAnswer.answer && conclusionAnswer.answer.trim().length > 0) {
+          this.conclusionChangedMap[rowId] = true;
+          this.cdr.detectChanges();
+        }
+      }
+    }
+
+
     validationRowAnswer.answer = eventValue;
     if (validation.type === ValidationType.FEATURE) {
       validationRowAnswer.feature = await firstValueFrom(
@@ -524,9 +562,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
-            if (validation.type === ValidationType.SELECT) {
+            /*if (validation.type === ValidationType.SELECT) {
               this.checkAndShowPrioritizationNotice(validationRowValue);
-            }
+            }*/
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -807,16 +845,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   deleteRow(rowId: number) {
-    // Finding the precondition ID of the row to delete
     const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
     if (!rowToDelete) return;
     const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
-
-    // Removing rowId from prioritizedRows before actually deleting
     if (this.prioritizedRows[preconditionId]) {
       this.prioritizedRows[preconditionId].delete(String(rowId));
-
-      // It is optional but just in case cleaning up empty sets to avoid memory waste
       if (this.prioritizedRows[preconditionId].size === 0) {
         delete this.prioritizedRows[preconditionId];
       }
@@ -1142,7 +1175,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
 
     validationRowAnswer.backgroundColor = newColor;
-    this.validationService.saveValidationAnswer(validationRowAnswer)
+    this.validationService.saveValidationAnswer(validationRowAnswer).subscribe();
   }
 
   toggleColorSelection(rowId: number): void {
@@ -1204,11 +1237,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
   }
 
-  showNotification: boolean = false;
+  /*showNotification: boolean = false;
   notificationMessage: string = '';
-  private notifiedPreconditionIds: Set<number> = new Set<number>();
+  private notifiedPreconditionIds: Set<number> = new Set<number>();*/
 
-  checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
+  /*checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
     const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
 
     if (this.notifiedPreconditionIds.has(preconditionId)) return;
@@ -1227,7 +1260,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         this.showNotification = true;
       }
     }
-  }
+  }*/
 
   shouldGrayOut(validation: Validation): boolean {
     return this.isValidationAutofill(validation) ||
