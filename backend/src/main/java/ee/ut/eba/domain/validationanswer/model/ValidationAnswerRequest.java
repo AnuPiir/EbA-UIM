@@ -95,4 +95,8 @@ public class ValidationAnswerRequest {
 	}
 
 	private String backgroundColor;
+
+	private Boolean prioritized;
+
+	private Boolean conclusionChanged;
 }

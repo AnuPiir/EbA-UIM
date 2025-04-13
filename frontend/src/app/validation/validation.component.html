@@ -132,7 +132,7 @@
                 <div *ngIf="conclusionChangedMap[validationRowValue.rowId]" class="conclusion-warning-box">
                     <mat-icon class="warning-icon" color="warn">warning</mat-icon>
                     <span class="warning-text">{{ 'conclusion.changedNotice' | translate }}</span>
-                    <button (click)="conclusionChangedMap[validationRowValue.rowId] = false" class="close-btn">✕</button>
+                    <button (click)="dismissNotification(validationRowValue)" class="close-btn">✕</button>
                 </div>
                 <div class="textarea-border w-100">
                 <textarea (input)="autoGrow($event)"

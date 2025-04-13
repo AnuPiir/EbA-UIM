@@ -191,6 +191,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             const conclusionAnswer = row.answers.find(a => a.type === ValidationType.TEXT);
             if (conclusionAnswer?.answer?.trim()) {
               this.hasWrittenConclusionMap[row.rowId] = true;
+              this.conclusionChangedMap[row.rowId] = conclusionAnswer.conclusionChanged === true;
             }
           });
           this.fixStakeholderReferences();
@@ -537,7 +538,10 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         );
         if (conclusionAnswer && conclusionAnswer.answer && conclusionAnswer.answer.trim().length > 0) {
           this.conclusionChangedMap[rowId] = true;
-          this.cdr.detectChanges();
+          conclusionAnswer.conclusionChanged = true;
+          this.validationService.saveValidationAnswer(conclusionAnswer).subscribe(() => {
+            this.cdr.detectChanges();
+          });
         }
       }
     }
@@ -1195,9 +1199,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
   isPrioritized(validationRowValue: ValidationRow): boolean {
-    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    /*const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
     //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
-    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;
+    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;*/
+
+    const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
+    return preconditionAnswer ? preconditionAnswer.prioritized === true : false;
   }
 
 
@@ -1218,11 +1225,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }
 
       const set = this.prioritizedRows[preconditionId];
+      let isNowPrioritized: boolean;
 
       if (set.has(rowId)) {
-        set.delete(rowId); // Uncheck
+        set.delete(rowId);
+        isNowPrioritized = false;
       } else {
-        set.add(rowId); // Check
+        set.add(rowId);
+        isNowPrioritized = true;
+      }
+
+      const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
+      if (preconditionAnswer) {
+        preconditionAnswer.prioritized = isNowPrioritized;
+        this.validationService.saveValidationAnswer(preconditionAnswer).subscribe(() => {
+        });
       }
 
       this.cdr.detectChanges();
@@ -1266,5 +1283,20 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.isValidationAutofill(validation) ||
         this.isValidationTextField(validation)
   }
+
+  dismissNotification(validationRowValue: ValidationRow): void {
+    const rowId = validationRowValue.rowId;
+    this.conclusionChangedMap[rowId] = false;
+    const conclusionAnswer = validationRowValue.answers.find(
+        a => a.validationId === this.conclusionValidationId
+    );
+    if (conclusionAnswer) {
+      conclusionAnswer.conclusionChanged = false;
+      this.validationService.saveValidationAnswer(conclusionAnswer).subscribe(() => {
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
 
 }

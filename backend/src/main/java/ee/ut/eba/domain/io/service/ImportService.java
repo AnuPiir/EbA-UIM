@@ -52,7 +52,7 @@ public class ImportService {
 			validationAnswerService.save(new ValidationAnswerService.SaveParameters(null, validationAnswer.rowId(),
 					validationAnswer.answer(), validationAnswer.type(), questionnaireId, validationId,
 					featurePreconditionId, featureGroupId, featureId, stakeholderId,
-					validationAnswer.backgroundColor()));
+					validationAnswer.backgroundColor(), validationAnswer.prioritized(), validationAnswer.conclusionChanged()));
 		}
 		return questionnaireId;
 	}

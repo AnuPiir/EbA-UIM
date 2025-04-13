@@ -22,7 +22,9 @@ public class ValidationAnswerMapper {
 						: null,
 				validationAnswer.getFeatureGroupId(), validationAnswer.getFeature().getId(),
 				validationAnswer.getStakeholder() != null ? validationAnswer.getStakeholder().getId() : null,
-				validationAnswer.getBackgroundColor());
+				validationAnswer.getBackgroundColor(),
+				validationAnswer.getPrioritized(),
+				validationAnswer.getConclusionChanged());
 	}
 
 	public static List<ValidationAnswerResponse> toResponse(List<ValidationAnswer> validationAnswers) {
@@ -38,6 +40,8 @@ public class ValidationAnswerMapper {
 				validationAnswer.getStakeholder() != null
 						? StakeholderMapper.toResponse(validationAnswer.getStakeholder())
 						: null,
-				validationAnswer.getBackgroundColor());
+				validationAnswer.getBackgroundColor(),
+				validationAnswer.getPrioritized(),
+				validationAnswer.getConclusionChanged());
 	}
 }
