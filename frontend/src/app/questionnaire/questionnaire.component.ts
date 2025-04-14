@@ -9,7 +9,6 @@ import {EditModalComponent} from './modal/edit-modal/edit-modal.component';
 import {formatDate} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
-import {formatFullDate, formatTimeAgo} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -264,13 +263,5 @@ export class QuestionnaireComponent implements OnInit {
         return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
     }
 
-    // Get formatted date for display
-    getFormattedDate(lastModified: string | null): string {
-        if (!lastModified) return this.translateService.instant('projectsTable.noDate');
-        return formatTimeAgo(lastModified);
-    }
 
-
-    protected readonly formatFullDate = formatFullDate;
-    protected readonly formatTimeAgo = formatTimeAgo;
 }

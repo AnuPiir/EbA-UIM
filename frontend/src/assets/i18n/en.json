@@ -282,6 +282,11 @@
   "prioritizationNotice": {
     "message": "Multiple situations have been added under this precondition. They can be prioritized by using the checkbox ✅."
   },
+  "pdfDownload": {
+    "downloadPdf": "Download as PDF",
+    "downloadMethodGuide": "Download Method Guide",
+    "downloadCombinationsGuide": "Download Combinations Guide"
+  },
   "questionnaires": "Questionnaires",
   "et": "EST",
   "en": "ENG"

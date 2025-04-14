@@ -168,3 +168,17 @@ img {
   --mat-tab-header-active-focus-indicator-color: none;
   --mat-tab-header-active-hover-indicator-color: none;
 }
+
+.tab-container {
+  position: relative;
+  width: 67.5rem;
+  max-width: 100%;
+}
+
+.download-buttons-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  z-index: 10;
+}

@@ -37,9 +37,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SanitizeHtmlPipe } from '../sanitize-html.pipe'; // Import the pipe here
 import { ColorSchemeService } from '../color-scheme.service';
 import { CombinationViewComponent } from './combination-view/combination-view.component';
-import { NotificationComponent } from './notification/notification.component'; // Import your service here
+import { NotificationComponent } from './notification/notification.component';
 import { BackToTopComponent } from './back-to-top/back-to-top.component';
-import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-modal/no-situation-modal.component"; // Import your service here
+import { NoSituationModalComponent } from "./questionnaire/modal/no-situation-modal/no-situation-modal.component";
+import { PdfService } from './utils/pdf.service';
+import { PdfDownloadButtonComponent } from './components/pdf-download-button/pdf-download-button.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -71,6 +73,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BackToTopComponent,
     NoSituationModalComponent,
     NotificationComponent,
+    PdfDownloadButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +102,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     BrowserModule
   ],
-  providers: [ColorSchemeService],
+  providers: [
+      ColorSchemeService,
+      PdfService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

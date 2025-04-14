@@ -288,6 +288,11 @@
   "noExampleNotification": {
     "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
   },
+  "pdfDownload": {
+    "downloadPdf": "Lae alla PDF",
+    "downloadMethodGuide": "Lae alla meetodi juhend",
+    "downloadCombinationsGuide": "Lae alla kombinatsioonid"
+  },
   "questionnaires": "Küsimustikud",
   "et": "EST",
   "en": "ENG"
