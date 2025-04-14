@@ -9,7 +9,6 @@ import {EditModalComponent} from './modal/edit-modal/edit-modal.component';
 import {formatDate} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
-import {formatFullDate, formatTimeAgo} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
 import { ChangeDetectorRef } from '@angular/core';
 

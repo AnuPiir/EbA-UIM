@@ -39,7 +39,8 @@
   },
   "projectsTable": {
     "title": "Projects",
-    "seeMore" : "Enter project ->"
+    "seeMore": "Enter project ->",
+    "sortByLastModified": "Last modified"
   },
   "deleteProjectModal": {
     "title": "Delete projekt: {{name}}",
