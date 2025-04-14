@@ -9,20 +9,20 @@
              class="toggle-button"
              [attr.aria-label]="'hidePanels.ariaLabel' | translate"
              tabindex="0">
-              <mat-icon class="toggle-icon">
-                  {{ showProjectsWrapper ? 'visibility_off' : 'visibility' }}
-              </mat-icon>
               <span>
                   {{ showProjectsWrapper ? ('hidePanels.hide' | translate) : ('hidePanels.unhide' | translate) }}
               </span>
+              <mat-icon class="toggle-icon">
+                  {{ showProjectsWrapper ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
           </button>
       </div>
       <div class="wrapper2">
       <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project" (click)="toggleAddNewGroup()">
+      <div class="add-project">
         <div class="add-project-header">
           <h2>{{'addGroup.title' | translate}}</h2>
-          <button class="button-icon">
+          <button (click)="toggleAddNewGroup()" class="button-icon">
             <span *ngIf=!isToggledGroupAdding class="material-symbols-outlined icon">expand_more</span>
             <span *ngIf=isToggledGroupAdding class="material-symbols-outlined icon">expand_less</span>
           </button>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project" (click)="toggleAddNewStakeholder()">
+      <div class="add-project">
         <div class="add-project-header">
           <h2>{{'addStakeholder.title' | translate}}</h2>
-          <button class="button-icon">
+          <button (click)="toggleAddNewStakeholder()" class="button-icon">
             <span *ngIf=!isToggledStakeholderAdding class="material-symbols-outlined icon">expand_more</span>
             <span *ngIf=isToggledStakeholderAdding class="material-symbols-outlined icon">expand_less</span>
           </button>
