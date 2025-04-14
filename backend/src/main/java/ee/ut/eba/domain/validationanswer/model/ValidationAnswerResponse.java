@@ -27,4 +27,6 @@ public class ValidationAnswerResponse {
 	private FeatureResponse feature;
 	private StakeholderResponse stakeholderResponse;
 	private String backgroundColor;
+	private Boolean prioritized;
+	private Boolean conclusionChanged;
 }

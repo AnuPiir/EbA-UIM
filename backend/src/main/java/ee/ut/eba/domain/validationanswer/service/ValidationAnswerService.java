@@ -45,7 +45,8 @@ public class ValidationAnswerService {
 				.setValidation(validationService.getById(params.validationId()))
 				.setFeatureGroup(featureGroupService.get(params.featureGroupId))
 				.setFeature(featureService.get(params.featureId)).setFeaturePrecondition(featurePrecondition)
-				.setBackgroundColor(params.backgroundColor);
+				.setBackgroundColor(params.backgroundColor).setPrioritized(params.prioritized)
+				.setConclusionChanged(params.conclusionChanged);
 
 		if (params.stakeholderId != null) {
 			validationAnswer.setStakeholder(stakeholderService.get(params.stakeholderId));
@@ -114,6 +115,6 @@ public class ValidationAnswerService {
 
 	public record SaveParameters(Integer id, Integer rowId, String answer, String type, Integer questionnaireId,
 			Integer validationId, Integer featurePreconditionId, Integer featureGroupId, Integer featureId,
-			Integer stakeholderId, String backgroundColor) {
+			Integer stakeholderId, String backgroundColor, Boolean prioritized, Boolean conclusionChanged) {
 	}
 }
