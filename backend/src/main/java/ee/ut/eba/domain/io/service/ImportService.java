@@ -9,8 +9,6 @@ import ee.ut.eba.domain.io.model.json.*;
 import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import ee.ut.eba.domain.stakeholder.service.StakeholderService;
-import ee.ut.eba.domain.validation.persistence.Validation;
-import ee.ut.eba.domain.validation.service.ValidationService;
 import ee.ut.eba.domain.validationanswer.service.ValidationAnswerService;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ImportService {
 
 	private final QuestionnaireService questionnaireService;
-	private final ValidationService validationService;
 	private final FeatureGroupService featureGroupService;
 	private final FeaturePreconditionService featurePreconditionService;
 	private final FeatureService featureService;
 	private final StakeholderService stakeholderService;
 	private final ValidationAnswerService validationAnswerService;
 
-	private final Map<Integer, Integer> savedValidations = new HashMap<>();
 	private final Map<Integer, Integer> savedFeatureGroups = new HashMap<>();
 	private final Map<Integer, Integer> savedFeaturePreconditions = new HashMap<>();
 	private final Map<Integer, Integer> savedFeatures = new HashMap<>();
@@ -47,18 +43,17 @@ public class ImportService {
 			int featureGroupId = saveFeatureGroup(validationAnswer.featureGroup(), questionnaireId);
 			int featurePreconditionId = saveFeaturePrecondition(validationAnswer.featurePrecondition());
 			int featureId = saveFeature(validationAnswer.feature());
-			int stakeholderId = saveStakeholder(validationAnswer.stakeholder(), questionnaireId);
+			Integer stakeholderId = saveStakeholder(validationAnswer.stakeholder(), questionnaireId);
 
 			validationAnswerService.save(new ValidationAnswerService.SaveParameters(null, validationAnswer.rowId(),
 					validationAnswer.answer(), validationAnswer.type(), questionnaireId, validationId,
-					featurePreconditionId, featureGroupId, featureId, stakeholderId,
-					validationAnswer.backgroundColor(), validationAnswer.prioritized(), validationAnswer.conclusionChanged()));
+					featurePreconditionId, featureGroupId, featureId, stakeholderId, validationAnswer.backgroundColor(),
+					validationAnswer.prioritized(), validationAnswer.conclusionChanged()));
 		}
 		return questionnaireId;
 	}
 
 	private void emptyMemory() {
-		savedValidations.clear();
 		savedFeatureGroups.clear();
 		savedFeaturePreconditions.clear();
 		savedFeatures.clear();
@@ -67,25 +62,6 @@ public class ImportService {
 
 	private int saveQuestionnaire(QuestionaireJson jsonData) {
 		return questionnaireService.save(new Questionnaire().setName(jsonData.name() + " (import)")).getId();
-	}
-
-	private int saveValidation(ValidationJson valJson) {
-		if (savedValidations.containsKey(valJson.id())) {
-			return savedValidations.get(valJson.id());
-		}
-
-		Validation val = new Validation();
-		val.setNameEt(valJson.nameEt());
-		val.setNameEn(valJson.nameEn());
-		val.setTooltipEt(valJson.tooltipEt());
-		val.setTooltipEn(valJson.tooltipEn());
-		val.setWeight(valJson.weight());
-		val.setType(valJson.type());
-
-		int newId = validationService.save(val);
-		savedValidations.put(valJson.id(), newId);
-
-		return newId;
 	}
 
 	private int saveFeatureGroup(FeatureGroupJson featureGroup, int questionnaireId) {
@@ -121,7 +97,10 @@ public class ImportService {
 		return newId;
 	}
 
-	private int saveStakeholder(StakeholderJson stakeholder, int questionnaireId) {
+	private Integer saveStakeholder(StakeholderJson stakeholder, int questionnaireId) {
+		if (stakeholder == null) {
+			return null;
+		}
 		if (savedStakeholders.containsKey(stakeholder.id())) {
 			return savedStakeholders.get(stakeholder.id());
 		}

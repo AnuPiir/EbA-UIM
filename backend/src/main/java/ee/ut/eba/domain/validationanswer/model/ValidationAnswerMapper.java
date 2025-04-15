@@ -22,8 +22,7 @@ public class ValidationAnswerMapper {
 						: null,
 				validationAnswer.getFeatureGroupId(), validationAnswer.getFeature().getId(),
 				validationAnswer.getStakeholder() != null ? validationAnswer.getStakeholder().getId() : null,
-				validationAnswer.getBackgroundColor(),
-				validationAnswer.getPrioritized(),
+				validationAnswer.getBackgroundColor(), validationAnswer.getPrioritized(),
 				validationAnswer.getConclusionChanged());
 	}
 
@@ -40,8 +39,7 @@ public class ValidationAnswerMapper {
 				validationAnswer.getStakeholder() != null
 						? StakeholderMapper.toResponse(validationAnswer.getStakeholder())
 						: null,
-				validationAnswer.getBackgroundColor(),
-				validationAnswer.getPrioritized(),
+				validationAnswer.getBackgroundColor(), validationAnswer.getPrioritized(),
 				validationAnswer.getConclusionChanged());
 	}
 }

@@ -35,6 +35,10 @@ export class QuestionnaireService {
     );
   }
 
+  public copyQuestionnaire(id: number): Observable<any> {
+    return this.http.get(QuestionnaireEndpointConstants.copyQuestionnaireUri(id));
+  }
+
   public exportQuestionnaireAsExcel(id: number, language: string): Observable<any> {
     const httpOptions = {
       responseType: 'blob' as 'json'

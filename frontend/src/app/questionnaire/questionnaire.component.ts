@@ -81,6 +81,20 @@ export class QuestionnaireComponent implements OnInit {
 
     }
 
+    async copyQuestionnaire(questionnaireId: number) {
+        this.questionnaireService.copyQuestionnaire(questionnaireId).subscribe(
+            response => {
+                if (response) {
+                    this.router.navigate(['/validation'], {
+                        queryParams: {
+                            questionnaireId: response.id
+                        }
+                    });
+                }
+            }
+        )
+    }
+
     toggleAddNewQuestionnaire(): void {
         this.isToggled = !this.isToggled;
     }
@@ -164,6 +178,11 @@ export class QuestionnaireComponent implements OnInit {
         return [
             {name: "menu.edit", icon: 'edit', onClick: () => this.editQuestionnaire(questionnaire)},
             {name: "menu.delete", icon: 'delete', onClick: () => this.deleteQuestionnaire(questionnaire)},
+            {
+                name: "menu.copy",
+                icon: 'content_copy',
+                onClick: () => this.copyQuestionnaire(questionnaire.id)
+            },
             {
                 name: "menu.downloadExcel",
                 icon: 'download',
