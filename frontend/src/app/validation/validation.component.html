@@ -135,7 +135,7 @@
                         <!--<div *ngIf="isValidationTextField(validation) && i !== 9" class="textfield">-->
                         <div *ngIf="isValidationTextField(validation) && i !== 9"
                              class="textfield"
-                             [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']"> <!--seeeeee siiiiiin suuuusss-->
+                             [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
                             <div *ngIf="conclusionChangedMap[validationRowValue.rowId]" class="conclusion-warning-box">
                                 <mat-icon class="warning-icon" color="warn">warning</mat-icon>
                                 <span class="warning-text">{{ 'conclusion.changedNotice' | translate }}</span>
@@ -165,7 +165,7 @@
                         </div>
                         <!--<div *ngIf="isValidationDoField(validation)">-->
                         <div *ngIf="isValidationDoField(validation)"
-                             [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']"> <!--ei tea ka kas siia peab jaama see row gray-->
+                             [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
                             <div class="w-100">
                                 {{ getValidationRowAnswer(validation, validationRowValue).answer }}
                             </div>

@@ -164,6 +164,17 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     });
   }
 
+  setConclusionFlagsForRow(row: ValidationRow): void {
+    const conclusionAnswer = row.answers.find(
+        a => a.validationId === this.conclusionValidationId
+    );
+
+    if (conclusionAnswer?.answer?.trim()) {
+      this.hasWrittenConclusionMap[row.rowId] = true;
+      this.conclusionChangedMap[row.rowId] = conclusionAnswer.conclusionChanged === true;
+    }
+  }
+
   getValidationAnswers(): void {
     this.validationService.getValidationAnswersByFeatureGroupId(this.featureGroup.id).subscribe(
       next => {
@@ -181,12 +192,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
           this.validationRowValues.forEach(row => {
-            const conclusionAnswer = row.answers.find(a => a.type === ValidationType.TEXT);
-            if (conclusionAnswer?.answer?.trim()) {
-              this.hasWrittenConclusionMap[row.rowId] = true;
-              this.conclusionChangedMap[row.rowId] = conclusionAnswer.conclusionChanged === true;
-            }
+            this.setConclusionFlagsForRow(row);
           });
+          this.cdr.detectChanges();
           this.fixStakeholderReferences();
 
           this.prioritizedRows = {};
@@ -206,6 +214,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         }
 
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error => {
          console.error("Error loading validation answers:", error);
@@ -532,11 +541,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     const rowId = validationRowValue.rowId;
 
     if (validation.type === ValidationType.SELECT) {
-      if (this.conclusionValidationId !== null) {
+      const previousValue = validationRowAnswer.answer;
+      if (eventValue !== previousValue) {
         const conclusionAnswer = validationRowValue.answers.find(
             a => a.validationId === this.conclusionValidationId
         );
-        if (conclusionAnswer && conclusionAnswer.answer && conclusionAnswer.answer.trim().length > 0) {
+        if (conclusionAnswer?.answer?.trim()) {
           this.conclusionChangedMap[rowId] = true;
           conclusionAnswer.conclusionChanged = true;
           this.validationService.saveValidationAnswer(conclusionAnswer).subscribe(() => {
@@ -545,7 +555,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         }
       }
     }
-
 
     validationRowAnswer.answer = eventValue;
     if (validation.type === ValidationType.FEATURE) {
@@ -617,7 +626,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         foundValidation.validationAutofillList.some(autofill =>
             autofill.validationFilledById !== null && autofill.validationFilledById === validation.id
         )
-    );
+    )
+        .filter(v => v.id !== this.conclusionValidationId);
 
     if (validation.type === ValidationType.STAKEHOLDER) {
       const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
@@ -715,15 +725,16 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
-    // To verify whether an answer is the default one (CHOOSE_OPTION)
+    if (validationFilledByAnswer.id === this.conclusionValidationId) {
+      return;
+    }
+
     const requiredAnswers = validationFilledByAnswer.validationAutofillList.map(v =>
         validationRowValue.answers.find(a => a.validationId === v.validationFilledById)
     );
-    // allAnswersValid will be true only if every required answer exists, has a value, and is not "CHOOSE_OPTION"
     const allAnswersValid = requiredAnswers.every(a => a && a.answer && a.answer !== 'CHOOSE_OPTION');
     const autofillAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
 
-    // If not all answers are valid, clear the autofill answer and exit
     if (!allAnswersValid) {
       if (autofillAnswer && autofillAnswer.answer !== '') {
         autofillAnswer.answer = '';
@@ -768,6 +779,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     if (answerToFill) {
       answerToFill.answer = this.getAnswerToSet(answerValuesSortedByWeight);
+      const row = this.validationRowValues.find(row => row.rowId === answerToFill.rowId);
+      const conclusionAnswer = row?.answers.find(a => a.validationId === this.conclusionValidationId);
+      if (conclusionAnswer?.conclusionChanged) {
+        answerToFill.conclusionChanged = true;
+      }
       this.validationService.saveValidationAnswer(answerToFill).subscribe(next => {});
     }
   }
@@ -810,7 +826,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
           // DONT append the stakeholder
           correctAnswer.answer = this.getTranslation(combinationResult);
-
+          const row = this.validationRowValues.find(row => row.rowId === correctAnswer.rowId);
+          const conclusionAnswer = row?.answers.find(a => a.validationId === this.conclusionValidationId);
+          if (conclusionAnswer?.conclusionChanged) {
+            correctAnswer.conclusionChanged = true;
+          }
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
           });
@@ -824,6 +844,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
       if (correctAnswer && correctAnswer.answer !== '') {
         correctAnswer.answer = '';
+        const row = this.validationRowValues.find(row => row.rowId === correctAnswer.rowId);
+        const conclusionAnswer = row?.answers.find(a => a.validationId === this.conclusionValidationId);
+        if (conclusionAnswer?.conclusionChanged) {
+          correctAnswer.conclusionChanged = true;
+        }
         this.validationService.saveValidationAnswer(correctAnswer).subscribe();
       }
     }
