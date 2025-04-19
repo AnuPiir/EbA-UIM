@@ -1,5 +1,4 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
-<!--<app-notification [message]="notificationMessage" [show]="showNotification" (close)="showNotification = false"> </app-notification>-->
 <div *ngIf="!loading" class="table-wrapper">
     <table>
         <thead>
@@ -132,7 +131,6 @@
                             ? 'Unmark this example as prioritized'
                             : 'Mark this example as prioritized'"/>
                         </div>
-                        <!--<div *ngIf="isValidationTextField(validation) && i !== 9" class="textfield">-->
                         <div *ngIf="isValidationTextField(validation) && i !== 9"
                              class="textfield"
                              [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
@@ -153,7 +151,6 @@
                             <button (click)="toggleColorSelection(validationRowValue.rowId)" class="toggle-button">
                                 {{ showColorSelectionMap[validationRowValue.rowId] ? ('colorPicker.close' | translate) : ('colorPicker.change' | translate) }}
                             </button>
-                            <!-- Color selection menu -->
                             <div *ngIf="showColorSelectionMap[validationRowValue.rowId]"
                                  class="textarea-color-selection-container">
                                 <div *ngFor="let color of colorOptions" class="textarea-color-option"
@@ -163,14 +160,12 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div *ngIf="isValidationDoField(validation)">-->
                         <div *ngIf="isValidationDoField(validation)"
                              [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
                             <div class="w-100">
                                 {{ getValidationRowAnswer(validation, validationRowValue).answer }}
                             </div>
                         </div>
-                        <!--<div *ngIf="isValidationAutofill(validation)">-->
                         <div *ngIf="isValidationAutofill(validation)"
                              [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '']">
                             <span *ngIf="getValidationRowAnswer(validation, validationRowValue).answer.length>0"

@@ -575,9 +575,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
-            /*if (validation.type === ValidationType.SELECT) {
-              this.checkAndShowPrioritizationNotice(validationRowValue);
-            }*/
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -742,10 +739,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }
       return;
     }
-
-    /*if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
-      return;
-    }*/
 
     const answerValues = []
     let isAutofillTypeCombination = true;
@@ -1042,7 +1035,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return this.sanitizer.bypassSecurityTrustHtml(answer);
     }
 
-    // Replacing the stakeholder name with a bold version
     const formattedSentence = answer.replace(
         new RegExp(`\\b${foundStakeholder.name}\\b`, 'g'),
         `<strong>${foundStakeholder.name}</strong>`
@@ -1050,7 +1042,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.sanitizer.bypassSecurityTrustHtml(formattedSentence);
   }
 
-  // Just in case keeping track of the columns which are currently hidden
   hiddenColumns: Set<number> = new Set();
   isColumnHidden(index: number): boolean {
     return this.hiddenColumns.has(index);
@@ -1223,10 +1214,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
   isPrioritized(validationRowValue: ValidationRow): boolean {
-    /*const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-    //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
-    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;*/
-
     const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
     return preconditionAnswer ? preconditionAnswer.prioritized === true : false;
   }
@@ -1277,31 +1264,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
   }
-
-  /*showNotification: boolean = false;
-  notificationMessage: string = '';
-  private notifiedPreconditionIds: Set<number> = new Set<number>();*/
-
-  /*checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
-    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-
-    if (this.notifiedPreconditionIds.has(preconditionId)) return;
-
-    const exampleRows = this.validationRowValues.filter(row =>
-        row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
-    );
-    if (exampleRows.length >= 2) {
-      const allAnswersFilled = exampleRows.every(row =>
-          row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
-          row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
-      );
-      if (allAnswersFilled) {
-        this.notifiedPreconditionIds.add(preconditionId);
-        this.notificationMessage = 'prioritizationNotice.message';
-        this.showNotification = true;
-      }
-    }
-  }*/
 
   shouldGrayOut(validation: Validation): boolean {
     return this.isValidationAutofill(validation) ||

@@ -45,7 +45,7 @@ td {
 
 tfoot td { border: none; }
 
-tr>th:first-child/*,tr>td:first-child*/ {
+tr>th:first-child {
   width: 3rem;
   position: sticky;
   left: 0;
@@ -243,11 +243,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   gap: 0.5rem;
 }
 
-/*.menu-row .menu:hover {
-  background-color: lightblue;
-  color: white;
-}*/
-
 .cell-with-menu-stakeholder {
   display: flex;
   flex-direction: row;
@@ -299,7 +294,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 .add-row-button:hover {
   background-color: var(--green);
 }
-
 
 .delete-row {
   width: 60px !important;
@@ -356,7 +350,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .toggle-button:hover {
-  /*background-color: var(--brown);*/
   background-color: #cdbfb4;
 }
 
@@ -417,9 +410,6 @@ border-right: 0.25rem solid #C0B2A3FF;
 background-color: var(--beige) !important;
 }
 
-
-
-
 .conclusion-notification {
 background-color: var(--light-yellow);
 border: 2px solid #856404;
@@ -439,10 +429,6 @@ cursor: pointer;
 font-weight: bold;
 color: #856404;
 }
-
-
-
-
 
 .conclusion-warning-box {
 background-color: #F5E2AAFF;
