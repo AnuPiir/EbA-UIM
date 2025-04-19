@@ -34,12 +34,13 @@ import { ColorSelectComponent } from './colorSelect/color-select.component';
 import { AboutComponent } from './about/about.component';
 import { MethodComponent } from './method/method.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SanitizeHtmlPipe } from '../sanitize-html.pipe'; // Import the pipe here
+import { SanitizeHtmlPipe } from '../sanitize-html.pipe';
 import { ColorSchemeService } from '../color-scheme.service';
 import { CombinationViewComponent } from './combination-view/combination-view.component';
-import { NotificationComponent } from './notification/notification.component'; // Import your service here
+import { NotificationComponent } from './notification/notification.component';
 import { BackToTopComponent } from './back-to-top/back-to-top.component';
-import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-modal/no-situation-modal.component"; // Import your service here
+import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-modal/no-situation-modal.component";
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -97,7 +98,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    BrowserModule
+    BrowserModule,
+    ScrollingModule,
   ],
   providers: [ColorSchemeService],
   bootstrap: [AppComponent]

@@ -426,7 +426,14 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
 
     // Add the new row to the UI immediately
-    this.validationRowValues.push({answers: validationRow, rowId: maxRowId + 1});
+    const newRow = { answers: validationRow, rowId: maxRowId + 1 };
+    this.validationRowValues = [...this.validationRowValues, newRow]
+        .sort((a, b) =>
+            a.answers[0].feature.id - b.answers[0].feature.id ||
+            a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id ||
+            a.rowId - b.rowId
+        );
+
     this.validationRowValues = this.validationRowValues.sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
     this.mapFeatureRowSpans();
@@ -967,6 +974,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return true;
   }
 
+  getFillerCellClass(validation: Validation): string {
+    if (validation.type === ValidationType.FEATURE) {
+      return 'filler-cell-feature';
+    }
+    return 'filler';
+  }
+
   getStickyClassByIndex(i: number, isHeader?: boolean): string {
     if (i === 0) {
       return 'content-cell-first-child'
@@ -1283,6 +1297,4 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       });
     }
   }
-
-
 }

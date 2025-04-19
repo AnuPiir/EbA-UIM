@@ -57,7 +57,7 @@ mat-tab-group {
   gap: 0.25rem;
   padding: 0.25rem;
 }
- 
+
 :host ::ng-deep .mat-mdc-tab-header.mat-mdc-tab-header-pagination-controls-enabled > .mat-mdc-tab-header-pagination.mat-mdc-tab-header-pagination-before.mat-ripple,
 :host ::ng-deep .mat-mdc-tab-header.mat-mdc-tab-header-pagination-controls-enabled > .mat-mdc-tab-header-pagination.mat-mdc-tab-header-pagination-after.mat-ripple {
   background-color: var(--table-head);
@@ -246,5 +246,5 @@ mat-tab-group {
 }
 
 .toggle-button:hover {
-  background: #c0e5b9;
+  background: var(--highlight);
 }
