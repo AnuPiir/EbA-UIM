@@ -62,6 +62,8 @@ function createWindow() {
         },
     });
 
+    mainWindow.maximize();
+
     mainWindow.loadURL(
         url.format({
             pathname: path.join(__dirname, 'dist/frontend/index.html'),
