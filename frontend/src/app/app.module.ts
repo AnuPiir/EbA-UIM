@@ -42,7 +42,6 @@ import { BackToTopComponent } from './back-to-top/back-to-top.component';
 import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import {ScrollingModule} from "@angular/cdk/scrolling";
 
-
 export function HttpLoaderFactory(http: HttpClient) {
   const isElectron = (window as any).process && (window as any).process.type;
   const basePath = isElectron ? `./assets/i18n/` : `/assets/i18n/`;
