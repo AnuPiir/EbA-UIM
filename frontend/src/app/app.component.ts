@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { TranslateService } from '@ngx-translate/core';
 
+interface Preference { type: string; value: string; }
 
 @Component({
   selector: 'app-root',
@@ -13,22 +14,23 @@ export class AppComponent {
   constructor(private translate: TranslateService, private http: HttpClient) {
     //translate.setDefaultLang('et');
     //translate.use('et');
+
   }
 
   ngOnInit() {
-    this.fetchPreferences();
-  }
-
-  fetchPreferences() {
-    this.http.get<{ type: string, value: string }[]>('/api/preference').subscribe(preferences => {
-      const languagePreference = preferences.find(p => p.type === 'LANGUAGE');
-      if (languagePreference) {
-        this.translate.use(languagePreference.value);
-      } else {
-        this.translate.setDefaultLang('et');
-        this.translate.use('et');
-      }
-    });
+    this.http.get<Preference[]>('/api/preference')
+        .subscribe({
+          next: prefs => {
+            const lang = prefs.find(p => p.type === 'LANGUAGE')?.value ?? 'et';
+            this.translate.setDefaultLang(lang);
+            this.translate.use(lang);
+          },
+          error: err => {
+            console.error('Failed to fetch preferences', err);
+            this.translate.setDefaultLang('et');
+            this.translate.use('et');
+          }
+        });
   }
 
   currentColorScheme: string = 'scheme1';

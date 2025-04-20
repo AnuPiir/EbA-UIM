@@ -41,20 +41,18 @@ export class ToolbarComponent{
     return this.translate.currentLang ? this.translate.currentLang.toUpperCase() : 'ET';
   }
 
-
   savePreference(language: string) {
-    this.http.post(`/api/preference/type/LANGUAGE/value/${language}`, {}).subscribe(
-        () => {},
-        error => {
-          console.error('Failed to save preference', error);
-        }
-    );
+    this.http.post<void>(`/api/preference/type/LANGUAGE/value/${language}`, {})
+        .subscribe({ next: () => {},
+          error: err => {
+            console.error('Failed to save preference', err);
+          }
+        });
   }
 
   setLang(language: string): void {
     this.translate.use(language.toLowerCase());
     this.savePreference(language.toLowerCase());
-
   }
 
   isLanguageSelected(language: string): boolean {
