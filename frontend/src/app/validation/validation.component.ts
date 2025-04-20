@@ -52,6 +52,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   private inputSubscription: Subscription;
   showColorSelection: boolean = false;
   showColorSelectionMap: Record<number, boolean> = {};
+  conclusionChangedMap: Record<number, boolean> = {};
+  hasWrittenConclusionMap: Record<number, boolean> = {};
+  conclusionValidationId: number | null = null;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
@@ -64,13 +67,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
 
   colorOptions = [
-    { name: 'Beige', value: 'var(--light-beige)' },
-    { name: 'Grey', value: 'var(--light-grey)' },
-    { name: 'Green', value: 'var(--light-green)' },
-    { name: 'Yellow', value: 'var(--light-yellow)' },
-    { name: 'Orange', value: 'var(--light-orange)' },
-    { name: 'Red', value: 'var(--light-red)' },
-    { name: 'Blue', value: 'var(--light-blue)' }
+    { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
+    { name: 'colorPickerExplanation.green', value: 'var(--light-green)' },
+    { name: 'colorPickerExplanation.orange', value: 'var(--light-orange)' },
+    { name: 'colorPickerExplanation.red', value: 'var(--light-red)' },
+    { name: 'colorPickerExplanation.yellow', value: 'var(--light-yellow)' },
+    { name: 'colorPickerExplanation.blue', value: 'var(--light-blue)' },
+    { name: 'colorPickerExplanation.default', value: 'var(--beige)' }
   ];
 
   constructor(
@@ -143,6 +146,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         .getValidations()
         .subscribe((next) => {
           this.validations = next.sort((a,b) => a.weight - b.weight);
+          const conclusionValidation = this.validations.find(
+              v => v.type === ValidationType.TEXT &&
+                  v.nameEn && v.nameEn.toLowerCase().includes('conclusion')
+          );
+          if (conclusionValidation) {
+            this.conclusionValidationId = conclusionValidation.id;
+          }
           subscriber.next(this.validations);
         });
   }
@@ -152,6 +162,17 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationCombinationResults = next
       subscriber.next(this.validationCombinationResults);
     });
+  }
+
+  setConclusionFlagsForRow(row: ValidationRow): void {
+    const conclusionAnswer = row.answers.find(
+        a => a.validationId === this.conclusionValidationId
+    );
+
+    if (conclusionAnswer?.answer?.trim()) {
+      this.hasWrittenConclusionMap[row.rowId] = true;
+      this.conclusionChangedMap[row.rowId] = conclusionAnswer.conclusionChanged === true;
+    }
   }
 
   getValidationAnswers(): void {
@@ -170,13 +191,30 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             }))
             .sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
+          this.validationRowValues.forEach(row => {
+            this.setConclusionFlagsForRow(row);
+          });
+          this.cdr.detectChanges();
           this.fixStakeholderReferences();
+
+          this.prioritizedRows = {};
+          for (const row of this.validationRowValues) {
+            const preconditionAnswer = row.answers.find(a => a.type === 'FEATURE_PRECONDITION');
+            if (preconditionAnswer?.prioritized) {
+              const preconditionId = preconditionAnswer.featurePrecondition.id;
+              if (!this.prioritizedRows[preconditionId]) {
+                this.prioritizedRows[preconditionId] = new Set<string>();
+              }
+              this.prioritizedRows[preconditionId].add(String(row.rowId));
+            }
+          }
 
           this.mapFeatureRowSpans();
 
         }
 
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error => {
          console.error("Error loading validation answers:", error);
@@ -497,9 +535,34 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       validation: validation,
       validationRowValue: validationRowValue
     })
+    if (validation.type === ValidationType.TEXT && eventValue.trim()) {
+      const rowId = validationRowValue.rowId;
+
+      if (!this.hasWrittenConclusionMap[rowId]) {
+        this.hasWrittenConclusionMap[rowId] = true;
+      }
+    }
   }
 
   async onValidationRowValueChange(eventValue: any, validationRowAnswer: ValidationAnswer, validation: Validation, validationRowValue: ValidationRow) {
+    const rowId = validationRowValue.rowId;
+
+    if (validation.type === ValidationType.SELECT) {
+      const previousValue = validationRowAnswer.answer;
+      if (eventValue !== previousValue) {
+        const conclusionAnswer = validationRowValue.answers.find(
+            a => a.validationId === this.conclusionValidationId
+        );
+        if (conclusionAnswer?.answer?.trim()) {
+          this.conclusionChangedMap[rowId] = true;
+          conclusionAnswer.conclusionChanged = true;
+          this.validationService.saveValidationAnswer(conclusionAnswer).subscribe(() => {
+            this.cdr.detectChanges();
+          });
+        }
+      }
+    }
+
     validationRowAnswer.answer = eventValue;
     if (validation.type === ValidationType.FEATURE) {
       validationRowAnswer.feature = await firstValueFrom(
@@ -519,9 +582,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
-            if (validation.type === ValidationType.SELECT) {
-              this.checkAndShowPrioritizationNotice(validationRowValue);
-            }
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -570,7 +630,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         foundValidation.validationAutofillList.some(autofill =>
             autofill.validationFilledById !== null && autofill.validationFilledById === validation.id
         )
-    );
+    )
+        .filter(v => v.id !== this.conclusionValidationId);
 
     if (validation.type === ValidationType.STAKEHOLDER) {
       const stakeholderAnswer = validationRowValue.answers.find(a => a.type === ValidationType.STAKEHOLDER);
@@ -668,15 +729,16 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   private setAutoFillAnswers(validationFilledByAnswer: Validation, validationRowValue: ValidationRow) {
-    // To verify whether an answer is the default one (CHOOSE_OPTION)
+    if (validationFilledByAnswer.id === this.conclusionValidationId) {
+      return;
+    }
+
     const requiredAnswers = validationFilledByAnswer.validationAutofillList.map(v =>
         validationRowValue.answers.find(a => a.validationId === v.validationFilledById)
     );
-    // allAnswersValid will be true only if every required answer exists, has a value, and is not "CHOOSE_OPTION"
     const allAnswersValid = requiredAnswers.every(a => a && a.answer && a.answer !== 'CHOOSE_OPTION');
     const autofillAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
 
-    // If not all answers are valid, clear the autofill answer and exit
     if (!allAnswersValid) {
       if (autofillAnswer && autofillAnswer.answer !== '') {
         autofillAnswer.answer = '';
@@ -684,10 +746,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }
       return;
     }
-
-    /*if (!this.allRequiredAnswersFilled(validationFilledByAnswer, validationRowValue)) {
-      return;
-    }*/
 
     const answerValues = []
     let isAutofillTypeCombination = true;
@@ -721,6 +779,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     if (answerToFill) {
       answerToFill.answer = this.getAnswerToSet(answerValuesSortedByWeight);
+      const row = this.validationRowValues.find(row => row.rowId === answerToFill.rowId);
+      const conclusionAnswer = row?.answers.find(a => a.validationId === this.conclusionValidationId);
+      if (conclusionAnswer?.conclusionChanged) {
+        answerToFill.conclusionChanged = true;
+      }
       this.validationService.saveValidationAnswer(answerToFill).subscribe(next => {});
     }
   }
@@ -763,7 +826,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
           // DONT append the stakeholder
           correctAnswer.answer = this.getTranslation(combinationResult);
-
+          const row = this.validationRowValues.find(row => row.rowId === correctAnswer.rowId);
+          const conclusionAnswer = row?.answers.find(a => a.validationId === this.conclusionValidationId);
+          if (conclusionAnswer?.conclusionChanged) {
+            correctAnswer.conclusionChanged = true;
+          }
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
           });
@@ -777,6 +844,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       const correctAnswer = validationRowValue.answers.find(a => a.validationId === validationFilledByAnswer.id);
       if (correctAnswer && correctAnswer.answer !== '') {
         correctAnswer.answer = '';
+        const row = this.validationRowValues.find(row => row.rowId === correctAnswer.rowId);
+        const conclusionAnswer = row?.answers.find(a => a.validationId === this.conclusionValidationId);
+        if (conclusionAnswer?.conclusionChanged) {
+          correctAnswer.conclusionChanged = true;
+        }
         this.validationService.saveValidationAnswer(correctAnswer).subscribe();
       }
     }
@@ -801,16 +873,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   deleteRow(rowId: number) {
-    // Finding the precondition ID of the row to delete
     const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
     if (!rowToDelete) return;
     const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
-
-    // Removing rowId from prioritizedRows before actually deleting
     if (this.prioritizedRows[preconditionId]) {
       this.prioritizedRows[preconditionId].delete(String(rowId));
-
-      // It is optional but just in case cleaning up empty sets to avoid memory waste
       if (this.prioritizedRows[preconditionId].size === 0) {
         delete this.prioritizedRows[preconditionId];
       }
@@ -982,7 +1049,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       return this.sanitizer.bypassSecurityTrustHtml(answer);
     }
 
-    // Replacing the stakeholder name with a bold version
     const formattedSentence = answer.replace(
         new RegExp(`\\b${foundStakeholder.name}\\b`, 'g'),
         `<strong>${foundStakeholder.name}</strong>`
@@ -990,7 +1056,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.sanitizer.bypassSecurityTrustHtml(formattedSentence);
   }
 
-  // Just in case keeping track of the columns which are currently hidden
   hiddenColumns: Set<number> = new Set();
   isColumnHidden(index: number): boolean {
     return this.hiddenColumns.has(index);
@@ -1160,18 +1225,14 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     ];
   }
 
-  // To keep track of which rows are prioritized for each precondition
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
-  // Check if the current row is prioritized
   isPrioritized(validationRowValue: ValidationRow): boolean {
-    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-    //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
-    return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;
+    const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
+    return preconditionAnswer ? preconditionAnswer.prioritized === true : false;
   }
 
 
-  // Check if the current precondition has more than one example
   hasMultipleExamples(preconditionId: number): boolean {
     const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
         row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
@@ -1189,11 +1250,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       }
 
       const set = this.prioritizedRows[preconditionId];
+      let isNowPrioritized: boolean;
 
       if (set.has(rowId)) {
-        set.delete(rowId); // Uncheck
+        set.delete(rowId);
+        isNowPrioritized = false;
       } else {
-        set.add(rowId); // Check
+        set.add(rowId);
+        isNowPrioritized = true;
+      }
+
+      const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
+      if (preconditionAnswer) {
+        preconditionAnswer.prioritized = isNowPrioritized;
+        this.validationService.saveValidationAnswer(preconditionAnswer).subscribe(() => {
+        });
       }
 
       this.cdr.detectChanges();
@@ -1208,41 +1279,22 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return prioritizedSet?.size > 0 && !prioritizedSet.has(String(validationRowValue.rowId));
   }
 
-  // Notification state
-  showNotification: boolean = false;
-  notificationMessage: string = '';
-  private notifiedPreconditionIds: Set<number> = new Set<number>();
-
-  checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
-    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-
-    // Skip if the notice has already been shown for this precondition
-    if (this.notifiedPreconditionIds.has(preconditionId)) return;
-
-    // Skip if the notice has already been shown for this precondition
-    const exampleRows = this.validationRowValues.filter(row =>
-        row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
-    );
-    // Check if there are now 2+ examples with 4 dropdowns filled
-    if (exampleRows.length >= 2) {
-      const allAnswersFilled = exampleRows.every(row =>
-          row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
-          row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
-      );
-      // If valid, show notification and remember this precondition to avoid future duplicates
-      if (allAnswersFilled) {
-        this.notifiedPreconditionIds.add(preconditionId);
-        this.notificationMessage = 'prioritizationNotice.message';
-        this.showNotification = true;
-      }
-    }
-  }
-
   shouldGrayOut(validation: Validation): boolean {
-    return this.isValidationExample(validation) ||
-        this.isValidationSelectable(validation) ||
-        this.isValidationAutofill(validation) ||
+    return this.isValidationAutofill(validation) ||
         this.isValidationTextField(validation)
   }
 
+  dismissNotification(validationRowValue: ValidationRow): void {
+    const rowId = validationRowValue.rowId;
+    this.conclusionChangedMap[rowId] = false;
+    const conclusionAnswer = validationRowValue.answers.find(
+        a => a.validationId === this.conclusionValidationId
+    );
+    if (conclusionAnswer) {
+      conclusionAnswer.conclusionChanged = false;
+      this.validationService.saveValidationAnswer(conclusionAnswer).subscribe(() => {
+        this.cdr.detectChanges();
+      });
+    }
+  }
 }

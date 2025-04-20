@@ -2,20 +2,31 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    padding: 10px 15px;
-    background-color: #007bff;
+    padding: 8px 12px;
+    background-color: var(--text-color);
     color: white;
-    border: none;
-    border-radius: 5px;
+    border: 0.125rem solid;
+    border-radius: 1rem;
+    border-color: #1a222c;
     cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.3s, background-color 0.3s;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s, background-color 0.3s, color 0.3s;
     z-index: 1000;
+    font-weight: 500;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-to-top .material-symbols-outlined {
+    font-size: 24px;
 }
 
 .back-to-top:hover,
 .back-to-top:focus {
-    background-color: #0056b3;
+    background-color: #263826FF;
+    color: white;
     outline: none;
 }
