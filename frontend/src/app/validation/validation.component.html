@@ -45,10 +45,10 @@
 
                         <ng-container *ngIf="!isColumnHidden(i)">
 
-                            <!--<td *ngIf="!isAnswerNotDisplayed(validation, validationRowValue)"
+                            <td *ngIf="!isAnswerNotDisplayed(validation, validationRowValue)"
                                 class="background-beige"
                                 [class]="getFillerCellClass(validation)">
-                            </td>-->
+                            </td>
 
                             <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)"
                                 class="background-beige no-bottom-border"
@@ -56,8 +56,7 @@
                                 [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '',
                                             i === 1 ? 'left-border-highlight' : '', i === 3 ? 'right-border-highlight' : '']"
                                 [ngStyle]="{'background-color': isRowDisabled(validationRowValue) && shouldGrayOut(validation)
-                                        ? '#e0e0e0' : getValidationRowAnswer(validation, validationRowValue)?.backgroundColor || '#F7F1E6'}"
-                                [attr.rowspan]="getAnswerRowSpanAndMapAsDisplayed(validation, validationRowValue)">
+                                        ? '#e0e0e0' : getValidationRowAnswer(validation, validationRowValue)?.backgroundColor || '#F7F1E6'}">
 
                                 <div class="selection max-h-250" *ngIf="isValidationSelectable(validation)">
                                     <app-select
@@ -141,24 +140,9 @@
                                         <textarea
                                                 [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                                                 (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
-                                                [ngClass]="{'colored-textarea': true}"
-                                                [ngStyle]="{'background-color': getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'}"
-                                                class="border-0 textarea-min-height max-h-150">
+                                                class="border-0 textarea-min-height max-h-150 beige-bg">
                                         </textarea>
                                     </div>
-                                    <!--<ng-container>
-                                        <button (click)="toggleColorSelection(validationRowValue.rowId)" class="toggle-button">
-                                            {{ showColorSelectionMap[validationRowValue.rowId] ? 'Close' : 'Change Color' }}
-                                        </button>
-                                        <div *ngIf="showColorSelectionMap[validationRowValue.rowId]"
-                                             class="textarea-color-selection-container">
-                                            <div *ngFor="let color of colorOptions" class="textarea-color-option"
-                                                 [style.background-color]="color.value"
-                                                 (click)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))"
-                                                 [attr.title]="color.name | translate">
-                                            </div>
-                                        </div>
-                                    </ng-container>-->
                                     <ng-container>
                                         <button *ngIf="!showColorSelectionMap[validationRowValue.rowId]"
                                                 (click)="toggleColorSelection(validationRowValue.rowId)"
