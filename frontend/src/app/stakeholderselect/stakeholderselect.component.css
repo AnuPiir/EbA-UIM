@@ -34,3 +34,7 @@
 .project-last-modified time {
   display: inline-block;
 }
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
+}

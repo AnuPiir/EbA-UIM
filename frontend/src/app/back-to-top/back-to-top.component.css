@@ -19,3 +19,7 @@
     background-color: #0056b3;
     outline: none;
 }
+
+:focus-visible {
+    outline: .25rem solid #fb8825;
+}

@@ -23,7 +23,7 @@ log.info('Electron log initialized and writing to:', logFilePath);
 
 let mainWindow;
 let backendProcess;
-let developerMode = true //change to true if you want to debug backend
+let developerMode = false //change to true if you want to debug backend
 
 function createWindow() {
 

@@ -4,7 +4,7 @@
           <h1>{{'toolbar.name' | translate}}</h1></a>
     <h1 class="truncate" *ngIf="questionnaireName">{{questionnaireName}}</h1>
   </div>
-  <div class="nav-group-right">
+  <div class="nav-group-right" (keydown.enter)="jumpToSkip()" (keydown.space)="jumpToSkip()">
     <a class="toolbar-router fcc" [routerLink]="questionnairePath">{{'toolbar.projects' | translate}}</a>
     <a class="toolbar-router fcc" [routerLink]="method">{{'toolbar.method' | translate}}</a>
     <a class="toolbar-router fcc" [routerLink]="about">{{'toolbar.about' | translate}}</a>

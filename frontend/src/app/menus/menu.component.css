@@ -51,6 +51,10 @@
   border: none;
 }
 
+.menu-row:hover {
+  background-color: var(--light-brown);
+}
+
 .arrow_drop_down {
   width: fit-content;
   height: fit-content;
@@ -77,4 +81,13 @@
 
 .more_vert-icon {
   font-size: 2.25rem;
+}
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
+}
+
+.menu-row:focus-visible {
+  outline: .25rem solid #fb8825;
+  outline-offset: -4px;
 }

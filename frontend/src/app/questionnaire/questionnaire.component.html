@@ -1,27 +1,34 @@
-<!-- frontend/src/app/questionnaire/questionnaire.component.html -->
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div class="projects-wrapper">
-    <div class="add-project">
+    <div class="add-project" (click)="!isToggled && toggleAddNewQuestionnaire()" role="button"
+         [attr.aria-expanded]="isToggled"
+         tabindex="0"
+         (keydown.enter)="!isToggled && toggleAddNewQuestionnaire()"
+         (keydown.space)="!isToggled && toggleAddNewQuestionnaire()">
         <div class="add-project-header">
             <h2>{{'addProject.title' | translate}}</h2>
-            <button (click)="toggleAddNewQuestionnaire()" class="button-icon">
-                <span *ngIf=!isToggled class="material-symbols-outlined icon">expand_more</span>
-                <span *ngIf=isToggled class="material-symbols-outlined icon">expand_less</span>
+            <button *ngIf="!isToggled" (click)="toggleAddNewQuestionnaire(); $event.stopPropagation()" class="button-icon">
+                <span class="material-symbols-outlined icon">expand_more</span>
+            </button>
+            <button *ngIf="isToggled" type="button" (click)="toggleAddNewQuestionnaire(); $event.stopPropagation()" class="button-icon"
+                    (keydown.enter)="toggleAddNewQuestionnaire(); $event.stopPropagation()"
+                    (keydown.space)="toggleAddNewQuestionnaire(); $event.stopPropagation()">
+                <span class="material-symbols-outlined icon">expand_less</span>
             </button>
         </div>
-        <div *ngIf=isToggled class="add-project-row">
+        <div *ngIf=isToggled class="add-project-row" (click)="$event.stopPropagation()">
             <div class="add-project-input">
                 <h3>{{'addProject.input' | translate}}</h3>
                 <input placeholder="{{'addProject.placeholder' | translate}}" id="questionnaireName" type="text" [(ngModel)]="questionnaireName" />
             </div>
             <div class="add-project-buttons">
-                <button (click)="toggleAddNewQuestionnaire()" class="button cancel-button">{{'button.cancel' | translate}}</button>
-                <button [disabled]="questionnaireName.length <= 0" (click)="addNewQuestionnaire(questionnaireName)" formtarget="_blank" class="button add-button">{{'button.add' | translate}}</button>
+                <button (click)="toggleAddNewQuestionnaire(); $event.stopPropagation()" class="button cancel-button">{{'button.cancel' | translate}}</button>
+                <button [disabled]="questionnaireName.length <= 0" (click)="addNewQuestionnaire(questionnaireName); $event.stopPropagation()" formtarget="_blank" class="button add-button">{{'button.add' | translate}}</button>
             </div>
         </div>
-        <div *ngIf="isToggled" class="add-project-row import-row">
+        <div *ngIf="isToggled" class="add-project-row import-row" (click)="$event.stopPropagation()">
             <div class="import-project-button">
-                <button (click)="importProject()" class="button blue">
+                <button (click)="importProject(); $event.stopPropagation()" class="button blue">
                     {{ 'button.import' | translate }}
                 </button>
             </div>

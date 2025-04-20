@@ -240,3 +240,7 @@ mat-tab-group {
 .toggle-button:hover {
   background-color: var(--highlight);
 }
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
+}

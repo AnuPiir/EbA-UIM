@@ -26,7 +26,8 @@
     "name": "EbA-UIM",
     "projects": "Projektid",
     "method": "EbA meetod",
-    "about": "Meist"
+    "about": "Meist",
+    "skipToMain": "Liigu põhisisu juurde"
   },
   "languages": {
     "est": "EST",
@@ -265,7 +266,8 @@
     "section3Heading": "EBA-UIM töövahendi meeskond",
     "section3Text": "EBA-UIM rakendus on edasiarendus EbA meetodi töövahendi esialgsest versioonist. EBA-UIM rakenduse on arendanud Tartu Ülikooli informaatika eriala tudengid Karl Olaf Kuldmaa ja Iris Kreinin oma bakalaureuse lõputöö raames. Karl Olaf Kuldmaa lõi rakenduse tagasüsteemi (ingl <i>back-end</i>), andmebaasi ja eessüsteemi (ingl <i>front-end</i>). Iris Kreinin lõi rakenduse eessüsteemi (ingl <i>front-end</i>) ja selle kasutajaliidese. Anu Piirisild koostas EbA meetodi kasutusjuhendi ja meetodit selgitavad tekstid ning näidisprojekti.",
     "contact": "Kontakt",
-    "address": "Anu Piirisild<br></br><a href='mailto:anu.piirisild@ut.ee'>anu.piirisild@ut.ee</a><br></br><br></br>Tartu Ülikool<br></br>Arvutiteaduse instituut<br></br>Narva mnt 18<br></br>51009 Tartu, Eesti"
+    "address": "Anu Piirisild<br></br><a href='mailto:anu.piirisild@ut.ee'>anu.piirisild@ut.ee</a><br></br><br></br>Tartu Ülikool<br></br>Arvutiteaduse instituut<br></br>Narva mnt 18<br></br>51009 Tartu, Eesti",
+    "overview": "Järgnevat kolm teemat annavad ülevaate lehe sisust"
   },
   "backToTop": {
     "buttonLabel": "Tagasi üles",

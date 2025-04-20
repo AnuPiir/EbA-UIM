@@ -14,7 +14,6 @@
   opacity: 0.8;
 }
 
-/* Rest of the existing CSS */
 .projects-wrapper {
   margin-top: 5rem;
   height: fit-content;
@@ -38,6 +37,10 @@
   border-width: 0.125rem;
   border-radius: 0.625rem;
   gap: 0.5rem;
+}
+
+.add-project:focus-visible {
+  outline: .25rem solid #fb8825;
 }
 
 .add-project-header {
@@ -134,9 +137,13 @@ table {
   border-width: 0.125rem;
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
-  color: var(--text);
+  color: var(--text-color);
   border-color: var(--dark-green);
 }
 .see-more-button:hover {
   background-color: var(--green);
+}
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
 }
