@@ -80,7 +80,7 @@
     "placeholder": "Sisesta nimetus mitmuses"
   },
   "table": {
-    "newRow": "Lisa uus rida",
+    "newRow": "Lisa uus funktsionaalsus",
     "deleteRow": "Ridade kustutamine",
     "delete": "Kustuta",
     "edit": "Muuda",
@@ -270,16 +270,36 @@
     "overview": "Järgnevat kolm teemat annavad ülevaate lehe sisust"
   },
   "backToTop": {
-    "buttonLabel": "Tagasi üles",
+    "buttonLabel": "ÜLES",
     "ariaLabel": "Nupp lehe algusesse liikumiseks. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt."
   },
   "hidePanels": {
     "hide": "Peida",
-    "unhide": "Näita",
+    "unhide": "Näita paneele",
     "ariaLabel": "Nupp projektide vahekaartide nähtavuse muutmiseks. Vajutage Enter, tühikut või kasutage Ctrl + Üles-nooleklahvi aktiveerimiseks."
+  },
+  "hideColumn": {
+    "hide": "Peida veerg",
+    "show": "Näita veergu"
+  },
+  "colorPicker": {
+    "change": "Kategoriseeri tegevusplaan",
+    "close": "Peida"
+  },
+  "colorPickerExplanation": {
+    "green": "Toimimise eeltingimus on täidetud e. \"toimib\"",
+    "orange": "Tehnoloogia poolt tuleb täiendada",
+    "red": "Lahendus nii ei tööta, tuleb leida teistsugune lahendus",
+    "yellow": "Lahendus vajab toetavat tegevust",
+    "blue": "Eeltingimus vajab testimist või täiendavat analüüsi",
+    "grey": "Muu otsus",
+    "default": "Kategooria puudub"
   },
   "prioritizationNotice": {
     "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅."
+  },
+  "conclusion": {
+    "changedNotice": "Eelnevat vastust on muudetud. Vajadusel muutke ka tegevuskava."
   },
   "noExampleModal": {
     "title": "Kinnita 'Situatsiooni ei ole'",

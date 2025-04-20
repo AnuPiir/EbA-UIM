@@ -94,8 +94,8 @@ mat-tab-group {
 
 .page-body {
   box-sizing: border-box;
-  padding-top: 5rem;
-  gap: 5rem;
+  padding-top: 2.5rem;
+  gap: 2.5rem;
   height: 100%;
   width: 100%;
   display: flex;
@@ -104,16 +104,15 @@ mat-tab-group {
 }
 
 .compressed-page-body {
-  padding-top: 2rem;
   gap: 2rem;
 }
 
 .modals {
-  max-width: 113.75rem;
-  width: 91.16vw;
+  max-width: 219.25rem;
+  width: 95.80vw;
   display: flex;
-  /*justify-content: space-between;*/
   flex-direction: row;
+  justify-content: center;
 
   @media (max-width: 1500px) {
     align-items: center;
@@ -122,39 +121,37 @@ mat-tab-group {
   }
 }
 
-/*.projects-wrapper {
-  height: fit-content;
-  width: fit-content;
-  padding: 1rem;
-  background-color: var(--container);
-  border-radius: 0.625rem;
-  display: flex;
-  gap: 5rem;
-}*/
+.modals.content-hidden {
+  justify-content: center;
+}
+
+@media (max-width: 1500px) {
+  .modals.content-hidden {
+    flex-direction: column;
+    align-items: center;
+  }
+}
 
 .projects-wrapper {
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 2rem;
+  padding: 1rem;
   background-color: var(--container);
   border-radius: 0.625rem;
 }
 
 .toggle-wrapper {
-  margin-bottom: 2rem;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
 .wrapper2 {
-  max-width: 113.75rem;
+  max-width: 81rem;
   width: 91.16vw;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  gap: 2rem;
 
   @media (max-width: 1500px) {
     align-items: center;
@@ -164,7 +161,15 @@ mat-tab-group {
 }
 
 .wrapper1 {
-  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+
+  @media (max-width: 1500px) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .add-project {
@@ -178,6 +183,7 @@ mat-tab-group {
   border-width: 0.125rem;
   border-radius: 0.625rem;
   gap: 0.5rem;
+  cursor: pointer;
 }
 
 .add-project-header {
@@ -222,23 +228,25 @@ mat-tab-group {
 }
 
 .toggle-button {
-  background-color: var(--beige);
-  color: var(--text-color);
-  padding: 0.5rem 0.7rem;
-  border: 0.08rem solid var(--text-color);
-  border-radius: 0.3rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.2s;
-  min-width: 4rem;
-  height: 2rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 0.125rem solid;
+  border-radius: 0.25rem;
+  border-color: var(--dark-green);
+  background: #dcffd3;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--dark-green);
+  white-space: nowrap;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s, background-color 0.3s, color 0.3s;
 }
 
 .toggle-button:hover {
-  background-color: var(--highlight);
+  background: var(--highlight);
 }
 
 :focus-visible {

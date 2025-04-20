@@ -108,16 +108,11 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .gray-out-cell {
-  background-color: var(--light-brown) !important;
-  /*opacity: 0.6;*/
-  /*filter: brightness(0.5);*/
+  background-color: #e1e1e1;
   color: var(--text-color) !important;
 }
 
-.gray-out-cell textarea,
-.gray-out-cell select,
-.gray-out-cell .select-button {
-  pointer-events: none;
+.gray-out-cell textarea {
   color: var(--text-color) !important;
   background-color: transparent !important;
   border-color: var(--container);
@@ -170,7 +165,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .content-cell-tenth-child {
-  width: 6.25rem;
+  width: 4rem;
 }
 
 .content-header-eleventh-child {
@@ -180,7 +175,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .content-cell-eleventh-child {
-  width: 16rem;
+  width: 15rem;
   border-right: none;
 }
 
@@ -196,7 +191,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .content-cell-fourteenth-child, .content-cell-fifteenth-child  {
-  width: 28rem;
+  width: 28.3rem;
 }
 
 .content-cell-sixteenth-child  {
@@ -304,7 +299,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   display: flex;
   align-items: center;
   justify-content: center;
-  width:  14.75rem;
+  min-width: 16rem;
   height: fit-content;
   border: solid;
   border-radius: 0.5rem;
@@ -319,7 +314,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   background-color: var(--green);
 }
 
-
 .delete-row {
   width: 60px !important;
 }
@@ -332,18 +326,22 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   overflow: unset;
 }
 
-/* Color selection menu specifically for textareas */
-.textarea-color-selection-container {
+.textarea-color-selection-container.with-close {
   display: flex;
-  gap: 5px;
-  margin-top: 5px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
   padding-bottom: 5px;
 }
 
-/* Style for each color option specifically for textareas */
+.textarea-color-selection-container .color-options {
+  display: flex;
+  gap: 5px;
+}
+
 .textarea-color-option {
-  width: 20px;
-  height: 20px;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
   border-style: solid;
   border-width: 0.09rem;
@@ -352,10 +350,9 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .textarea-color-option:hover {
-  border: 0.125rem solid #000; /* Adds a subtle border when hovering */
+  border: 0.125rem solid #000;
 }
 
-/* Styling for the colored textarea */
 .textarea-colored {
   width: 100%;
   resize: none;
@@ -366,10 +363,11 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .toggle-button {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: var(--light-brown);
+  border: 0.125rem solid var(--dark-brown);
+  border-radius: 0.25rem;
   padding: 4px 8px;
+  margin-top: 10px;
   margin-bottom: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -377,6 +375,119 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 
 .toggle-button:hover {
   background-color: #e0e0e0;
+}
+
+.close-color-btn {
+  margin: 0;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.toggle-column-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 0.125rem solid;
+  border-radius: 0.25rem;
+  border-color: var(--dark-green);
+  background: #dcffd3;
+  color: var(--dark-green);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.toggle-column-btn:hover {
+  background: var(--brown);
+  background: #c0e5b9;
+}
+
+.toggle-right {
+  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.prioritization-checkbox {
+  display: flex;
+  margin-top: 22px;
+  justify-content: center;
+  height: 100%;
+}
+
+.prioritize-checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  accent-color: var(--dark-green);
+  border-radius: 0.25rem;
+  border: 2px solid var(--dark-brown);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.left-border-highlight {
+  border-left: 0.25rem solid #C0B2A3FF;
+}
+
+.right-border-highlight {
+  border-right: 0.25rem solid #C0B2A3FF;
+}
+
+.beige-bg {
+  background-color: var(--beige) !important;
+}
+
+.conclusion-notification {
+  background-color: var(--light-yellow);
+  border: 2px solid #856404;
+  padding: 4px 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  color: #856404;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.conclusion-notification button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: #856404;
+}
+
+.conclusion-warning-box {
+  background-color: #F5E2AAFF;
+  border: 2px solid #856404;
+  color: #856404;
+  padding: 3px 10px;
+  font-size: 17px;
+  font-weight: bolder;
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.conclusion-warning-box .close-btn {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #856404;
+  font-weight: bolder;
+}
+
+.warning-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  font-size: 20px;
+  color: #856404;
 }
 
 .filler-cell-feature {
@@ -387,3 +498,4 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 :focus-visible {
   outline: .25rem solid #fb8825;
 }
+
