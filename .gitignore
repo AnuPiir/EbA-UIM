@@ -44,4 +44,4 @@ EbA installer.exe
 /frontend/.angular/
 /frontend/node_modules/
 /frontend/dist/
-/frontend/out/make/
+/frontend/out/
