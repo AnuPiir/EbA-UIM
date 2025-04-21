@@ -3,6 +3,7 @@ package ee.ut.eba.domain.stakeholder.api;
 import static ee.ut.eba.domain.stakeholder.model.StakeholderMapper.toCreateParams;
 import static ee.ut.eba.domain.stakeholder.model.StakeholderMapper.toResponse;
 
+import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import ee.ut.eba.domain.stakeholder.model.StakeholderCreateRequest;
 import ee.ut.eba.domain.stakeholder.model.StakeholderResponse;
 import ee.ut.eba.domain.stakeholder.model.StakeholderUpdateRequest;
@@ -37,6 +38,7 @@ public class StakeholderController {
 	private final StakeholderService stakeholderService;
 	private final StakeholderDeleteService stakeholderDeleteService;
 	private final StakeholderUpdateService stakeholderUpdateService;
+	private final QuestionnaireService questionnaireService;
 
 	@GetMapping("/questionnaire-id/{questionnaireId}")
 	public List<StakeholderResponse> get(@PathVariable(value = "questionnaireId") @NotNull Integer id) {
@@ -48,7 +50,7 @@ public class StakeholderController {
 	@PostMapping
 	public StakeholderResponse create(@RequestBody @Valid StakeholderCreateRequest stakeholder) {
 		log.info("Creating stakeholder: {}", stakeholder);
-
+		questionnaireService.questionnaireUpdated(stakeholder.getQuestionnaireId());
 		return toResponse(stakeholderService.create(toCreateParams(stakeholder)));
 	}
 

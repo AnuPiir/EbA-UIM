@@ -36,4 +36,9 @@ public class QuestionnaireService {
 		questionnaireRepository.deleteById(id);
 	}
 
+    public void questionnaireUpdated(Integer questionnaireId) {
+		Questionnaire questionnaire = get(questionnaireId);
+		questionnaire.setLastModified(LocalDateTime.now());
+		questionnaireRepository.save(questionnaire);
+    }
 }
