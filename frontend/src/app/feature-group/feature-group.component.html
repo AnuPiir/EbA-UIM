@@ -87,49 +87,6 @@
   </div>
   </div>
 </div>
-  <!-- <div>
-      <mat-accordion>
-        <mat-expansion-panel #mep="matExpansionPanel">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Add new feature group (translate)
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <mat-form-field>
-            <mat-label>Group name (translate)</mat-label>
-            <input [(ngModel)]="featureGroupName" matInput placeholder="Enter group name (translate)">
-          </mat-form-field>
-          <button mat-raised-button (click)="toggleAddNewQuistionnaire()" color="secondary">Cancel (translate)</button>
-          <button mat-raised-button (click)="createNewFeatureGroup(featureGroupName);mep.toggle()" color="primary">Create (translate)</button>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-
-    <div>
-      <mat-accordion>
-        <mat-expansion-panel #mep="matExpansionPanel">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Add new stakeholder (translate) NOT IMPLEMENTED YET
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div>
-            <h2>Existing stakeholders (translate)</h2>
-            <p>Lorem ipsum</p>
-          </div>
-
-          <mat-form-field>
-            <mat-label>Stakeholder name (translate)</mat-label>
-            <input matInput placeholder="Enter stakeholder name (translate)">
-          </mat-form-field>
-          <button mat-raised-button (click)="toggleAddNewQuistionnaire()" color="secondary">Cancel (translate)</button>
-          <button mat-raised-button color="primary">Create (translate)</button>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-  </div> -->
   <div *ngIf="!tabsLoading">
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #featureGroupTabs>
       <mat-tab *ngFor="let featureGroup of featureGroups; index as i"  label="{{featureGroup.name}}" class="tabs">

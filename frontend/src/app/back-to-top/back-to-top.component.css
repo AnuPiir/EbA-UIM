@@ -24,8 +24,7 @@
     font-size: 24px;
 }
 
-.back-to-top:hover,
-.back-to-top:focus {
+.back-to-top:hover {
     background-color: #263826FF;
     color: white;
     outline: none;

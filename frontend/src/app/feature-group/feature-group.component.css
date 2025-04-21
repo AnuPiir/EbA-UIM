@@ -72,6 +72,10 @@ mat-tab-group {
   border-radius: 0.25rem;
 }
 
+:host ::ng-deep div[role="tab"]:focus-visible {
+  outline: .25rem solid #fb8825;
+}
+
 :host ::ng-deep .mdc-tab-indicator .mdc-tab-indicator__content {
   border: none;
 }
