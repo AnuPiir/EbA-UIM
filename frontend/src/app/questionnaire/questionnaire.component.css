@@ -15,7 +15,6 @@
   opacity: 0.8;
 }
 
-/* Rest of the existing CSS */
 .projects-wrapper {
   margin-top: 5rem;
   height: fit-content;
@@ -46,6 +45,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+}
+
+.add-project-header.hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .add-project-row {

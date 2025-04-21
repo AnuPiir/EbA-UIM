@@ -183,7 +183,6 @@ mat-tab-group {
   border-width: 0.125rem;
   border-radius: 0.625rem;
   gap: 0.5rem;
-  cursor: pointer;
 }
 
 .add-project-header {
@@ -191,6 +190,7 @@ mat-tab-group {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .add-project-row {
