@@ -39,7 +39,13 @@
             <tbody>
             <tr *ngFor="let questionnaire of questionnaires" class="projects-table-row">
                 <td class="project-cell">
-                    <span>{{questionnaire.name}}</span>
+                    <span
+                    [matTooltip]="questionnaire.name.length > 25 ? questionnaire.name : ''"
+                    matTooltipPosition="above"
+                    [matTooltipDisabled]="questionnaire.name.length <= 25"
+                    class="project-name">
+                    {{questionnaire.name | truncate:25}}
+                    </span>
                     <a [routerLink]="validationPath" [queryParams]="{questionnaireId: questionnaire.id}" class="see-more-button">{{'projectsTable.seeMore' | translate}}</a>
                     <p>{{ questionnaire.lastModified | date: 'dd.MM.yyyy HH:mm' : 'et-EE' }}</p>
                 </td>
