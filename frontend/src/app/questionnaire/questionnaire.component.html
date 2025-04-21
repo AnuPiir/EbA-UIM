@@ -37,7 +37,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let questionnaire of questionnaires" class="projects-table-row">
+            <tr *ngFor="let questionnaire of getPaginatedQuestionnaires()" class="projects-table-row">
                 <td class="project-cell">
                     <span
                     [matTooltip]="questionnaire.name.length > 25 ? questionnaire.name : ''"
@@ -55,5 +55,24 @@
             </tr>
             </tbody>
         </table>
+        <div *ngIf="!loading && questionnaires.length > 0" class="pagination-controls">
+            <button (click)="prevPage()" [disabled]="currentPage === 1" class="button pagination-button">
+                {{ 'paginationButton.previous' | translate }}
+            </button>
+            <div class="page-numbers">
+                <button *ngFor="let page of getPageNumbers()"
+                        (click)="goToPage(page)"
+                        [class.active]="page === currentPage"
+                        class="button page-number-button"
+                        [attr.aria-current]="page === currentPage ? 'page' : null"
+                        [attr.aria-label]="('pagination.page' | translate) + ' ' + page">
+                    {{ page }}
+                </button>
+            </div>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="button pagination-button">
+                {{ 'paginationButton.next' | translate }}
+            </button>
+            <span>{{ 'pagination.page' | translate }} {{ currentPage }} {{ 'pagination.of' | translate }} {{ totalPages }}</span>
+        </div>
     </div>
 </div>

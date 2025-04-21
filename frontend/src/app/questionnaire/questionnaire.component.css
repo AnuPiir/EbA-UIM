@@ -141,3 +141,47 @@ table {
 .see-more-button:hover {
   background-color: var(--green);
 }
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: var(--beige);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.page-numbers {
+  display: flex;
+  gap: 5px;
+}
+
+.page-number-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: var(--beige);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.page-number-button:hover {
+  background-color: #f0f0f0;
+}
+
+.page-number-button.active {
+  background-color: var(--beige);
+  color: black;
+  border: 3px solid;
+  border-color:black;
+  cursor: default;
+}

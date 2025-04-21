@@ -38,6 +38,10 @@ export class QuestionnaireComponent implements OnInit {
     notificationVisible = false;
     notificationMessage = '';
 
+    currentPage: number = 1;
+    questionnairesPerPage: number = 5;
+    totalPages: number = 1;
+
     constructor(
         private questionnaireService: QuestionnaireService,
         private modalService: BsModalService,
@@ -55,6 +59,7 @@ export class QuestionnaireComponent implements OnInit {
         this.questionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires())
         console.log(this.questionnaires)
         this.sortQuestionnaires();
+        this.updatePagination()
         this.loading = false;
         this.cdr.detectChanges();
     }
@@ -273,4 +278,42 @@ export class QuestionnaireComponent implements OnInit {
 
     protected readonly formatFullDate = formatFullDate;
     protected readonly formatTimeAgo = formatTimeAgo;
+
+    updatePagination() {
+        this.totalPages = Math.ceil(this.questionnaires.length / this.questionnairesPerPage);
+        this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
+    }
+
+    getPaginatedQuestionnaires(): Questionnaire[] {
+        const startIndex = (this.currentPage - 1) * this.questionnairesPerPage;
+        const endIndex = startIndex + this.questionnairesPerPage;
+        return this.questionnaires.slice(startIndex, endIndex);
+    }
+
+    getPageNumbers(): number[] {
+        return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    }
+
+    goToPage(page: number) {
+        if (page >= 1 && page <= this.totalPages) {
+            this.currentPage = page;
+            this.cdr.detectChanges();
+        }
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.cdr.detectChanges();
+        }
+    }
+
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.cdr.detectChanges();
+        }
+    }
+
+
 }
