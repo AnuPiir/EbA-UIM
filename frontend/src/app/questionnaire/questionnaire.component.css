@@ -14,7 +14,6 @@
   opacity: 0.8;
 }
 
-/* Rest of the existing CSS */
 .projects-wrapper {
   margin-top: 5rem;
   height: fit-content;
@@ -146,10 +145,10 @@ table {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* space between icon and text */
+  gap: 8px;
 }
 
 .upload-button .icon {
-  font-size: 20px; /* or any size you prefer */
+  font-size: 20px;
   vertical-align: middle;
 }
