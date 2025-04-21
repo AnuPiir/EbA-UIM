@@ -4,7 +4,7 @@
     "edit": "Muuda",
     "add": "Lisa",
     "cancel": "Loobu",
-    "import": "Impordi"
+    "import": "Lae üles (JSON)"
   },
   "menu": {
     "edit": "Muuda",
@@ -12,7 +12,7 @@
     "copy": "Tee koopia",
     "download": "Lae alla",
     "downloadExcel": "Lae alla Excel",
-    "downloadJson": "Lae alla Json",
+    "downloadJson": "Lae alla JSON",
     "deleteFeature": "Kustuta funktsionaalsus",
     "addStakeholder": "Lisa sidusrühm",
     "addPrecondition": "Lisa eeltingimus",
