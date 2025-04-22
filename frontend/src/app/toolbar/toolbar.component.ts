@@ -20,7 +20,7 @@ export class ToolbarComponent{
     private translate: TranslateService,
     private questionnaireService: QuestionnaireService,
     private route: ActivatedRoute,
-    private preference: PreferenceService,
+    private pref: PreferenceService,
     private http: HttpClient
   ) {
     this.route.queryParams.subscribe(params => {
@@ -38,24 +38,22 @@ export class ToolbarComponent{
   validationPath = "/validation"
 
   get currentLang(): string {
-    return this.translate.currentLang ? this.translate.currentLang.toUpperCase() : 'ET';
-  }
-
-  savePreference(language: string) {
-    this.http.post<void>(`/api/preference/type/LANGUAGE/value/${language}`, {})
-        .subscribe({ next: () => {},
-          error: err => {
-            console.error('Failed to save preference', err);
-          }
-        });
+    return (this.translate.currentLang || 'et').toUpperCase();
   }
 
   setLang(language: string): void {
-    this.translate.use(language.toLowerCase());
-    this.savePreference(language.toLowerCase());
+    const code = language.toLowerCase();
+    this.translate.use(code).subscribe(() => {
+      this.pref.setPreference('LANGUAGE', code)
+          .subscribe({
+            next: () => {},
+            error: e => console.error('Could not save lang:', e)
+          });
+      localStorage.setItem('user-language', code);
+    });
   }
 
   isLanguageSelected(language: string): boolean {
-    return this.currentLang == language;
+    return this.currentLang === language;
   }
 }

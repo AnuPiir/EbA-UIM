@@ -12,25 +12,6 @@ interface Preference { type: string; value: string; }
 })
 export class AppComponent {
   constructor(private translate: TranslateService, private http: HttpClient) {
-    //translate.setDefaultLang('et');
-    //translate.use('et');
-
-  }
-
-  ngOnInit() {
-    this.http.get<Preference[]>('/api/preference')
-        .subscribe({
-          next: prefs => {
-            const lang = prefs.find(p => p.type === 'LANGUAGE')?.value ?? 'et';
-            this.translate.setDefaultLang(lang);
-            this.translate.use(lang);
-          },
-          error: err => {
-            console.error('Failed to fetch preferences', err);
-            this.translate.setDefaultLang('et');
-            this.translate.use('et');
-          }
-        });
   }
 
   currentColorScheme: string = 'scheme1';

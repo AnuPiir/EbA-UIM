@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { PreferenceEndpointConstants } from '../constants/preference-endpoint-constants';
 
 export interface Preference {
   type: string;
@@ -12,17 +13,17 @@ export interface Preference {
 })
 export class PreferenceService {
 
-  private baseUrl = '/api/preference';
-
   constructor (private http: HttpClient) { }
 
   getPreferences(): Observable<Preference[]> {
-    return this.http.get<Preference[]>(this.baseUrl);
+    return this.http.get<Preference[]>(
+        PreferenceEndpointConstants.getAll()
+    );
   }
 
-  updatePreference(type: string, value: string): Observable<any> {
+  setPreference(type: string, value: string): Observable<void> {
     return this.http.post<void>(
-        `${this.baseUrl}/type/${encodeURIComponent(type)}/value/${encodeURIComponent(value)}`,
+        PreferenceEndpointConstants.save(type, value),
         {}
     );
   }
