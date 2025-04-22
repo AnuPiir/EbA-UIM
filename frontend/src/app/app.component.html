@@ -1,6 +1,6 @@
 <div id="content" [ngClass]="currentColorScheme">
   <!-- <button (click)="toggleColorScheme()">Toggle Color Scheme</button> -->
-  <app-toolbar>  <button (click)="toggleColorScheme()">Toggle Color Scheme</button>
+  <app-toolbar (colorSchemeChanged)="applyColorScheme($event)">
   </app-toolbar>
   <div class="page-body">
     <router-outlet></router-outlet>

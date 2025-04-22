@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output, Renderer2} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { QuestionnaireService } from '../questionnaire/service/questionnaire.service';
 import { ActivatedRoute } from '@angular/router';
@@ -12,16 +12,23 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent{
+  @Output() colorSchemeChanged = new EventEmitter<string>();
 
   languages = ['ET', 'EN']
   questionnaireName: string | null;
+  isAccessibilityPanelOpen: boolean = false;
+  // Current color scheme and text size
+  currentColorScheme: string = 'scheme1';
+  textSize: string = 'medium';
+
 
   constructor(
     private translate: TranslateService,
     private questionnaireService: QuestionnaireService,
     private route: ActivatedRoute,
     private pref: PreferenceService,
-    private http: HttpClient
+    private http: HttpClient,
+    private renderer: Renderer2
   ) {
     this.route.queryParams.subscribe(params => {
       if (params['questionnaireId']) {
@@ -55,5 +62,42 @@ export class ToolbarComponent{
 
   isLanguageSelected(language: string): boolean {
     return this.currentLang === language;
+  }
+
+  toggleAccessibilityPanel() {
+    this.isAccessibilityPanelOpen = !this.isAccessibilityPanelOpen;
+  }
+
+  closeAccessibilityPanel() {
+    this.isAccessibilityPanelOpen = false;
+  }
+
+  /*currentColorScheme: string = 'scheme1';
+  toggleColorScheme() {
+    this.currentColorScheme = this.currentColorScheme === 'scheme1' ? 'scheme2' : 'scheme1';
+  }*/
+
+  setColorScheme(scheme: string) {
+    this.colorSchemeChanged.emit(scheme);
+  }
+
+  changeTextSize(size: string) {
+    this.textSize = size;
+    switch (size) {
+      case 'small':
+        document.body.style.fontSize = '12px';
+        break;
+      case 'medium':
+        document.body.style.fontSize = '16px';
+        break;
+      case 'large':
+        document.body.style.fontSize = '20px';
+        break;
+    }
+
+    this.pref.setPreference('textSize', size).subscribe({
+      next: () => {},
+      error: e => console.error('Could not save text size:', e)
+    });
   }
 }

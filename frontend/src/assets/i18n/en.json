@@ -302,6 +302,18 @@
   "conclusion": {
     "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
   },
+  "accessibility": {
+    "button": "Accessibility",
+    "title": "Accessibility Preferences",
+    "colorScheme": "Color Scheme",
+    "scheme1": "Colorful",
+    "scheme2": "High contrast",
+    "textSize": "Text Size",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large",
+    "close": "Close"
+  },
   "questionnaires": "Questionnaires",
   "et": "EST",
   "en": "ENG"

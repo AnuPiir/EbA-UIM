@@ -8,8 +8,32 @@
     <a class="toolbar-router fcc" [routerLink]="questionnairePath">{{'toolbar.projects' | translate}}</a>
     <a class="toolbar-router fcc" [routerLink]="method">{{'toolbar.method' | translate}}</a>
     <a class="toolbar-router fcc" [routerLink]="about">{{'toolbar.about' | translate}}</a>
-    <div>
+    <button class="toolbar-router" (click)="toggleAccessibilityPanel()">
+        {{'accessibility.button' | translate}}
+    </button>
+      <div>
       <button (click)="setLang(language)" *ngFor="let language of languages" [value]="language" class="button-language" [class.language-active]="isLanguageSelected(language)">{{language}}</button>
     </div>
   </div>
+</div>
+
+<div class="accessibility-panel" *ngIf="isAccessibilityPanelOpen">
+    <div class="accessibility-content">
+        <h2>{{ 'accessibility.title' | translate }}</h2>
+
+        <div class="color-scheme-section">
+            <label>{{ 'accessibility.colorScheme' | translate }}</label>
+            <button (click)="setColorScheme('scheme1')" [class.active]="currentColorScheme === 'scheme1'">{{ 'accessibility.scheme1' | translate }}</button>
+            <button (click)="setColorScheme('high-contrast')" [class.active]="currentColorScheme === 'high-contrast'">{{ 'accessibility.scheme2' | translate }}</button>
+        </div>
+
+        <div class="text-size-section">
+            <label>{{ 'accessibility.textSize' | translate }}</label>
+            <button (click)="changeTextSize('small')" [class.active]="textSize === 'small'">{{ 'accessibility.small' | translate }}</button>
+            <button (click)="changeTextSize('medium')" [class.active]="textSize === 'medium'">{{ 'accessibility.medium' | translate }}</button>
+            <button (click)="changeTextSize('large')" [class.active]="textSize === 'large'">{{ 'accessibility.large' | translate }}</button>
+        </div>
+
+        <button (click)="closeAccessibilityPanel()">{{ 'accessibility.close' | translate }}</button>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { TranslateService } from '@ngx-translate/core';
 
@@ -16,7 +16,15 @@ export class AppComponent {
 
   currentColorScheme: string = 'scheme1';
 
+  applyColorScheme(scheme: string) {
+    this.currentColorScheme = scheme;
+    document.body.classList.remove('scheme1', 'high-contrast');
+    document.body.classList.add(scheme);
+  }
+
+  // Method to toggle between color schemes
   toggleColorScheme() {
-    this.currentColorScheme = this.currentColorScheme === 'scheme1' ? 'scheme2' : 'scheme1';
+    const newScheme = this.currentColorScheme === 'scheme1' ? 'scheme2' : 'scheme1';
+    this.applyColorScheme(newScheme);
   }
 }

@@ -63,6 +63,15 @@
     --table-head: #bbccd7;
 }
 
+.high-contrast {
+    --text-color: #ffcf00;
+    --bg-color: #000000;
+    --container: #000000;
+    --highlight: #000000;
+    --contrast-highlight: #000000;
+    --table-head: #000000;
+}
+
 #content {
     color: var(--text-color);
     background-color: var(--bg-color);

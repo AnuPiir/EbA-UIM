@@ -308,6 +308,18 @@
   "noExampleNotification": {
     "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
   },
+  "accessibility": {
+    "button": "Ligipääsetavus",
+    "title": "Ligipääsetavuse eelistused",
+    "colorScheme": "Värviskeemid",
+    "scheme1": "Värviline",
+    "scheme2": "Kõrge kontrastsusega",
+    "textSize": "Teksti suurus",
+    "small": "Väike",
+    "medium": "Keskmine",
+    "large": "Suur",
+    "close": "Sulge"
+  },
   "questionnaires": "Küsimustikud",
   "et": "EST",
   "en": "ENG"

@@ -1,0 +1,15 @@
+<div class="accessibility-panel" *ngIf="isPanelOpen">
+    <div class="panel-header">
+        <h3>Accessibility Preferences</h3>
+        <button (click)="togglePanel()">Close</button>
+    </div>
+    <div class="preferences">
+        <button (click)="toggleColorScheme()">Toggle Color Scheme</button>
+        <label for="text-size">Text Size</label>
+        <select id="text-size" (change)="changeTextSize($event)">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select>
+    </div>
+</div>
