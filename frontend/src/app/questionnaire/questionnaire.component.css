@@ -143,45 +143,49 @@ table {
 }
 
 .pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    align-items: center;
+    margin-top: 12px;
 }
 
 .pagination-button {
-  padding: 8px 16px;
-  font-size: 14px;
-  background-color: var(--beige);
+    min-width: 50px;
+    height: 36px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.pagination-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 .page-numbers {
-  display: flex;
-  gap: 5px;
+    display: flex;
+    gap: 4px;
 }
 
 .page-number-button {
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  background-color: var(--beige);
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.page-number-button:hover {
-  background-color: #f0f0f0;
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .page-number-button.active {
-  background-color: var(--beige);
-  color: black;
-  border: 3px solid;
-  border-color:black;
-  cursor: default;
+    background: #e6f0ff;
+    color: #0066ff;
+}
+
+.page-numbers .ellipsis {
+    min-width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

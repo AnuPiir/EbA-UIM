@@ -309,8 +309,8 @@
     "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
   },
   "paginationButton": {
-    "previous": "Eelmine",
-    "next": "Järgmine"
+    "previous": "<",
+    "next": ">"
   },
   "pagination": {
     "of": "Kokku",

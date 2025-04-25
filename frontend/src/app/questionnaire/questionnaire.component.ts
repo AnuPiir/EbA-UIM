@@ -13,6 +13,11 @@ import {formatFullDate, formatTimeAgo} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
 import { ChangeDetectorRef } from '@angular/core';
 
+interface PaginationItem {
+    value: number | string
+    isEllipsis: boolean
+}
+
 @Component({
     selector: 'app-questionnaire',
     templateUrl: './questionnaire.component.html',
@@ -39,7 +44,7 @@ export class QuestionnaireComponent implements OnInit {
     notificationMessage = '';
 
     currentPage: number = 1;
-    questionnairesPerPage: number = 5;
+    questionnairesPerPage: number = 3;
     totalPages: number = 1;
 
     constructor(
@@ -290,13 +295,51 @@ export class QuestionnaireComponent implements OnInit {
         return this.questionnaires.slice(startIndex, endIndex);
     }
 
-    getPageNumbers(): number[] {
-        return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    getPageNumbers(): PaginationItem[] {
+        if (this.totalPages <= 7) {
+            return Array.from({ length: this.totalPages }, (_, i) => ({
+                value: i + 1,
+                isEllipsis: false
+            }));
+        }
+
+        const pageNumbers: PaginationItem[] = [];
+        const currentPage = this.currentPage;
+
+        pageNumbers.push({ value: 1, isEllipsis: false });
+
+        if (currentPage > 4) {
+            pageNumbers.push({ value: '...', isEllipsis: true });
+        }
+
+        let start = Math.max(2, currentPage - 2);
+        let end = Math.min(this.totalPages - 1, currentPage + 2);
+
+        if (currentPage <= 4) {
+            end = 5;
+        }
+
+        if (currentPage > this.totalPages - 4) {
+            start = this.totalPages - 4;
+        }
+
+        for (let i = start; i <= end; i++) {
+            pageNumbers.push({ value: i, isEllipsis: false });
+        }
+
+        if (currentPage < this.totalPages - 3) {
+            pageNumbers.push({ value: '...', isEllipsis: true });
+        }
+
+        pageNumbers.push({ value: this.totalPages, isEllipsis: false });
+
+        return pageNumbers;
     }
 
-    goToPage(page: number) {
-        if (page >= 1 && page <= this.totalPages) {
-            this.currentPage = page;
+    goToPage(pageValue: number | string) {
+        const pageNumber = Number(pageValue);
+        if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= this.totalPages) {
+            this.currentPage = pageNumber;
             this.cdr.detectChanges();
         }
     }
@@ -315,5 +358,7 @@ export class QuestionnaireComponent implements OnInit {
         }
     }
 
-
+    showPagination(): boolean {
+        return this.questionnaires.length > this.questionnairesPerPage;
+    }
 }
