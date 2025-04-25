@@ -1,8 +1,8 @@
 <!-- frontend/src/app/questionnaire/questionnaire.component.html -->
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div class="projects-wrapper">
-    <div class="add-project">
-        <div class="add-project-header" (click)="toggleAddNewQuestionnaire()">
+    <div class="add-project" (click)="handleOpenAddNewQuestionnaire()" [class.toggled]="isToggled">
+        <div class="add-project-header" (click)="handleCloseAddNewQuestionnaire($event)">
             <h2>{{'addGroup.title' | translate}}</h2>
             <div class="button-icon-container">
                 <span *ngIf="!isToggled" class="material-symbols-outlined icon">expand_more</span>

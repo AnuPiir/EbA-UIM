@@ -19,8 +19,8 @@
       </div>
       <div class="wrapper2">
       <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project">
-          <div class="add-project-header" (click)="toggleAddNewGroup()">
+      <div class="add-project" (click)="handleOpenAddNewGroup()" [class.toggled]="isToggledGroupAdding">
+          <div class="add-project-header" (click)="handleCloseAddNewGroup($event)">
               <h2>{{'addGroup.title' | translate}}</h2>
               <div class="button-icon-container">
                   <span *ngIf="!isToggledGroupAdding" class="material-symbols-outlined icon">expand_more</span>
@@ -52,8 +52,8 @@
       </div>
     </div>
     <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project">
-          <div class="add-project-header" (click)="toggleAddNewStakeholder()">
+      <div class="add-project" (click)="handleOpenAddNewStakeholder()" [class.toggled]="isToggledStakeholderAdding">
+          <div class="add-project-header" (click)="handleCloseAddNewStakeholder($event)">
               <h2>{{'addStakeholder.title' | translate}}</h2>
               <div class="button-icon-container">
                   <span *ngIf="!isToggledStakeholderAdding" class="material-symbols-outlined icon">expand_more</span>

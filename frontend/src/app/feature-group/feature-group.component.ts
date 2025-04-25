@@ -84,12 +84,38 @@ export class FeatureGroupComponent implements OnInit {
     this.isToggledGroupAdding = !this.isToggledGroupAdding;
   }
 
+  handleOpenAddNewGroup() {
+    if (!this.isToggledGroupAdding) {
+      this.toggleAddNewGroup();
+    }
+  }
+
+  handleCloseAddNewGroup(event: Event) {
+    if (this.isToggledGroupAdding) {
+      this.toggleAddNewGroup();
+      event.stopPropagation();
+    }
+  }
+
   toggleGroupList(): void {
     this.isToggledGroupList = !this.isToggledGroupList;
   }
 
   toggleAddNewStakeholder(): void {
     this.isToggledStakeholderAdding = !this.isToggledStakeholderAdding;
+  }
+
+  handleOpenAddNewStakeholder() {
+    if (!this.isToggledStakeholderAdding) {
+      this.toggleAddNewStakeholder();
+    }
+  }
+
+  handleCloseAddNewStakeholder(event: Event) {
+    if (this.isToggledStakeholderAdding) {
+      this.toggleAddNewStakeholder();
+      event.stopPropagation();
+    }
   }
 
   toggleStakeholderList(): void {

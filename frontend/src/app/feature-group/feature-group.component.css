@@ -183,6 +183,11 @@ mat-tab-group {
   border-width: 0.125rem;
   border-radius: 0.625rem;
   gap: 0.5rem;
+  cursor: pointer;
+}
+
+.add-project.toggled {
+  cursor: default;
 }
 
 .add-project-header {
