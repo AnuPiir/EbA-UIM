@@ -1,3 +1,5 @@
+if (require('electron-squirrel-startup')) return;
+
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
@@ -29,9 +31,13 @@ function createWindow() {
             ? path.join(process.resourcesPath, "jars", "backend-1.2.0.jar")
             : path.join(__dirname, "jars", "backend-1.2.0.jar");
 
+        const javaPath = app.isPackaged
+            ? path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe')
+            : 'java';
+
         log.info(`Starting backend from: ${backendPath}`);
 
-        backendProcess = spawn("java", ["-jar", backendPath], {
+        backendProcess = spawn(javaPath, ["-jar", backendPath], {
             detached: false,
             stdio: ['pipe', 'pipe', 'pipe'],
         });
