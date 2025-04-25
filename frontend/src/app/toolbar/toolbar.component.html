@@ -1,15 +1,23 @@
 <div class="nav">
-  <div class="nav-group-left">
-      <a class="toolbar-router" [routerLink]="questionnairePath">
-          <h1>{{'toolbar.name' | translate}}</h1></a>
-    <h1 class="truncate" *ngIf="questionnaireName">{{questionnaireName | truncate: 40}}</h1>
-  </div>
-  <div class="nav-group-right">
-    <a class="toolbar-router fcc" [routerLink]="questionnairePath">{{'toolbar.projects' | translate}}</a>
-    <a class="toolbar-router fcc" [routerLink]="method">{{'toolbar.method' | translate}}</a>
-    <a class="toolbar-router fcc" [routerLink]="about">{{'toolbar.about' | translate}}</a>
-    <div>
-      <button (click)="setLang(language)" *ngFor="let language of languages" [value]="language" class="button-language" [class.language-active]="isLanguageSelected(language)">{{language}}</button>
+    <div class="nav-group-left">
+        <a class="toolbar-router" [routerLink]="questionnairePath">
+            <h1>{{ 'toolbar.name' | translate }}</h1></a>
+        <h1 class="truncate"
+            *ngIf="questionnaireName"
+            [matTooltip]="questionnaireName.length > 40 ? questionnaireName : ''"
+            matTooltipPosition="above"
+            [matTooltipDisabled]="questionnaireName.length <= 40">
+            {{ questionnaireName | truncate: 40 }}
+        </h1>
     </div>
-  </div>
+    <div class="nav-group-right">
+        <a class="toolbar-router fcc" [routerLink]="questionnairePath">{{ 'toolbar.projects' | translate }}</a>
+        <a class="toolbar-router fcc" [routerLink]="method">{{ 'toolbar.method' | translate }}</a>
+        <a class="toolbar-router fcc" [routerLink]="about">{{ 'toolbar.about' | translate }}</a>
+        <div>
+            <button (click)="setLang(language)" *ngFor="let language of languages" [value]="language"
+                    class="button-language" [class.language-active]="isLanguageSelected(language)">{{ language }}
+            </button>
+        </div>
+    </div>
 </div>
