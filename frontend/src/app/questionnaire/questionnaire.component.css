@@ -6,6 +6,7 @@
 
 .project-name {
   font-weight: 500;
+  max-width: 24rem;
 }
 
 .project-last-modified {
@@ -138,6 +139,7 @@ table {
   padding: 0.25rem 0.5rem;
   color: var(--text-color);
   border-color: var(--dark-green);
+  white-space: nowrap;
 }
 .see-more-button:hover {
   background-color: var(--green);
