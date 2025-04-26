@@ -55,9 +55,13 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   conclusionChangedMap: Record<number, boolean> = {};
   hasWrittenConclusionMap: Record<number, boolean> = {};
   conclusionValidationId: number | null = null;
+  showNotification: boolean = false;
+  notificationMessage: string = '';
+  private notifiedPreconditionIds: Set<number> = new Set<number>();
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
+  @ViewChild('notificationElement') notificationElement!: ElementRef;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];
@@ -438,6 +442,20 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
     this.mapFeatureRowSpans();
 
+    const exampleAnswer = validationRow.find(a => a.type === ValidationType.EXAMPLE);
+    if (exampleAnswer) {
+      const preconditionId = exampleAnswer.featurePrecondition.id;
+      const exampleRows = this.validationRowValues.filter(row =>
+          row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
+      );
+
+      if (exampleRows.length === 2 && !this.notifiedPreconditionIds.has(preconditionId)) {
+        this.notificationMessage = 'prioritizationNotice.message';
+        this.showNotification = true;
+        this.notifiedPreconditionIds.add(preconditionId);
+      }
+    }
+
     // Update precondition related answers
     this.updateRelatedValidationAnswers(<Validation>this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), {answers: validationRow, rowId: maxRowId + 1});
 
@@ -582,6 +600,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
+            /*if (validation.type === ValidationType.SELECT) {
+              this.checkAndShowPrioritizationNotice(validationRowValue);
+            }*/
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -1228,10 +1249,45 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
   isPrioritized(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+    //return this.prioritizedRows[preconditionId] === String(validationRowValue.rowId);
+    //return this.prioritizedRows[preconditionId]?.has(String(validationRowValue.rowId)) ?? false;
+
     const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
     return preconditionAnswer ? preconditionAnswer.prioritized === true : false;
   }
 
+  checkAndShowPrioritizationNotice(validationRowValue: ValidationRow): void {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
+    if (this.notifiedPreconditionIds.has(preconditionId)) return;
+
+    const exampleRows = this.validationRowValues.filter(row =>
+        row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
+    );
+    if (exampleRows.length >= 2) {
+      const allAnswersFilled = exampleRows.every(row =>
+          row.answers.filter(a => a.type === ValidationType.SELECT).length === 4 &&
+          row.answers.filter(a => a.type === ValidationType.SELECT).every(a => !!a.answer)
+      );
+      if (allAnswersFilled) {
+        this.notifiedPreconditionIds.add(preconditionId);
+        this.notificationMessage = 'prioritizationNotice.message';
+        this.showNotificationAndFocus();
+      }
+    }
+  }
+
+  showNotificationAndFocus() {
+    this.showNotification = true;
+    setTimeout(() => {
+      this.notificationElement?.nativeElement?.focus();
+    }, 0);
+  }
+
+  closeNotification(): void {
+    this.showNotification = false;
+  }
 
   hasMultipleExamples(preconditionId: number): boolean {
     const rowsWithSamePrecondition = this.validationRowValues.filter(row =>

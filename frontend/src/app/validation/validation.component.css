@@ -463,7 +463,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   border: 2px solid #856404;
   color: #856404;
   padding: 3px 10px;
-  font-size: 17px;
   font-weight: bolder;
   border-radius: 4px;
   position: relative;
@@ -477,7 +476,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   justify-content: center;
   background: none;
   border: none;
-  font-size: 18px;
   cursor: pointer;
   color: #856404;
   font-weight: bolder;
@@ -493,4 +491,26 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 .filler-cell-feature {
   border-top: none;
   border-bottom: none;
+}
+
+.notification-overlay {
+  position: fixed;
+  top:    0;
+  left:   0;
+  right:  0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+display: flex;
+align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.notification-overlay app-notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1060;
 }
