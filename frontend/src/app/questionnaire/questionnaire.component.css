@@ -6,6 +6,7 @@
 
 .project-name {
   font-weight: 500;
+  max-width: 24rem;
 }
 
 .project-last-modified {
@@ -14,17 +15,19 @@
   opacity: 0.8;
 }
 
-/* Rest of the existing CSS */
 .projects-wrapper {
   margin-top: 5rem;
   height: fit-content;
   width: fit-content;
+  max-width: 1200px;
   padding: 2rem;
   background-color: var(--container);
   border-radius: 0.625rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .add-project {
@@ -134,8 +137,9 @@ table {
   border-width: 0.125rem;
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
-  color: var(--text);
+  color: var(--text-color);
   border-color: var(--dark-green);
+  white-space: nowrap;
 }
 .see-more-button:hover {
   background-color: var(--green);
