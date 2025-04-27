@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, Input, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ValidationService } from './service/validation.service';
 import { Validation, ValidationType } from './model/validation';
 import { ValidationRow } from './model/validation-row';
@@ -25,6 +25,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { MatMenuTrigger } from '@angular/material/menu';
+
 
 @Component({
   selector: 'app-validation',
@@ -58,6 +60,9 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
+  @ViewChild(MatMenuTrigger) infoMenuTrigger!: MatMenuTrigger;
+  @ViewChild('infoIcon', { read: ElementRef }) infoIcon!: ElementRef<HTMLElement>;
+  @ViewChild('status') statusEl!: ElementRef<HTMLElement>;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];
@@ -65,6 +70,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
 
+  @HostListener('window:keydown', ['$event'])
 
   colorOptions = [
     { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
@@ -1061,12 +1067,23 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.hiddenColumns.has(index);
   }
 
-  toggleColumnVisibility(index: number) {
-    if (this.hiddenColumns.has(index)) {
-      this.hiddenColumns.delete(index);
-    } else {
-      this.hiddenColumns.add(index);
+  handleAltH(event: KeyboardEvent) {
+    if (event.altKey && event.key.toLowerCase() === 'h') {
+      event.preventDefault();
+      this.toggleColumnVisibility(13);
     }
+  }
+
+  toggleColumnVisibility(idx: number) {
+    if (this.hiddenColumns.has(idx)) {
+      this.hiddenColumns.delete(idx);
+    } else {
+      this.hiddenColumns.add(idx);
+    }
+    setTimeout(() => {
+      const msg = `Duplicate column ${this.isColumnHidden(idx) ? 'hidden' : 'shown'}.`;
+      this.statusEl.nativeElement.textContent = msg;
+    }, 0);
   }
 
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {

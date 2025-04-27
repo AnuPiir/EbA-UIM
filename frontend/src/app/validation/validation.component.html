@@ -1,4 +1,5 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
+<div aria-live="polite" class="visually-hidden" #columnStatus></div>
 <div *ngIf="!loading" class="table-wrapper">
 
     <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000">
@@ -23,11 +24,17 @@
 
                                     <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
 
-                                    <mat-icon *ngIf="validation.tooltipEt"
-                                              matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"
-                                              matTooltipClass="tooltip"
-                                              class="material-symbols-outlined overflow-unset">info
-                                    </mat-icon>
+                                    <!--<mat-icon *ngIf="validation.tooltipEt" matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}" matTooltipClass="tooltip" class="material-symbols-outlined overflow-unset">info </mat-icon>-->
+                                    <ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
+                                    <button mat-icon-button disableRipple [matMenuTriggerFor]="infoMenu" aria-label="Show info">
+                                        <mat-icon>info</mat-icon>
+                                    </button>
+                                    <mat-menu #infoMenu="matMenu" class="info-tooltip-menu">
+                                        <div class="info-tooltip-content">
+                                            {{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}
+                                        </div>
+                                    </mat-menu>
+                                    </ng-container>
                                 </div>
                         </ng-container>
                     </ng-container>
@@ -152,11 +159,13 @@
                                         <div *ngIf="showColorSelectionMap[validationRowValue.rowId]"
                                              class="textarea-color-selection-container with-close">
                                             <div class="color-options">
-                                                <div *ngFor="let color of colorOptions" class="textarea-color-option"
+                                                <button *ngFor="let color of colorOptions" class="textarea-color-option"
                                                      [style.background-color]="color.value"
                                                      (click)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))"
-                                                     [attr.title]="color.name | translate">
-                                                </div>
+                                                     (keydown.enter)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))"
+                                                     (keydown.space)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue)); $event.preventDefault()"
+                                                     [attr.aria-label]="color.name | translate">
+                                                </button>
                                             </div>
                                             <button (click)="toggleColorSelection(validationRowValue.rowId)"
                                                     class="toggle-button close-color-btn">

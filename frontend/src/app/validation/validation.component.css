@@ -499,3 +499,9 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   outline: .25rem solid #fb8825;
 }
 
+.info-tooltip-content {
+  background-color: var(--dark-green);
+  color: var(--beige);
+  padding: 1rem;
+}
+
