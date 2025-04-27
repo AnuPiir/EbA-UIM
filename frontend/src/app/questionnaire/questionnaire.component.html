@@ -1,9 +1,8 @@
-<!-- frontend/src/app/questionnaire/questionnaire.component.html -->
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div class="projects-wrapper">
     <div class="add-project">
         <div class="add-project-header">
-            <h2>{{'addProject.title' | translate}}</h2>
+            <h2>{{ 'addProject.title' | translate }}</h2>
             <button (click)="toggleAddNewQuestionnaire()" class="button-icon">
                 <span *ngIf=!isToggled class="material-symbols-outlined icon">expand_more</span>
                 <span *ngIf=isToggled class="material-symbols-outlined icon">expand_less</span>
@@ -11,12 +10,17 @@
         </div>
         <div *ngIf=isToggled class="add-project-row">
             <div class="add-project-input">
-                <h3>{{'addProject.input' | translate}}</h3>
-                <input placeholder="{{'addProject.placeholder' | translate}}" id="questionnaireName" type="text" [(ngModel)]="questionnaireName" />
+                <h3>{{ 'addProject.input' | translate }}</h3>
+                <input placeholder="{{'addProject.placeholder' | translate}}" id="questionnaireName" type="text"
+                       [(ngModel)]="questionnaireName"/>
             </div>
             <div class="add-project-buttons">
-                <button (click)="toggleAddNewQuestionnaire()" class="button cancel-button">{{'button.cancel' | translate}}</button>
-                <button [disabled]="questionnaireName.length <= 0" (click)="addNewQuestionnaire(questionnaireName)" formtarget="_blank" class="button add-button">{{'button.add' | translate}}</button>
+                <button (click)="toggleAddNewQuestionnaire()"
+                        class="button cancel-button">{{ 'button.cancel' | translate }}
+                </button>
+                <button [disabled]="questionnaireName.length <= 0" (click)="addNewQuestionnaire(questionnaireName)"
+                        formtarget="_blank" class="button add-button">{{ 'button.add' | translate }}
+                </button>
             </div>
         </div>
         <div *ngIf="isToggled" class="add-project-row import-row">
@@ -32,21 +36,22 @@
             <thead>
             <tr>
                 <th class="projects-table-head">
-                    <h2>{{'projectsTable.title' | translate}}</h2>
+                    <h2>{{ 'projectsTable.title' | translate }}</h2>
                 </th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let questionnaire of questionnaires" class="projects-table-row">
+            <tr *ngFor="let questionnaire of getPaginatedQuestionnaires()" class="projects-table-row">
                 <td class="project-cell">
                     <span
-                    [matTooltip]="questionnaire.name.length > 25 ? questionnaire.name : ''"
-                    matTooltipPosition="above"
-                    [matTooltipDisabled]="questionnaire.name.length <= 25"
-                    class="project-name">
-                    {{questionnaire.name | truncate:25}}
+                            [matTooltip]="questionnaire.name.length > 25 ? questionnaire.name : ''"
+                            matTooltipPosition="above"
+                            [matTooltipDisabled]="questionnaire.name.length <= 25"
+                            class="project-name">
+                    {{ questionnaire.name | truncate:25 }}
                     </span>
-                    <a [routerLink]="validationPath" [queryParams]="{questionnaireId: questionnaire.id}" class="see-more-button">{{'projectsTable.seeMore' | translate}}</a>
+                    <a [routerLink]="validationPath" [queryParams]="{questionnaireId: questionnaire.id}"
+                       class="see-more-button">{{ 'projectsTable.seeMore' | translate }}</a>
                     <p>{{ questionnaire.lastModified | date: 'dd.MM.yyyy HH:mm' : 'et-EE' }}</p>
                 </td>
                 <td class="action-button-cell">
@@ -55,5 +60,42 @@
             </tr>
             </tbody>
         </table>
+        <div class="pagination-controls" *ngIf="showPagination()">
+            <button
+                    (click)="prevPage()"
+                    [disabled]="currentPage === 1"
+                    class="button pagination-button"
+                    [attr.aria-label]="'paginationButton.previous' | translate">
+                <
+            </button>
+
+            <div class="page-numbers">
+                <ng-container *ngFor="let page of getPageNumbers()">
+                    <button
+                            *ngIf="!page.isEllipsis"
+                            class="button page-number-button"
+                            [class.active]="page.value === currentPage"
+                            (click)="goToPage(page.value)"
+                            [attr.aria-current]="page.value === currentPage ? 'page' : null"
+                            [attr.aria-label]="('pagination.page' | translate) + ' ' + page.value">
+                        {{ page.value }}
+                    </button>
+                    <span *ngIf="page.isEllipsis"
+                          class="ellipsis"
+                          aria-hidden="true">
+                            {{ page.value }}
+                    </span>
+                </ng-container>
+            </div>
+            <button
+                    (click)="nextPage()"
+                    [disabled]="currentPage === totalPages"
+                    class="button pagination-button"
+                    [attr.aria-label]="'paginationButton.next' | translate">
+            </button>
+            <span class="pagination-text">
+        {{ 'pagination.page' | translate }} {{ currentPage }} {{ 'pagination.of' | translate }} {{ totalPages }}
+    </span>
+        </div>
     </div>
 </div>

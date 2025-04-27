@@ -308,6 +308,14 @@
   "noExampleNotification": {
     "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
   },
+  "paginationButton": {
+    "previous": "<",
+    "next": ">"
+  },
+  "pagination": {
+    "of": "Kokku",
+    "page": "Leht"
+  },
   "questionnaires": "Küsimustikud",
   "et": "EST",
   "en": "ENG"
