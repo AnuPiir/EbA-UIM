@@ -39,7 +39,8 @@
   },
   "projectsTable": {
     "title": "Projektid",
-    "seeMore" : "Sisene projekti ->"
+    "seeMore" : "Sisene projekti ->",
+    "sortByLastModified": "Viimati muudetud"
   },
   "deleteProjectModal": {
     "title": "Kustuta projekt: {{name}}",

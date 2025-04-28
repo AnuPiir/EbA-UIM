@@ -38,6 +38,13 @@
             <tr>
                 <th class="projects-table-head">
                     <h2>{{ 'projectsTable.title' | translate }}</h2>
+                    <div class="header-alignment-container">
+                        <div class="invisible-project-name-spacer"></div>
+                        <div class="invisible-button-spacer"></div>
+                        <div (click)="toggleSortOrder()" class="sort-button">
+                            {{ 'projectsTable.sortByLastModified' | translate }} {{ isNewestFirst ? '↓' : '↑' }}
+                        </div>
+                    </div>
                 </th>
             </tr>
             </thead>
@@ -56,7 +63,11 @@
                     <p>{{ questionnaire.lastModified | date: 'dd.MM.yyyy HH:mm' : 'et-EE' }}</p>
                 </td>
                 <td class="action-button-cell">
-                    <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getActions(questionnaire)"></app-menu>
+                    <div class="right-side-container">
+                        <span class="project-date">{{ getTimeAgo(questionnaire.lastModified) }}</span>
+                        <div class="invisible-spacer"></div>
+                        <app-menu [toggle]="'Menu'" [icon]="menuIcon" [actions]="getActions(questionnaire)"></app-menu>
+                    </div>
                 </td>
             </tr>
             </tbody>

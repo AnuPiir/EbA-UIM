@@ -10,9 +10,9 @@
 }
 
 .project-last-modified {
-    font-size: 0.85rem;
     color: var(--text-color);
     opacity: 0.8;
+    font-size: 1rem;
 }
 
 .projects-wrapper {
@@ -62,15 +62,15 @@
 }
 
 .add-project-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .import-row {
-    display: flex;
-    justify-content: flex-start;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .add-project-input {
@@ -120,37 +120,39 @@ table {
 }
 
 .projects-table-head {
-  padding: 2rem;
-  justify-content: left;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
 }
 
 .project-cell {
-  padding: 2rem;
-  width: 31.25rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+    padding: 2rem;
+    width: 31.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .action-button-cell {
-  padding: 2rem;
-  width: 31.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    padding: 2rem;
+    width: 31.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .see-more-button {
-  background-color: var(--light-green);
-  text-decoration: none;
-  border: solid;
-  border-width: 0.125rem;
-  border-radius: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  color: var(--text-color);
-  border-color: var(--dark-green);
-  white-space: nowrap;
+    background-color: var(--light-green);
+    text-decoration: none;
+    border: solid;
+    border-width: 0.125rem;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    color: var(--text-color);
+    border-color: var(--dark-green);
+    margin-right: 1rem;
+    white-space: nowrap;
 }
 
 .see-more-button:hover {
@@ -215,4 +217,106 @@ table {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+.project-date {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-right: 2rem;
+}
+
+.header-alignment-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.invisible-project-name-spacer {
+    flex: 1;
+    visibility: hidden;
+}
+
+.invisible-button-spacer {
+    width: 8.75rem;
+    visibility: hidden;
+}
+
+.sort-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-right: 2rem;
+}
+
+.sort-button:hover {
+    opacity: 0.7;
+}
+
+.sort-arrow {
+    font-weight: bold;
+}
+
+.right-side-container {
+    display: flex;
+    align-items: center;
+}
+
+.invisible-spacer {
+    width: 0;
+    visibility: hidden;
+}
+
+.timestamp-column {
+    width: 12rem;
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.timestamp-cell {
+    width: 12rem;
+    text-align: right;
+    padding-right: 1rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.85rem;
+}
+
+.action-column {
+    width: 5rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    background-color: var(--beige);
+    border-top-left-radius: 0.625rem;
+    border-top-right-radius: 0.625rem;
+}
+
+.action-button-head {
+    text-align: right;
+    padding: 2rem;
+    width: 31.25rem;
+}
+
+.sort-header {
+    cursor: pointer;
+    text-align: right;
+    font-size: 1rem;
+}
+
+.sort-text {
+    font-family: inherit;
+    color: var(--text-color);
+}
+
+.text-right {
+    text-align: right;
 }
