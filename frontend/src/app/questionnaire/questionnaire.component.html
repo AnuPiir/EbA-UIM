@@ -25,7 +25,8 @@
         </div>
         <div *ngIf="isToggled" class="add-project-row import-row">
             <div class="import-project-button">
-                <button (click)="importProject()" class="button blue">
+                <button (click)="importProject()" class="button blue upload-button">
+                    <span class="material-symbols-outlined icon">upload</span>
                     {{ 'button.import' | translate }}
                 </button>
             </div>
