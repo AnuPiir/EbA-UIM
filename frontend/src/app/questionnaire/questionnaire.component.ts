@@ -13,6 +13,11 @@ import {formatFullDate, formatTimeAgo} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
 import { ChangeDetectorRef } from '@angular/core';
 
+interface PaginationItem {
+    value: number | string
+    isEllipsis: boolean
+}
+
 @Component({
     selector: 'app-questionnaire',
     templateUrl: './questionnaire.component.html',
@@ -38,6 +43,10 @@ export class QuestionnaireComponent implements OnInit {
     notificationVisible = false;
     notificationMessage = '';
 
+    currentPage: number = 1;
+    questionnairesPerPage: number = 3;
+    totalPages: number = 1;
+
     constructor(
         private questionnaireService: QuestionnaireService,
         private modalService: BsModalService,
@@ -55,6 +64,7 @@ export class QuestionnaireComponent implements OnInit {
         this.questionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires())
         console.log(this.questionnaires)
         this.sortQuestionnaires();
+        this.updatePagination()
         this.loading = false;
         this.cdr.detectChanges();
     }
@@ -273,4 +283,82 @@ export class QuestionnaireComponent implements OnInit {
 
     protected readonly formatFullDate = formatFullDate;
     protected readonly formatTimeAgo = formatTimeAgo;
+
+    updatePagination() {
+        this.totalPages = Math.ceil(this.questionnaires.length / this.questionnairesPerPage);
+        this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
+    }
+
+    getPaginatedQuestionnaires(): Questionnaire[] {
+        const startIndex = (this.currentPage - 1) * this.questionnairesPerPage;
+        const endIndex = startIndex + this.questionnairesPerPage;
+        return this.questionnaires.slice(startIndex, endIndex);
+    }
+
+    getPageNumbers(): PaginationItem[] {
+        if (this.totalPages <= 7) {
+            return Array.from({ length: this.totalPages }, (_, i) => ({
+                value: i + 1,
+                isEllipsis: false
+            }));
+        }
+
+        const pageNumbers: PaginationItem[] = [];
+        const currentPage = this.currentPage;
+
+        pageNumbers.push({ value: 1, isEllipsis: false });
+
+        if (currentPage > 4) {
+            pageNumbers.push({ value: '...', isEllipsis: true });
+        }
+
+        let start = Math.max(2, currentPage - 2);
+        let end = Math.min(this.totalPages - 1, currentPage + 2);
+
+        if (currentPage <= 4) {
+            end = 5;
+        }
+
+        if (currentPage > this.totalPages - 4) {
+            start = this.totalPages - 4;
+        }
+
+        for (let i = start; i <= end; i++) {
+            pageNumbers.push({ value: i, isEllipsis: false });
+        }
+
+        if (currentPage < this.totalPages - 3) {
+            pageNumbers.push({ value: '...', isEllipsis: true });
+        }
+
+        pageNumbers.push({ value: this.totalPages, isEllipsis: false });
+
+        return pageNumbers;
+    }
+
+    goToPage(pageValue: number | string) {
+        const pageNumber = Number(pageValue);
+        if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= this.totalPages) {
+            this.currentPage = pageNumber;
+            this.cdr.detectChanges();
+        }
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.cdr.detectChanges();
+        }
+    }
+
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.cdr.detectChanges();
+        }
+    }
+
+    showPagination(): boolean {
+        return this.questionnaires.length > this.questionnairesPerPage;
+    }
 }

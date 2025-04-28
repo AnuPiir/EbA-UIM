@@ -302,6 +302,14 @@
   "conclusion": {
     "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
   },
+  "paginationButton": {
+    "previous": "<",
+    "next": ">"
+  },
+  "pagination": {
+    "of": "Total",
+    "page": "Page"
+  },
   "questionnaires": "Questionnaires",
   "et": "EST",
   "en": "ENG"

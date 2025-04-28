@@ -43,6 +43,8 @@ import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-moda
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import { PreferenceService } from './services/preference.service';
 import {firstValueFrom} from "rxjs";
+import {TruncatePipe} from "./utils/truncate.pipe";
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   const isElectron = (window as any).process && (window as any).process.type;
@@ -97,6 +99,7 @@ export function initAppFactory(
     BackToTopComponent,
     NoSituationModalComponent,
     NotificationComponent,
+    TruncatePipe,
   ],
   imports: [
     BrowserModule,

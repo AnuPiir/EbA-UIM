@@ -1,24 +1,23 @@
+if (require('electron-squirrel-startup')) return;
+
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const { spawn } = require("child_process");
 const fs = require('fs');
-const log = require('electron-log'); // Import electron-log
+const log = require('electron-log');
 
 const logDir = path.join(app.getPath('documents'), 'ebam');
 const logFilePath = path.join(logDir, 'electron-app-log.txt');
 
-// Ensure the directory exists
 if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
 }
 
-// Configure electron-log
-log.transports.file.level = 'info'; // Set minimum log level
-log.transports.file.format = '{h}:{i}:{s}:{ms} {text}'; // Custom log format
-log.transports.file.resolvePathFn = () => logFilePath; // Set log file path
+log.transports.file.level = 'info';
+log.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
+log.transports.file.resolvePathFn = () => logFilePath;
 
-// Example log
 log.info('Electron log initialized and writing to:', logFilePath);
 
 let mainWindow;
@@ -29,12 +28,16 @@ function createWindow() {
 
     if (!developerMode) {
         const backendPath = app.isPackaged
-            ? path.join(process.resourcesPath, "app", "jars", "backend-1.2.0.jar")
+            ? path.join(process.resourcesPath, "jars", "backend-1.2.0.jar")
             : path.join(__dirname, "jars", "backend-1.2.0.jar");
+
+        const javaPath = app.isPackaged
+            ? path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe')
+            : 'java';
 
         log.info(`Starting backend from: ${backendPath}`);
 
-        backendProcess = spawn("java", ["-jar", backendPath], {
+        backendProcess = spawn(javaPath, ["-jar", backendPath], {
             detached: false,
             stdio: ['pipe', 'pipe', 'pipe'],
         });
@@ -64,6 +67,8 @@ function createWindow() {
             webSecurity: false
         },
     });
+
+    mainWindow.maximize();
 
     mainWindow.loadURL(
         url.format({
