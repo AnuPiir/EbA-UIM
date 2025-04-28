@@ -32,8 +32,9 @@ function createWindow() {
         let javaPath;
 
         if (app.isPackaged) {
-            const isMac = os.platform() === 'darwin';
-            //const isWindows = os.platform() === 'win32';
+            const platform = os.platform();
+            const isMac = platform === 'darwin';
+            const isWindows = platform === 'win32';
 
             backendPath = isMac
                 ? path.join(process.resourcesPath, 'app', 'jars', 'backend-1.2.0.jar')
@@ -41,11 +42,12 @@ function createWindow() {
 
             javaPath = isMac
                 ? path.join(process.resourcesPath, 'app', 'jre', 'temurin-21.jre', 'Contents', 'Home', 'bin', 'java')
-                : path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe');
+                : isWindows
+                    ? path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe')
+                    : path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java'); // Linux case, no .exe
         } else {
-            // Development mode
             backendPath = path.join(__dirname, 'jars', 'backend-1.2.0.jar');
-            javaPath = 'java'; // Use system-installed Java
+            javaPath = 'java';
         }
 
         log.info(`Starting backend from: ${backendPath}`);
