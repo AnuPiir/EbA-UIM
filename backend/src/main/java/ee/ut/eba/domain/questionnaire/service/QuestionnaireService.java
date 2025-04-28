@@ -5,6 +5,7 @@ import ee.ut.eba.domain.questionnaire.persistence.QuestionnaireRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,11 @@ public class QuestionnaireService {
 
 	public void delete(Integer id) {
 		questionnaireRepository.deleteById(id);
+	}
+
+	public void questionnaireUpdated(Integer questionnaireId) {
+		Questionnaire questionnaire = get(questionnaireId);
+		questionnaire.setLastModified(LocalDateTime.now());
+		questionnaireRepository.save(questionnaire);
 	}
 }

@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div *ngIf="!loading" class="page-body" [ngClass]="{'compressed-page-body': !showProjectsWrapper}">
-  <div class="modals">
+  <div class="modals" [ngClass]="{ 'content-hidden': !showProjectsWrapper }">
       <!-- Hide/Show Button -->
       <div class="wrapper1">
       <div class="toggle-wrapper">
@@ -9,20 +9,24 @@
              class="toggle-button"
              [attr.aria-label]="'hidePanels.ariaLabel' | translate"
              tabindex="0">
-              <span *ngIf="showProjectsWrapper">{{ 'hidePanels.hide' | translate }}</span>
-              <span *ngIf="!showProjectsWrapper">{{ 'hidePanels.unhide' | translate }}</span>
+              <span>
+                  {{ showProjectsWrapper ? ('hidePanels.hide' | translate) : ('hidePanels.unhide' | translate) }}
+              </span>
+              <mat-icon class="toggle-icon">
+                  {{ showProjectsWrapper ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
           </button>
       </div>
       <div class="wrapper2">
       <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project">
-        <div class="add-project-header">
-          <h2>{{'addGroup.title' | translate}}</h2>
-          <button (click)="toggleAddNewGroup()" class="button-icon">
-            <span *ngIf=!isToggledGroupAdding class="material-symbols-outlined icon">expand_more</span>
-            <span *ngIf=isToggledGroupAdding class="material-symbols-outlined icon">expand_less</span>
-          </button>
-        </div>
+      <div class="add-project" (click)="handleOpenAddNewGroup()" [class.toggled]="isToggledGroupAdding">
+          <div class="add-project-header" (click)="handleCloseAddNewGroup($event)">
+              <h2>{{'addGroup.title' | translate}}</h2>
+              <div class="button-icon-container">
+                  <span *ngIf="!isToggledGroupAdding" class="material-symbols-outlined icon">expand_more</span>
+                  <span *ngIf="isToggledGroupAdding" class="material-symbols-outlined icon">expand_less</span>
+              </div>
+          </div>
           <div *ngIf=isToggledGroupAdding class="add-project-row">
             <div class="add-project-input">
               <div>
@@ -48,14 +52,14 @@
       </div>
     </div>
     <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project">
-        <div class="add-project-header">
-          <h2>{{'addStakeholder.title' | translate}}</h2>
-          <button (click)="toggleAddNewStakeholder()" class="button-icon">
-            <span *ngIf=!isToggledStakeholderAdding class="material-symbols-outlined icon">expand_more</span>
-            <span *ngIf=isToggledStakeholderAdding class="material-symbols-outlined icon">expand_less</span>
-          </button>
-        </div>
+      <div class="add-project" (click)="handleOpenAddNewStakeholder()" [class.toggled]="isToggledStakeholderAdding">
+          <div class="add-project-header" (click)="handleCloseAddNewStakeholder($event)">
+              <h2>{{'addStakeholder.title' | translate}}</h2>
+              <div class="button-icon-container">
+                  <span *ngIf="!isToggledStakeholderAdding" class="material-symbols-outlined icon">expand_more</span>
+                  <span *ngIf="isToggledStakeholderAdding" class="material-symbols-outlined icon">expand_less</span>
+              </div>
+          </div>
           <div *ngIf=isToggledStakeholderAdding class="add-project-row">
             <div class="add-project-input">
               <div>

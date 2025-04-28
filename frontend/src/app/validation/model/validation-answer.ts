@@ -15,4 +15,6 @@ export interface ValidationAnswer {
   feature: FeatureResponse;
   stakeholder: StakeholderResponse  | undefined
   backgroundColor?: string;
+  prioritized?: boolean;
+  conclusionChanged?: boolean;
 }
