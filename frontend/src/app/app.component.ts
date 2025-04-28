@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
-import {HttpClientModule} from "@angular/common/http";
+import {Component, OnInit} from '@angular/core';
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { TranslateService } from '@ngx-translate/core';
 
+interface Preference { type: string; value: string; }
 
 @Component({
   selector: 'app-root',
@@ -10,9 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private translate: TranslateService) {
-    translate.setDefaultLang('et');
-    translate.use('et');
+  constructor(private translate: TranslateService, private http: HttpClient) {
   }
 
   currentColorScheme: string = 'scheme1';
