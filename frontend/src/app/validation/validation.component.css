@@ -17,6 +17,10 @@ thead {
   background-color: var(--table-head);
   border-collapse: separate;
   border-spacing: 0;
+
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 th {
@@ -180,7 +184,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .content-cell-twelveth-child {
-  width: 9.75rem;
+  width: 11rem;
   border-right: none;
   border-left: none;
 }
@@ -227,6 +231,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   align-items: center;
   justify-content: center;
   width: fit-content;
+  max-width: 10rem;
   height: fit-content;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
@@ -234,6 +239,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   border-width: 0.125rem;
   border-radius:0.5rem;
   word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .cell-with-menu {
