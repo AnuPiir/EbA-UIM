@@ -17,6 +17,10 @@ thead {
   background-color: var(--table-head);
   border-collapse: separate;
   border-spacing: 0;
+
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 th {
