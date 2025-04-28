@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { QuestionnaireService } from '../questionnaire/service/questionnaire.service';
 import { ActivatedRoute } from '@angular/router';
+import { PreferenceService } from '../services/preference.service';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-toolbar',
@@ -16,7 +19,9 @@ export class ToolbarComponent{
   constructor(
     private translate: TranslateService,
     private questionnaireService: QuestionnaireService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private pref: PreferenceService,
+    private http: HttpClient
   ) {
     this.route.queryParams.subscribe(params => {
       if (params['questionnaireId']) {
@@ -33,14 +38,22 @@ export class ToolbarComponent{
   validationPath = "/validation"
 
   get currentLang(): string {
-    return this.translate.currentLang.toUpperCase();
+    return (this.translate.currentLang || 'et').toUpperCase();
   }
 
   setLang(language: string): void {
-    this.translate.use(language.toLowerCase());
+    const code = language.toLowerCase();
+    this.translate.use(code).subscribe(() => {
+      this.pref.setPreference('LANGUAGE', code)
+          .subscribe({
+            next: () => {},
+            error: e => console.error('Could not save lang:', e)
+          });
+      localStorage.setItem('user-language', code);
+    });
   }
 
   isLanguageSelected(language: string): boolean {
-    return this.currentLang == language;
+    return this.currentLang === language;
   }
 }
