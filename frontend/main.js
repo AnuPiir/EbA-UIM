@@ -1,5 +1,6 @@
 if (require('electron-squirrel-startup')) return;
 
+const os = require('os');
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
@@ -27,15 +28,28 @@ let developerMode = false //change to true if you want to debug backend
 function createWindow() {
 
     if (!developerMode) {
-        const backendPath = app.isPackaged
-            ? path.join(process.resourcesPath, "jars", "backend-1.2.0.jar")
-            : path.join(__dirname, "jars", "backend-1.2.0.jar");
+        let backendPath;
+        let javaPath;
 
-        const javaPath = app.isPackaged
-            ? path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe')
-            : 'java';
+        if (app.isPackaged) {
+            const isMac = os.platform() === 'darwin';
+            //const isWindows = os.platform() === 'win32';
+
+            backendPath = isMac
+                ? path.join(process.resourcesPath, 'app', 'jars', 'backend-1.2.0.jar')
+                : path.join(process.resourcesPath, 'jars', 'backend-1.2.0.jar');
+
+            javaPath = isMac
+                ? path.join(process.resourcesPath, 'app', 'jre', 'temurin-21.jre', 'Contents', 'Home', 'bin', 'java')
+                : path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe');
+        } else {
+            // Development mode
+            backendPath = path.join(__dirname, 'jars', 'backend-1.2.0.jar');
+            javaPath = 'java'; // Use system-installed Java
+        }
 
         log.info(`Starting backend from: ${backendPath}`);
+        log.info(`Using Java at: ${javaPath}`);
 
         backendProcess = spawn(javaPath, ["-jar", backendPath], {
             detached: false,
