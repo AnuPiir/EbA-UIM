@@ -2,6 +2,7 @@ package ee.ut.eba.domain.validationanswer.api;
 
 import static ee.ut.eba.domain.validationanswer.model.ValidationAnswerMapper.toResponse;
 
+import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import ee.ut.eba.domain.validationanswer.model.ValidationAnswerMapper;
 import ee.ut.eba.domain.validationanswer.model.ValidationAnswerRequest;
 import ee.ut.eba.domain.validationanswer.model.ValidationAnswerResponse;
@@ -31,10 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ValidationAnswerController {
 
 	private final ValidationAnswerService validationAnswerService;
+	private final QuestionnaireService questionnaireService;
 
 	@PutMapping
 	public ValidationAnswerResponse putValidationAnswer(@RequestBody @Valid ValidationAnswerRequest validationAnswer) {
 		log.info("Saving validation answer: {}", validationAnswer);
+		questionnaireService.questionnaireUpdated(validationAnswer.getQuestionnaireId());
 		return toResponse(
 				validationAnswerService.save(ValidationAnswerMapper.toValidationAnswerSaveParams(validationAnswer)));
 	}

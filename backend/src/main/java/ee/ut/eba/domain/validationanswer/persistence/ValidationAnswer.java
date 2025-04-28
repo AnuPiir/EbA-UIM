@@ -69,4 +69,10 @@ public class ValidationAnswer {
 
 	@Column
 	private String backgroundColor;
+
+	@Column
+	private Boolean prioritized;
+
+	@Column
+	private Boolean conclusionChanged;
 }

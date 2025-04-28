@@ -56,7 +56,8 @@ public class QuestionnaireCopyService {
 			validationAnswerService.save(new ValidationAnswerService.SaveParameters(null, validationAnswer.getRowId(),
 					validationAnswer.getAnswer(), validationAnswer.getType(), newQuestionnaireId, validationId,
 					featurePreconditionId, featureGroupId, featureId, stakeholderId,
-					validationAnswer.getBackgroundColor()));
+					validationAnswer.getBackgroundColor(), validationAnswer.getPrioritized(),
+					validationAnswer.getConclusionChanged()));
 		}
 
 		return newQuestionnaireId;

@@ -113,7 +113,8 @@ public class ExportService {
 								validationAnswer.getStakeholder() != null
 										? validationAnswer.getStakeholder().getName()
 										: null),
-						validationAnswer.getBackgroundColor()))
+						validationAnswer.getBackgroundColor(), validationAnswer.getPrioritized(),
+						validationAnswer.getConclusionChanged()))
 				.toList());
 	}
 

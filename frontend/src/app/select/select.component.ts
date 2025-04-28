@@ -17,8 +17,6 @@ export class SelectComponent implements AfterViewInit {
   @ViewChild('optionContainer') optionContainer: ElementRef;
   @Input() selectedValue: ValidationValue;
   @Output() selectionChange: EventEmitter<ValidationValue> = new EventEmitter<ValidationValue>();
-  @Input() isDisabled: boolean = false;
-
 
   constructor(
       private elementRef: ElementRef,
@@ -33,8 +31,6 @@ export class SelectComponent implements AfterViewInit {
   }
 
   toggleSelect(): void {
-    if (this.isDisabled) return;
-
     this.isToggled = !this.isToggled;
     if (this.isToggled) {
       // When opening the dropdown, check position
@@ -79,11 +75,9 @@ export class SelectComponent implements AfterViewInit {
   }
 
   onValueChange(validationValue: ValidationValue): void {
-    if (!this.isDisabled) {
       this.selectedValue = validationValue;
       this.selectionChange.emit(validationValue)
       this.toggleSelect();
-    }
   }
 
   @HostListener('document:click', ['$event'])

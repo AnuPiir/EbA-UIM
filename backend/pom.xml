@@ -92,13 +92,6 @@
             <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
-        <!-- JUnit 5 API and Engine -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.10.0</version> <!-- Use latest version -->
-            <scope>test</scope>
-        </dependency>
         <!-- JUnit Platform Engine (for test execution) -->
         <dependency>
             <groupId>org.junit.platform</groupId>

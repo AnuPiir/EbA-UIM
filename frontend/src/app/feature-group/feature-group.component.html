@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div *ngIf="!loading" class="page-body" [ngClass]="{'compressed-page-body': !showProjectsWrapper}">
-  <div class="modals">
+  <div class="modals" [ngClass]="{ 'content-hidden': !showProjectsWrapper }">
       <!-- Hide/Show Button -->
       <div class="wrapper1">
       <div class="toggle-wrapper">
@@ -9,8 +9,12 @@
              class="toggle-button"
              [attr.aria-label]="'hidePanels.ariaLabel' | translate"
              tabindex="0">
-              <span *ngIf="showProjectsWrapper">{{ 'hidePanels.hide' | translate }}</span>
-              <span *ngIf="!showProjectsWrapper">{{ 'hidePanels.unhide' | translate }}</span>
+              <span>
+                  {{ showProjectsWrapper ? ('hidePanels.hide' | translate) : ('hidePanels.unhide' | translate) }}
+              </span>
+              <mat-icon class="toggle-icon">
+                  {{ showProjectsWrapper ? 'visibility_off' : 'visibility' }}
+              </mat-icon>
           </button>
       </div>
       <div class="wrapper2">
