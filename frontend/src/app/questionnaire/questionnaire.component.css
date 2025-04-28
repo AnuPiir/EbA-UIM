@@ -1,18 +1,18 @@
 .project-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .project-name {
-  font-weight: 500;
-  max-width: 24rem;
+    font-weight: 500;
+    max-width: 24rem;
 }
 
 .project-last-modified {
-  font-size: 0.85rem;
-  color: var(--text-color);
-  opacity: 0.8;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    opacity: 0.8;
 }
 
 .projects-wrapper {
@@ -31,35 +31,46 @@
 }
 
 .add-project {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--beige);
-  width: 62.5rem;
-  padding: 1rem;
-  border: solid;
-  border-color: var(--text-color);
-  border-width: 0.125rem;
-  border-radius: 0.625rem;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--beige);
+    width: 62.5rem;
+    padding: 1rem;
+    border: solid;
+    border-color: var(--text-color);
+    border-width: 0.125rem;
+    border-radius: 0.625rem;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.add-project.toggled {
+    cursor: default;
 }
 
 .add-project-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.add-project-header.hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .add-project-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 .import-row {
-  display: flex;
-  justify-content: flex-start;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .add-project-input {
@@ -143,7 +154,7 @@ table {
 }
 
 .see-more-button:hover {
-  background-color: var(--green);
+    background-color: var(--green);
 }
 
 .upload-button {

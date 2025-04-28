@@ -1,12 +1,12 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div class="projects-wrapper">
-    <div class="add-project">
-        <div class="add-project-header">
-            <h2>{{ 'addProject.title' | translate }}</h2>
-            <button (click)="toggleAddNewQuestionnaire()" class="button-icon">
-                <span *ngIf=!isToggled class="material-symbols-outlined icon">expand_more</span>
-                <span *ngIf=isToggled class="material-symbols-outlined icon">expand_less</span>
-            </button>
+    <div class="add-project" (click)="handleOpenAddNewQuestionnaire()" [class.toggled]="isToggled">
+        <div class="add-project-header" (click)="handleCloseAddNewQuestionnaire($event)">
+            <h2>{{'addGroup.title' | translate}}</h2>
+            <div class="button-icon-container">
+                <span *ngIf="!isToggled" class="material-symbols-outlined icon">expand_more</span>
+                <span *ngIf="isToggled" class="material-symbols-outlined icon">expand_less</span>
+            </div>
         </div>
         <div *ngIf=isToggled class="add-project-row">
             <div class="add-project-input">

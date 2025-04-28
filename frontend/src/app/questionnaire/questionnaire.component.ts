@@ -109,6 +109,20 @@ export class QuestionnaireComponent implements OnInit {
         this.isToggled = !this.isToggled;
     }
 
+    handleOpenAddNewQuestionnaire() {
+        if (!this.isToggled) {
+            this.toggleAddNewQuestionnaire();
+        }
+    }
+
+    handleCloseAddNewQuestionnaire(event: Event) {
+        if (this.isToggled) {
+            this.toggleAddNewQuestionnaire();
+            event.stopPropagation();
+        }
+    }
+
+
     openActionButtonsMenu(): void {
         this.isOpen = !this.isOpen;
     }
