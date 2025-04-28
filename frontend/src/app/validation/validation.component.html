@@ -24,7 +24,6 @@
 
                                     <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
 
-                                    <!--<mat-icon *ngIf="validation.tooltipEt" matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}" matTooltipClass="tooltip" class="material-symbols-outlined overflow-unset">info </mat-icon>-->
                                     <ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
                                     <button mat-icon-button disableRipple [matMenuTriggerFor]="infoMenu" aria-label="Show info">
                                         <mat-icon>info</mat-icon>

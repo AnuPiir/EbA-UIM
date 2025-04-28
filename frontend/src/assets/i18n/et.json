@@ -279,8 +279,8 @@
     "ariaLabel": "Nupp projektide vahekaartide nähtavuse muutmiseks. Vajutage Enter, tühikut või kasutage Ctrl + Üles-nooleklahvi aktiveerimiseks."
   },
   "hideColumn": {
-    "hide": "Peida veerg",
-    "show": "Näita veergu"
+    "hide": "Peida veerg (Alt+H)",
+    "show": "Näita veergu (Alt+H)"
   },
   "colorPicker": {
     "change": "Kategoriseeri tegevusplaan",

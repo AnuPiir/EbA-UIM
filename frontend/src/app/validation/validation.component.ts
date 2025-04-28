@@ -70,7 +70,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
 
-  @HostListener('window:keydown', ['$event'])
 
   colorOptions = [
     { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
@@ -1067,6 +1066,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.hiddenColumns.has(index);
   }
 
+  @HostListener('window:keydown', ['$event'])
   handleAltH(event: KeyboardEvent) {
     if (event.altKey && event.key.toLowerCase() === 'h') {
       event.preventDefault();

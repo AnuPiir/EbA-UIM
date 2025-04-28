@@ -32,6 +32,24 @@ th {
   vertical-align: center;
 }
 
+/*thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--table-head);
+  left: auto;
+}
+
+/*thead th:first-child {
+  left: 0;
+  z-index: 20;
+}
+
+thead th:nth-child(2) {
+  left: 3rem;
+  z-index: 30;
+}*/
+
 td {
   vertical-align: top;
   text-align: left;
@@ -504,4 +522,22 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   color: var(--beige);
   padding: 1rem;
 }
+
+/*thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--table-head);
+  left: auto;
+}
+
+thead th:first-child {
+  left: 0;
+  z-index: 20;
+}
+
+thead th:nth-child(2) {
+  left: 3rem;
+  z-index: 30;
+}*/
 
