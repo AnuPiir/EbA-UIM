@@ -4,7 +4,7 @@
     "edit": "Muuda",
     "add": "Lisa",
     "cancel": "Loobu",
-    "import": "Impordi"
+    "import": "Lae üles (JSON)"
   },
   "menu": {
     "edit": "Muuda",
@@ -12,7 +12,7 @@
     "copy": "Tee koopia",
     "download": "Lae alla",
     "downloadExcel": "Lae alla Excel",
-    "downloadJson": "Lae alla Json",
+    "downloadJson": "Lae alla JSON",
     "deleteFeature": "Kustuta funktsionaalsus",
     "addStakeholder": "Lisa sidusrühm",
     "addPrecondition": "Lisa eeltingimus",
@@ -39,7 +39,8 @@
   },
   "projectsTable": {
     "title": "Projektid",
-    "seeMore" : "Sisene projekti ->"
+    "seeMore" : "Sisene projekti ->",
+    "sortByLastModified": "Viimati muudetud"
   },
   "deleteProjectModal": {
     "title": "Kustuta projekt: {{name}}",
@@ -318,6 +319,14 @@
     "deleteFeatureMessage": "Kas olete kindel, et soovite selle funktsionaalsuse kustutada?",
     "deletePreconditionTitle": "Kustuta eeltingimus",
     "deletePreconditionMessage": "Kas olete kindel, et soovite selle eeltingimuse kustutada?"
+  },
+  "paginationButton": {
+    "previous": "<",
+    "next": ">"
+  },
+  "pagination": {
+    "of": "Kokku",
+    "page": "Leht"
   },
   "questionnaires": "Küsimustikud",
   "et": "EST",
