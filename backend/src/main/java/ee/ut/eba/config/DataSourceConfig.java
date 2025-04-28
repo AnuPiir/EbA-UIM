@@ -27,12 +27,9 @@ public class DataSourceConfig {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("org.sqlite.JDBC");
 
-		String resourcesPath = new File(System.getProperty("user.dir")).getParent();
-		String appDataDir = Paths.get(resourcesPath, "app", "database.db").toString();
-
-		/*// Create a user-writable path for the database
+		// Create a user-writable path for the database S
 		String userHome = System.getProperty("user.home");
-		String appDataDir = Paths.get(userHome, "Documents", "EBAM").toString();*/
+		String appDataDir = Paths.get(userHome, "Documents", "EBAM").toString();
 
 		// Ensure the directory exists
 		File directory = new File(appDataDir);
