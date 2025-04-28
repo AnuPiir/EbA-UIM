@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div class="notification-overlay" *ngIf="showNotification">
-    <app-notification [message]="notificationMessage" [show]="showNotification" (close)="closeNotification()" tabindex="-1"> </app-notification>
+    <app-notification [title]="notificationTitle" [message]="notificationMessage" [show]="showNotification" (close)="closeNotification()" tabindex="-1"> </app-notification>
 </div>
 
 <div *ngIf="!loading" class="table-wrapper">

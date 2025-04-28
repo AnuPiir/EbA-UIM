@@ -1,4 +1,5 @@
-<div class="notification" *ngIf="show" role="status" aria-live="polite">
+<div class="notification" *ngIf="show" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" tabindex="0" #modalContainer (keydown)="handleKeydown($event)">
+    <h2 id="notificationTitle">{{ title | translate }}</h2>
     <button class="close-button" (click)="closeNotification()" aria-label="Close notification">
         <span class="material-symbols-outlined">close</span>
     </button>

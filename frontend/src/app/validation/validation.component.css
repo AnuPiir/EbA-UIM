@@ -500,8 +500,8 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   right:  0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-display: flex;
-align-items: center;
+  display: flex;
+  align-items: center;
   justify-content: center;
   z-index: 1050;
 }
@@ -514,3 +514,8 @@ align-items: center;
   pointer-events: none;
   z-index: 1060;
 }
+
+body.modal-open {
+  overflow: hidden;
+}
+

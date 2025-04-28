@@ -41,6 +41,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { BackToTopComponent } from './back-to-top/back-to-top.component';
 import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import {ScrollingModule} from "@angular/cdk/scrolling";
+import { ConfirmActionModalComponent } from './questionnaire/modal/confirm-action-modal/confirm-action-modal.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -72,6 +73,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BackToTopComponent,
     NoSituationModalComponent,
     NotificationComponent,
+    ConfirmActionModalComponent,
   ],
   imports: [
     BrowserModule,
