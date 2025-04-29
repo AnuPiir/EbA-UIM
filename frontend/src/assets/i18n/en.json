@@ -306,8 +306,8 @@
     "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
   },
   "paginationButton": {
-    "previous": "<",
-    "next": ">"
+    "previous": "Previous",
+    "next": "Next"
   },
   "pagination": {
     "of": "Total",
