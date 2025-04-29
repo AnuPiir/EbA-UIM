@@ -53,7 +53,8 @@
 
                             <td *ngIf="!isAnswerNotDisplayed(validation, validationRowValue)"
                                 class="background-beige"
-                                [class]="getFillerCellClass(validation)">
+                                [class]="getFillerCellClass(validation)"
+                                [ngClass]="[i === 1 ? 'left-border-highlight' : '', i === 3 ? 'right-border-highlight' : '']">
                             </td>
 
                             <td *ngIf="isAnswerNotDisplayed(validation, validationRowValue)"

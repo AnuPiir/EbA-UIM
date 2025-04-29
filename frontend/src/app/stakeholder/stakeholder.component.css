@@ -1,10 +1,10 @@
 .stakeholder {
   display: flex;
-  align-items: top;
+  align-items: flex-start;
   justify-content: center;
   width: fit-content;
   height: fit-content;
-  max-width: 30rem;
+  max-width: 10rem;
   padding: 0.25rem 0.5rem;
   border-style: solid;
   border-width: 0.125rem;
@@ -12,7 +12,7 @@
 }
 
 .stakeholder-label {
-  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .x-btn {

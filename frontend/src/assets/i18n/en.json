@@ -4,7 +4,7 @@
     "edit": "Edit",
     "add": "Add",
     "cancel": "Cancel",
-    "import": "Import"
+    "import": "Upload (JSON)"
   },
   "menu": {
     "edit": "Edit",
@@ -12,7 +12,7 @@
     "copy": "Make a copy",
     "download": "Download",
     "downloadExcel": "Download as Excel",
-    "downloadJson": "Download as Json",
+    "downloadJson": "Download as JSON",
     "deleteFeature": "Delete this feature",
     "addStakeholder": "Add a stakeholder",
     "addPrecondition": "Add a preconditon",
@@ -40,7 +40,8 @@
   },
   "projectsTable": {
     "title": "Projects",
-    "seeMore" : "Enter project ->"
+    "seeMore": "Enter project ->",
+    "sortByLastModified": "Last modified"
   },
   "deleteProjectModal": {
     "title": "Delete projekt: {{name}}",
@@ -303,6 +304,14 @@
   },
   "conclusion": {
     "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
+  },
+  "paginationButton": {
+    "previous": "<",
+    "next": ">"
+  },
+  "pagination": {
+    "of": "Total",
+    "page": "Page"
   },
   "questionnaires": "Questionnaires",
   "et": "EST",

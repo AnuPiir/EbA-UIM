@@ -9,9 +9,13 @@ import {EditModalComponent} from './modal/edit-modal/edit-modal.component';
 import {formatDate} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
-import {formatFullDate, formatTimeAgo} from "../utils/date.utils";
 import {firstValueFrom} from "rxjs";
 import { ChangeDetectorRef } from '@angular/core';
+
+interface PaginationItem {
+    value: number | string
+    isEllipsis: boolean
+}
 
 @Component({
     selector: 'app-questionnaire',
@@ -32,11 +36,16 @@ export class QuestionnaireComponent implements OnInit {
     modalRef: BsModalRef;
     menuIcon: string = "more_vert";
 
+    isNewestFirst: boolean = true;
     sortField: 'name' | 'lastModified' = 'lastModified';
     sortDirection: 'asc' | 'desc' = 'desc';
 
     notificationVisible = false;
     notificationMessage = '';
+
+    currentPage: number = 1;
+    questionnairesPerPage: number = 3;
+    totalPages: number = 1;
 
     constructor(
         private questionnaireService: QuestionnaireService,
@@ -55,6 +64,7 @@ export class QuestionnaireComponent implements OnInit {
         this.questionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires())
         console.log(this.questionnaires)
         this.sortQuestionnaires();
+        this.updatePagination()
         this.loading = false;
         this.cdr.detectChanges();
     }
@@ -98,6 +108,20 @@ export class QuestionnaireComponent implements OnInit {
     toggleAddNewQuestionnaire(): void {
         this.isToggled = !this.isToggled;
     }
+
+    handleOpenAddNewQuestionnaire() {
+        if (!this.isToggled) {
+            this.toggleAddNewQuestionnaire();
+        }
+    }
+
+    handleCloseAddNewQuestionnaire(event: Event) {
+        if (this.isToggled) {
+            this.toggleAddNewQuestionnaire();
+            event.stopPropagation();
+        }
+    }
+
 
     openActionButtonsMenu(): void {
         this.isOpen = !this.isOpen;
@@ -239,38 +263,136 @@ export class QuestionnaireComponent implements OnInit {
                     ? a.name.localeCompare(b.name)
                     : b.name.localeCompare(a.name);
             } else {
-                return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime()
+                const comparison = new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+                return this.isNewestFirst ? comparison : -comparison;
             }
         });
     }
 
-    // Toggle sort field and direction
-    toggleSort(field: 'name' | 'lastModified'): void {
-        console.log(`Toggling sort to ${field}`);
-
-        if (this.sortField === field) {
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            this.sortField = field;
-            this.sortDirection = 'desc'; // Default to descending when changing fields
-        }
-
+    toggleSortOrder() {
+        this.isNewestFirst = !this.isNewestFirst;
+        this.sortDirection = this.isNewestFirst ? 'desc' : 'asc';
         this.sortQuestionnaires();
     }
 
-    // Get sort indicator icon
-    getSortIcon(field: 'name' | 'lastModified'): string {
-        if (this.sortField !== field) return 'unfold_more';
-        return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
+    getTimeAgo(date: Date | string): string {
+
+        const now = new Date();
+        const past = new Date(date);
+        const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const weeks = Math.floor(days / 7);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(days / 365);
+
+        const isEstonian = this.translateService.currentLang === 'et';
+
+        if (seconds < 60) {
+            return isEstonian ? 'äsja' : 'just now';
+        } else if (minutes === 1) {
+            return isEstonian ? '1 minut tagasi' : '1 minute ago';
+        } else if (minutes < 60) {
+            return isEstonian ? `${minutes} minutit tagasi` : `${minutes} minutes ago`;
+        } else if (hours === 1) {
+            return isEstonian ? '1 tund tagasi' : '1 hour ago';
+        } else if (hours < 24) {
+            return isEstonian ? `${hours} tundi tagasi` : `${hours} hours ago`;
+        } else if (days === 1) {
+            return isEstonian ? '1 päev tagasi' : '1 day ago';
+        } else if (days < 7) {
+            return isEstonian ? `${days} päeva tagasi` : `${days} days ago`;
+        } else if (weeks === 1) {
+            return isEstonian ? '1 nädal tagasi' : '1 week ago';
+        } else if (weeks < 4) {
+            return isEstonian ? `${weeks} nädalat tagasi` : `${weeks} weeks ago`;
+        } else if (months === 1) {
+            return isEstonian ? '1 kuu tagasi' : '1 month ago';
+        } else if (months < 12) {
+            return isEstonian ? `${months} kuud tagasi` : `${months} months ago`;
+        } else if (years === 1) {
+            return isEstonian ? '1 aasta tagasi' : '1 year ago';
+        } else {
+            return isEstonian ? `${years} aastat tagasi` : `${years} years ago`;
+        }
     }
 
-    // Get formatted date for display
-    getFormattedDate(lastModified: string | null): string {
-        if (!lastModified) return this.translateService.instant('projectsTable.noDate');
-        return formatTimeAgo(lastModified);
+    updatePagination() {
+        this.totalPages = Math.ceil(this.questionnaires.length / this.questionnairesPerPage);
+        this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
     }
 
+    getPaginatedQuestionnaires(): Questionnaire[] {
+        const startIndex = (this.currentPage - 1) * this.questionnairesPerPage;
+        const endIndex = startIndex + this.questionnairesPerPage;
+        return this.questionnaires.slice(startIndex, endIndex);
+    }
 
-    protected readonly formatFullDate = formatFullDate;
-    protected readonly formatTimeAgo = formatTimeAgo;
+    getPageNumbers(): PaginationItem[] {
+        if (this.totalPages <= 7) {
+            return Array.from({ length: this.totalPages }, (_, i) => ({
+                value: i + 1,
+                isEllipsis: false
+            }));
+        }
+
+        const pageNumbers: PaginationItem[] = [];
+        const currentPage = this.currentPage;
+
+        pageNumbers.push({ value: 1, isEllipsis: false });
+
+        if (currentPage > 4) {
+            pageNumbers.push({ value: '...', isEllipsis: true });
+        }
+
+        let start = Math.max(2, currentPage - 2);
+        let end = Math.min(this.totalPages - 1, currentPage + 2);
+
+        if (currentPage <= 4) {
+            end = 5;
+        }
+
+        if (currentPage > this.totalPages - 4) {
+            start = this.totalPages - 4;
+        }
+
+        for (let i = start; i <= end; i++) {
+            pageNumbers.push({ value: i, isEllipsis: false });
+        }
+
+        if (currentPage < this.totalPages - 3) {
+            pageNumbers.push({ value: '...', isEllipsis: true });
+        }
+
+        pageNumbers.push({ value: this.totalPages, isEllipsis: false });
+
+        return pageNumbers;
+    }
+
+    goToPage(pageValue: number | string) {
+        const pageNumber = Number(pageValue);
+        if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= this.totalPages) {
+            this.currentPage = pageNumber;
+            this.cdr.detectChanges();
+        }
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.cdr.detectChanges();
+        }
+    }
+
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.cdr.detectChanges();
+        }
+    }
+
+    showPagination(): boolean {
+        return this.questionnaires.length > this.questionnairesPerPage;
+    }
 }
