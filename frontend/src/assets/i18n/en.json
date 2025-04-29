@@ -298,10 +298,21 @@
     "default": "No category"
   },
   "prioritizationNotice": {
-    "message": "Multiple situations have been added under this precondition. They can be prioritized by using the checkbox ✅."
+    "message": "Multiple situations have been added under this precondition. They can be prioritized by using the checkbox ✅.",
+    "title": "Prioritizing opportunity"
   },
   "conclusion": {
     "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
+  },
+  "confirmModal": {
+    "deleteRowTitle": "Delete row",
+    "deleteRowMessage": "Are you sure you want to delete this row?",
+    "deleteExampleTitle": "Delete situation",
+    "deleteExampleMessage": "Are you sure you want to delete this situation?",
+    "deleteFeatureTitle": "Delete feature",
+    "deleteFeatureMessage": "Are you sure you want to delete this feature?",
+    "deletePreconditionTitle": "Delete precondition",
+    "deletePreconditionMessage": "Are you sure you want to delete this precondition?"
   },
   "paginationButton": {
     "previous": "<",

@@ -41,6 +41,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { BackToTopComponent } from './back-to-top/back-to-top.component';
 import {NoSituationModalComponent} from "./questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import {ScrollingModule} from "@angular/cdk/scrolling";
+import { ConfirmActionModalComponent } from './questionnaire/modal/confirm-action-modal/confirm-action-modal.component';
 import { PreferenceService } from './services/preference.service';
 import {firstValueFrom} from "rxjs";
 import {TruncatePipe} from "./utils/truncate.pipe";
@@ -99,6 +100,7 @@ export function initAppFactory(
     BackToTopComponent,
     NoSituationModalComponent,
     NotificationComponent,
+    ConfirmActionModalComponent,
     TruncatePipe,
   ],
   imports: [
