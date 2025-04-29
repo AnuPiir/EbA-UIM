@@ -44,7 +44,7 @@
     "sortByLastModified": "Last modified"
   },
   "deleteProjectModal": {
-    "title": "Delete projekt: {{name}}",
+    "title": "Delete project: {{name}}",
     "body": "Are you sure you want to delete the project?"
   },
   "deleteFeatureGroupModal": {
