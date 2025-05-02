@@ -25,7 +25,7 @@
   "toolbar": {
     "name": "EbA-UIM",
     "projects": "Projects",
-    "method": "EbA Method",
+    "method": "EbA Method Guide",
     "about": "About"
   },
   "languages": {
@@ -106,7 +106,7 @@
   },
   "methodTabs":{
     "method": {
-      "tab": "EbA Method",
+      "tab": "EbA Method Guide",
       "subtab": "Method",
       "subtab1": "Step 1",
       "subtab2": "Step 2",
@@ -302,7 +302,7 @@
     "title": "Prioritizing opportunity"
   },
   "conclusion": {
-    "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
+    "changedNotice": "The previous combination of answers has been changed. If necessary, update the action plan"
   },
   "confirmModal": {
     "deleteRowTitle": "Delete row",
