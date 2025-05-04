@@ -1,4 +1,6 @@
-<button class="back-to-top" (click)="scrollToTop()" (keydown)="handleKeyPress($event)" *ngIf="showButton" [attr.aria-label]="'backToTop.ariaLabel' | translate" tabindex="0">
+<div class="visually-hidden" aria-live="polite" #liveAnnouncer></div>
+<button *ngIf="showButton" class="back-to-top"
+        (click)="scrollToTop()" (keydown)="handleKeyPress($event)" [attr.aria-label]="'backToTop.ariaLabel' | translate" tabindex="0">
     <span class="material-symbols-outlined">keyboard_arrow_up</span>
     {{ 'backToTop.buttonLabel' | translate }}
 </button>

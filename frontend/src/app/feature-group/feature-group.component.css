@@ -261,3 +261,24 @@ mat-tab-group {
 :focus-visible {
   outline: .25rem solid #fb8825;
 }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+}
+
+.skip-link:focus-visible {
+  position: static;
+  margin-bottom: 1rem;
+  background-color: var(--text-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  z-index: 1000;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0.25rem;
+  outline: 0.25rem solid #fb8825;
+  outline-offset: 0;
+  display: inline-block;
+}

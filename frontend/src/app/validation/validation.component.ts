@@ -26,6 +26,7 @@ import { ChangeDetectorRef, NgZone } from '@angular/core';
 import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MatMenuTrigger } from '@angular/material/menu';
+import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 
 
 @Component({
@@ -63,13 +64,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @ViewChild(MatMenuTrigger) infoMenuTrigger!: MatMenuTrigger;
   @ViewChild('infoIcon', { read: ElementRef }) infoIcon!: ElementRef<HTMLElement>;
   @ViewChild('status') statusEl!: ElementRef<HTMLElement>;
+  @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport)
+  viewport!: CdkVirtualScrollViewport;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];
   @Input() featureGroup: FeatureGroupResponse;
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
-
 
   colorOptions = [
     { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },

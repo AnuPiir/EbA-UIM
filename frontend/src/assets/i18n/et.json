@@ -302,6 +302,9 @@
   "conclusion": {
     "changedNotice": "Eelnevat vastust on muudetud. Vajadusel muutke ka tegevuskava."
   },
+  "skipButton": {
+    "skipToTable": "Liigu tabeli sisuni"
+  },
   "noExampleModal": {
     "title": "Kinnita 'Situatsiooni ei ole'",
     "message": "Kas olete kindel, et soovite märkida selle kui 'Situatsiooni ei ole'? See lähtestab kõik selle näite valikud.",

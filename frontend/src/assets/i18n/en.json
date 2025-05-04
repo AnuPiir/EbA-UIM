@@ -305,6 +305,9 @@
   "conclusion": {
     "changedNotice": "The previous answer has been changed. If necessary, adjust the action plan."
   },
+  "skipButton": {
+    "skipToTable": "Skip to main table content"
+  },
   "paginationButton": {
     "previous": "Previous",
     "next": "Next"
