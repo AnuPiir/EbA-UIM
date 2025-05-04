@@ -29,7 +29,7 @@
 
 .arrow_drop_down-menu {
   top: 0rem;
-  left: 1.5rem;
+  left: 1.7rem;
 }
 
 .color-menu {
@@ -58,8 +58,8 @@
 .arrow_drop_down {
   width: fit-content;
   height: fit-content;
-  max-width: 1.5rem;
-  max-height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
   color: var(--dark-green);
   background-color: var(--light-green);
   display: flex;

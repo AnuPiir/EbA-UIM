@@ -24,16 +24,42 @@
 
                                     <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
 
+                                    <!--<ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
+                                        <button mat-icon-button disableRipple
+                                                matTooltip="{{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}"
+                                                matTooltipClass="tooltip" aria-label="Show info" class="header-tooltip-button" tabindex="0">
+                                                <mat-icon>info</mat-icon>
+                                        </button>
+                                    </ng-container>-->
+                                    <!--see meeldis-->
+                                    <!--<ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
+                                        <button
+                                                mat-icon-button
+                                                disableRipple
+                                                matTooltip="{{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}"
+                                                matTooltipClass="tooltip"
+                                                matTooltipPosition="right"
+                                        aria-label="Show info"
+                                        class="header-tooltip-button flat-icon-button"
+                                        tabindex="0">
+                                        <mat-icon>info</mat-icon>
+                                        </button>
+                                    </ng-container>-->
+
                                     <ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
-                                    <button mat-icon-button disableRipple [matMenuTriggerFor]="infoMenu" aria-label="Show info">
+                                    <button mat-icon-button disableRipple
+                                            matTooltip="{{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}"
+                                            matTooltipClass="tooltip-below" matTooltipPosition="below" aria-label="Show info"
+                                            class="header-tooltip-button flat-icon-button" tabindex="0">
                                         <mat-icon>info</mat-icon>
                                     </button>
-                                    <mat-menu #infoMenu="matMenu" class="info-tooltip-menu">
-                                        <div class="info-tooltip-content">
-                                            {{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}
-                                        </div>
-                                    </mat-menu>
                                     </ng-container>
+
+                                    <!--<mat-icon *ngIf="validation.tooltipEt"
+                                              matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"
+                                              matTooltipClass="tooltip"
+                                              class="material-symbols-outlined overflow-unset">info
+                                    </mat-icon>-->
                                 </div>
                         </ng-container>
                     </ng-container>
@@ -96,8 +122,10 @@
                                                     placeholder="ID">
                                           </textarea>
                                         </div>
-                                        <app-menu [toggle]="'Menu'" [icon]="menuIcon"
-                                                  [actions]="getFeatureActions(validationRowValue)"></app-menu>
+                                        <app-featuremenu
+                                                [onDeleteFeature]="getFeatureActions(validationRowValue)[0].onClick">
+                                        </app-featuremenu>
+
                                     </div>
                                     <div class="textarea-border w-100">
                                         <textarea [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
@@ -113,8 +141,11 @@
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
                                     </div>
-                                    <app-menu [toggle]="'Menu'" [icon]="menuIcon"
-                                              [actions]="getPreconditionActions(validationRowValue)"></app-menu>
+                                    <app-preconditionmenu
+                                            [onAddPrecondition]="getPreconditionActions(validationRowValue)[0].onClick"
+                                            [onDeletePrecondition]="getPreconditionActions(validationRowValue)[1].onClick">
+                                    </app-preconditionmenu>
+
                                 </div>
                                 <div *ngIf="isValidationExample(validation)" class="cell-with-menu max-h-250">
                                     <div class="textarea-border">
@@ -123,8 +154,12 @@
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
                                     </div>
-                                    <app-menu [toggle]="'Menu'" [icon]="menuIcon"
-                                              [actions]="getExampleActions(validationRowValue)"></app-menu>
+                                    <app-examplemenu
+                                            [onAddExample]="getExampleActions(validationRowValue)[0].onClick"
+                                            [onDeleteExample]="getExampleActions(validationRowValue)[1].onClick"
+                                            [onNoExample]="getExampleActions(validationRowValue)[2].onClick"
+                                    ></app-examplemenu>
+
                                 </div>
                                 <div *ngIf="i === 9 && hasMultipleExamples(validationRowValue.answers[0].featurePrecondition.id)"
                                      class="prioritization-checkbox max-h-250">

@@ -209,6 +209,21 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   z-index: 1;
 }
 
+::ng-deep .mat-mdc-menu-panel.custom-info-menu {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  min-width: auto !important;
+}
+
+::ng-deep .mat-mdc-menu-panel.custom-info-menu .mat-mdc-menu-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  list-style: none;
+  display: block !important;
+}
+
 .textarea-container {
   position: relative;
 }
@@ -478,12 +493,12 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 
 .conclusion-warning-box .close-btn {
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 2px;
+  top: 3px;
   justify-content: center;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   color: #856404;
   font-weight: bolder;
@@ -509,5 +524,70 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   background-color: var(--dark-green);
   color: var(--beige);
   padding: 1rem;
+  white-space: pre-line;
 }
 
+.flat-icon-button {
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  min-width: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+.flat-icon-button {
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  min-width: unset;
+  min-height: unset;
+  background: none;
+  border: none;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.custom-info-menu.mat-mdc-menu-panel {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  margin-top: 4px;
+  min-width: 0 !important;
+}
+
+.custom-info-menu .mat-mdc-menu-content {
+  padding: 0 !important;
+  background: transparent;
+}
+
+.info-tooltip-content {
+  background-color: var(--dark-green);
+  color: var(--beige);
+  padding: 1rem;
+  white-space: pre-line;
+  max-width: 250px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}*/
+
+.tooltip-below {
+  white-space: pre-line;
+  max-width: 250px;
+  margin-top: 4px;
+}
+
+.mat-tooltip-panel {
+  padding: 0 !important;
+}

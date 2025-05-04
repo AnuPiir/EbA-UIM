@@ -45,6 +45,9 @@ import {ScrollingModule} from "@angular/cdk/scrolling";
 import { PreferenceService } from './services/preference.service';
 import {firstValueFrom} from "rxjs";
 import {TruncatePipe} from "./utils/truncate.pipe";
+import { ExamplemenuComponent } from './validation/menus/examplemenu/examplemenu.component';
+import { FeaturemenuComponent } from './validation/menus/featuremenu/featuremenu.component';
+import { PreconditionmenuComponent } from './validation/menus/preconditionmenu/preconditionmenu.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -101,6 +104,9 @@ export function initAppFactory(
     NoSituationModalComponent,
     NotificationComponent,
     TruncatePipe,
+    ExamplemenuComponent,
+    FeaturemenuComponent,
+    PreconditionmenuComponent,
   ],
   imports: [
     BrowserModule,
