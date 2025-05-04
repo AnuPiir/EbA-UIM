@@ -1,7 +1,11 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
+<div class="notification-overlay" *ngIf="showNotification">
+    <app-notification [title]="notificationTitle" [message]="notificationMessage" [show]="showNotification" (close)="closeNotification()" tabindex="-1"> </app-notification>
+</div>
+
 <div *ngIf="!loading" class="table-wrapper">
 
-    <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000">
+    <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000" #tableViewport>
         <table>
             <thead>
                 <tr>

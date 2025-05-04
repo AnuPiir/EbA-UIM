@@ -295,7 +295,8 @@
     "default": "Kategooria puudub"
   },
   "prioritizationNotice": {
-    "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅."
+    "message": "Selle eeltingimuse alla on lisatud mitu situatsiooni. Neid on võimalik prioritiseerida, kasutades selleks märkeruutu ✅.",
+    "title": "Prioritiseerimise võimalus"
   },
   "conclusion": {
     "changedNotice": "Eelnevat vastust on muudetud. Vajadusel muutke ka tegevuskava."
@@ -308,6 +309,16 @@
   },
   "noExampleNotification": {
     "message": "Näide on märgitud kui 'Situatsiooni ei ole'"
+  },
+  "confirmModal": {
+    "deleteRowTitle": "Kustuta rida",
+    "deleteRowMessage": "Kas olete kindel, et soovite selle rea kustutada?",
+    "deleteExampleTitle": "Kustuta situatsioon",
+    "deleteExampleMessage": "Kas olete kindel, et soovite selle situatsiooni kustutada?",
+    "deleteFeatureTitle": "Kustuta funktsionaalsus",
+    "deleteFeatureMessage": "Kas olete kindel, et soovite selle funktsionaalsuse kustutada?",
+    "deletePreconditionTitle": "Kustuta eeltingimus",
+    "deletePreconditionMessage": "Kas olete kindel, et soovite selle eeltingimuse kustutada?"
   },
   "paginationButton": {
     "previous": "<",

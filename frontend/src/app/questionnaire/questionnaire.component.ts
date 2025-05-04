@@ -61,12 +61,31 @@ export class QuestionnaireComponent implements OnInit {
 
     async getQuestionnaires() {
         this.loading = true;
-        this.questionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires())
-        console.log(this.questionnaires)
-        this.sortQuestionnaires();
-        this.updatePagination()
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.getQuestionnairesWithRetry().then(() => {
+            this.sortQuestionnaires();
+            this.updatePagination()
+            this.loading = false;
+            this.cdr.detectChanges();
+        })
+    }
+
+    sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async getQuestionnairesWithRetry() {
+        while (true) {
+            try {
+                const questionnaires = await firstValueFrom(this.questionnaireService.getQuestionnaires());
+                if (questionnaires) {
+                    this.questionnaires = questionnaires;
+                    break;
+                }
+            } catch (error) {
+                console.warn("Failed to fetch questionnaires. Retrying in 3 seconds...", error);
+            }
+            await this.sleep(3000);
+        }
     }
 
     async addNewQuestionnaire(questionnaireName: string) {
