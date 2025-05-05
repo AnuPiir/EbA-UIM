@@ -27,7 +27,7 @@ import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-mod
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
-
+import {ConfirmActionModalComponent} from "../questionnaire/modal/confirm-action-modal/confirm-action-modal.component";
 
 @Component({
   selector: 'app-validation',
@@ -58,11 +58,15 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   conclusionChangedMap: Record<number, boolean> = {};
   hasWrittenConclusionMap: Record<number, boolean> = {};
   conclusionValidationId: number | null = null;
-  ctrlRecentlyPressed = false;
+  showNotification: boolean = false;
+  notificationTitle: string = '';
+  notificationMessage: string = '';
+  private notifiedPreconditionIds: Set<number> = new Set<number>();ctrlRecentlyPressed = false;
   ctrlPressTimeout: any = null;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
+  @ViewChild('notificationElement') notificationElement!: ElementRef;
   @ViewChild(MatMenuTrigger) infoMenuTrigger!: MatMenuTrigger;
   @ViewChild('infoIcon', { read: ElementRef }) infoIcon!: ElementRef<HTMLElement>;
   @ViewChild('status') statusEl!: ElementRef<HTMLElement>;
@@ -447,6 +451,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.validationRowValues = this.validationRowValues.sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
     this.mapFeatureRowSpans();
+
+    const exampleAnswer = validationRow.find(a => a.type === ValidationType.EXAMPLE);
+    if (exampleAnswer) {
+      const preconditionId = exampleAnswer.featurePrecondition.id;
+      const exampleRows = this.validationRowValues.filter(row =>
+          row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
+      );
+
+      if (exampleRows.length === 2 && !this.notifiedPreconditionIds.has(preconditionId)) {
+        this.notificationTitle = 'prioritizationNotice.title';
+        this.notificationMessage = 'prioritizationNotice.message';
+        this.showNotificationAndFocus();
+        this.notifiedPreconditionIds.add(preconditionId);
+      }
+    }
 
     // Update precondition related answers
     this.updateRelatedValidationAnswers(<Validation>this.validations.find(v => v.type === ValidationType.FEATURE_PRECONDITION), {answers: validationRow, rowId: maxRowId + 1});
@@ -882,23 +901,39 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return hasMatch;
   }
 
-  deleteRow(rowId: number) {
-    const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
-    if (!rowToDelete) return;
-    const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
-    if (this.prioritizedRows[preconditionId]) {
-      this.prioritizedRows[preconditionId].delete(String(rowId));
-      if (this.prioritizedRows[preconditionId].size === 0) {
-        delete this.prioritizedRows[preconditionId];
-      }
-    }
+  deleteRow(rowId: number, modalTexts?: { title: string, message: string }) {
+    const initialState = {
+      title: modalTexts?.title || this.translateService.instant('confirmModal.deleteRowTitle'),
+      message: modalTexts?.message || this.translateService.instant('confirmModal.deleteRowMessage')
+    };
 
-    this.validationService.deleteValidationAnswersByQuestionnaireIdAndRowId(this.questionnaireId, rowId).subscribe(
-        next => {
-          this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
-          this.reloadComponent();
+    const modalRef = this.modalService.show(ConfirmActionModalComponent, {
+      class: 'modal-box modal-md',
+      initialState
+    });
+
+    if (modalRef && modalRef.content) {
+      modalRef.content.onClose = (confirmed: boolean) => {
+        if (confirmed) {
+          const rowToDelete = this.validationRowValues.find(vrv => vrv.rowId === rowId);
+          if (!rowToDelete) return;
+          const preconditionId = rowToDelete.answers[0].featurePrecondition.id;
+          if (this.prioritizedRows[preconditionId]) {
+            this.prioritizedRows[preconditionId].delete(String(rowId));
+            if (this.prioritizedRows[preconditionId].size === 0) {
+              delete this.prioritizedRows[preconditionId];
+            }
+          }
+
+          this.validationService.deleteValidationAnswersByQuestionnaireIdAndRowId(this.questionnaireId, rowId).subscribe(
+              next => {
+                this.validationRowValues = this.validationRowValues.filter(vrv => vrv.rowId !== rowId);
+                this.reloadComponent();
+              }
+          );
         }
-    );
+      };
+    }
   }
 
   getTranslation(value: any): string {
@@ -1170,17 +1205,56 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           );
         }
       },
-      {name: "menu.deleteExample", icon: 'delete', onClick: () => this.deleteRow(validationRowValue.rowId)},
-      {name: "menu.noExample", icon: 'cancel', onClick: () => this.setNoExampleAnswer(validationRowValue)}
+      {
+        name: "menu.deleteExample", icon: 'delete', onClick: () =>
+          this.deleteRow(validationRowValue.rowId, {
+            title: this.translateService.instant('confirmModal.deleteExampleTitle'),
+            message: this.translateService.instant('confirmModal.deleteExampleMessage')
+          }),
+        },
+      {
+        name: "menu.noExample", icon: 'cancel', onClick: () => this.setNoExampleAnswer(validationRowValue)}
     ];
   }
 
   deleteFeature(id: number) {
-    this.featureService.delete(id).subscribe(next => this.reloadComponent());
+    const initialState = {
+      title: this.translateService.instant('confirmModal.deleteFeatureTitle'),
+      message: this.translateService.instant('confirmModal.deleteFeatureMessage')
+    };
+
+    const modalRef = this.modalService.show(ConfirmActionModalComponent, {
+      class: 'modal-box modal-md',
+      initialState
+    });
+
+    if (modalRef && modalRef.content) {
+      modalRef.content.onClose = (confirmed: boolean) => {
+        if (confirmed) {
+          this.featureService.delete(id).subscribe(next => this.reloadComponent());
+        }
+      };
+    }
   }
 
   deleteFeaturePreCondition(id: number) {
-    this.featurePreconditionService.delete(id).subscribe(next => this.reloadComponent());
+    const initialState = {
+      title: this.translateService.instant('confirmModal.deletePreconditionTitle'),
+      message: this.translateService.instant('confirmModal.deletePreconditionMessage')
+    };
+
+    const modalRef = this.modalService.show(ConfirmActionModalComponent, {
+      class: 'modal-box modal-md',
+      initialState
+    });
+
+    if (modalRef && modalRef.content) {
+      modalRef.content.onClose = (confirmed: boolean) => {
+        if (confirmed) {
+          this.featurePreconditionService.delete(id).subscribe(next => this.reloadComponent());
+        }
+      };
+    }
   }
 
   reloadComponent() {
@@ -1268,10 +1342,24 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   prioritizedRows: { [preconditionId: string]: Set<string> } = {};
 
   isPrioritized(validationRowValue: ValidationRow): boolean {
+    const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+
     const preconditionAnswer = validationRowValue.answers.find(a => a.type === 'FEATURE_PRECONDITION');
     return preconditionAnswer ? preconditionAnswer.prioritized === true : false;
   }
 
+  showNotificationAndFocus() {
+    this.showNotification = true;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      this.notificationElement?.nativeElement?.focus();
+    }, 0);
+  }
+
+  closeNotification(): void {
+    this.showNotification = false;
+    document.body.style.overflow = '';
+  }
 
   hasMultipleExamples(preconditionId: number): boolean {
     const rowsWithSamePrecondition = this.validationRowValues.filter(row =>

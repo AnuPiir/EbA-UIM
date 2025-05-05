@@ -5,14 +5,16 @@ module.exports = {
   packagerConfig: {
     asar: true,
     extraResource: ['./jars', './jre'],
+    icon: './icons/eba.ico',
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        authors: "EBAM team",
-        description: "EBAM tool",
+        authors: "EbA-UIM team",
+        description: "EbA-UIM tool",
+        setupIcon: './icons/eba.ico',
       },
     },
     {
