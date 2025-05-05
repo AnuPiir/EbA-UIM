@@ -10,6 +10,8 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 export class BackToTopComponent implements AfterViewInit {
   @Input() viewport!: CdkVirtualScrollViewport;
   showButton = false;
+  ctrlPressTimeout: any = null;
+  ctrlPressed = false;
 
   @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
 
@@ -38,14 +40,14 @@ export class BackToTopComponent implements AfterViewInit {
 
   scrollToTop(): void {
     if (this.viewport) {
-      this.viewport.scrollToIndex(0, 'smooth');
+      this.viewport.scrollToIndex(0);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0 });
     }
-
     const focusTarget = document.querySelector('a, button, [tabindex="0"]') as HTMLElement;
     focusTarget?.focus();
   }
+
 
   handleKeyPress(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -56,10 +58,22 @@ export class BackToTopComponent implements AfterViewInit {
 
   @HostListener('window:keydown', ['$event'])
   onKeyPress(event: KeyboardEvent) {
-    if (event.ctrlKey && event.key === 'ArrowUp') {
+    if (event.key === 'Control') {
+      this.ctrlPressed = true;
+      clearTimeout(this.ctrlPressTimeout);
+      this.ctrlPressTimeout = setTimeout(() => {
+        this.ctrlPressed = false;
+      }, 3000);
+    }
+
+    if (event.key === 'ArrowUp' && this.ctrlPressed) {
       event.preventDefault();
       this.scrollToTop();
+      this.ctrlPressed = false;
+      clearTimeout(this.ctrlPressTimeout);
     }
   }
+
+
 
 }

@@ -58,6 +58,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   conclusionChangedMap: Record<number, boolean> = {};
   hasWrittenConclusionMap: Record<number, boolean> = {};
   conclusionValidationId: number | null = null;
+  ctrlRecentlyPressed = false;
+  ctrlPressTimeout: any = null;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
@@ -1077,6 +1079,24 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  @HostListener('window:keydown', ['$event'])
+  handleCtrlCombinations(event: KeyboardEvent) {
+    const key = event.key.toLowerCase();
+    if (key === 'control') {
+      this.ctrlRecentlyPressed = true;
+      clearTimeout(this.ctrlPressTimeout);
+      this.ctrlPressTimeout = setTimeout(() => {
+        this.ctrlRecentlyPressed = false;
+      }, 3000);
+    }
+    if (key === 'h' && (event.ctrlKey || this.ctrlRecentlyPressed)) {
+      event.preventDefault();
+      this.ctrlRecentlyPressed = false;
+      clearTimeout(this.ctrlPressTimeout);
+      this.toggleColumnVisibility(13);
+    }
+  }
+
   toggleColumnVisibility(idx: number) {
     if (this.hiddenColumns.has(idx)) {
       this.hiddenColumns.delete(idx);
@@ -1317,4 +1337,5 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       });
     }
   }
+
 }

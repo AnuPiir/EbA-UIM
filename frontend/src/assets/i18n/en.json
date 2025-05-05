@@ -283,8 +283,8 @@
     "ariaLabel": "Button to toggle visibility of project tabs. Press Enter, Space, or use Ctrl + Up Arrow to activate."
   },
   "hideColumn": {
-    "hide": "Hide column (Alt+H)",
-    "show": "Show column (Alt+H)"
+    "hide": "Hide column (Ctrl+H)",
+    "show": "Show column (Ctrl+H)"
   },
   "colorPicker": {
     "change": "Categorise action plan",
