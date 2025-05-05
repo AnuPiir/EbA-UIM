@@ -13,23 +13,34 @@ export class BackToTopComponent implements AfterViewInit {
 
   @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
 
-
   ngAfterViewInit(): void {
     if (this.viewport) {
       this.viewport.elementScrolled().subscribe(() => {
         const offset = this.viewport.measureScrollOffset('top');
-        const wasVisible = this.showButton;
-        this.showButton = offset > 200;
-        if (!wasVisible && this.showButton && this.liveAnnouncer) {
-          this.liveAnnouncer.nativeElement.textContent = 'Back to top button is now available';
-        }
+        this.updateButtonVisibility(offset);
       });
+    } else {
+      window.addEventListener('scroll', () => {
+        const offset = window.scrollY || document.documentElement.scrollTop;
+        this.updateButtonVisibility(offset);
+      });
+    }
+  }
+
+  private updateButtonVisibility(offset: number) {
+    const wasVisible = this.showButton;
+    this.showButton = offset > 200;
+    if (!wasVisible && this.showButton && this.liveAnnouncer) {
+      this.liveAnnouncer.nativeElement.textContent =
+          'Back to top button is now available'; //muuta
     }
   }
 
   scrollToTop(): void {
     if (this.viewport) {
       this.viewport.scrollToIndex(0, 'smooth');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const focusTarget = document.querySelector('a, button, [tabindex="0"]') as HTMLElement;
