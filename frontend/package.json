@@ -2,8 +2,8 @@
   "name": "EbA-UIM",
   "productName": "Experience-based Analysis",
   "author": "EbA-UIM team",
-  "description": "This project was generated with Electron and Angular CLI version 16.2.10.",
-  "version": "1.1.0",
+  "description": "EbA-UIM desktop application for Windows, Mac, and Linux",
+  "version": "1.2.0",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",

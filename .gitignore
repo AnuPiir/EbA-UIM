@@ -46,3 +46,4 @@ EbA installer.exe
 /frontend/dist/
 /frontend/out/
 /frontend/jre/
+/frontend/release-builds/
