@@ -13,7 +13,7 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {
         authors: "EbA-UIM team",
-        description: "EbA-UIM tool",
+        description: "Experience-based Analysis",
         setupIcon: './icons/eba.ico',
       },
     },

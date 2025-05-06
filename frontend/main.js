@@ -1,7 +1,7 @@
 if (require('electron-squirrel-startup')) return;
 
 const os = require('os');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, globalShortcut, Menu} = require('electron');
 const path = require('path');
 const url = require('url');
 const { spawn } = require("child_process");
@@ -10,7 +10,6 @@ const log = require('electron-log');
 
 const logDir = path.join(app.getPath('documents'), 'ebam');
 const logFilePath = path.join(logDir, 'electron-app-log.txt');
-
 if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
 }
@@ -77,12 +76,15 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 600,
+        title: 'Experience-based Analysis',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
             webSecurity: false
         },
     });
+
+    Menu.setApplicationMenu(null);
 
     mainWindow.maximize();
 
@@ -96,6 +98,26 @@ function createWindow() {
 
     mainWindow.on('closed', function () {
         mainWindow = null;
+    });
+
+    globalShortcut.register('CommandOrControl+R', function() {
+        mainWindow.loadURL(
+            url.format({
+                pathname: path.join(__dirname, 'dist/frontend/index.html'),
+                protocol: 'file:',
+                slashes: true,
+            })
+        );
+    })
+
+    globalShortcut.register('CommandOrControl+=', () => {
+        let zoomLevel = mainWindow.webContents.getZoomLevel();
+        mainWindow.webContents.setZoomLevel(zoomLevel + 1);
+    });
+
+    globalShortcut.register('CommandOrControl+-', () => {
+        let zoomLevel = mainWindow.webContents.getZoomLevel();
+        mainWindow.webContents.setZoomLevel(zoomLevel - 1);
     });
 
     process.env.API_URL = 'http://localhost:8080/api';
