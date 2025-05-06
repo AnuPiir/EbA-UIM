@@ -60,6 +60,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   notificationTitle: string = '';
   notificationMessage: string = '';
   private notifiedPreconditionIds: Set<number> = new Set<number>();
+  shouldShowPrioritizationColumn: boolean = false;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
@@ -216,6 +217,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           }
 
           this.mapFeatureRowSpans();
+          this.updateShouldShowPrioritizationColumn();
 
         }
 
@@ -443,6 +445,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     this.validationRowValues = this.validationRowValues.sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
 
     this.mapFeatureRowSpans();
+    this.updateShouldShowPrioritizationColumn();
 
     const exampleAnswer = validationRow.find(a => a.type === ValidationType.EXAMPLE);
     if (exampleAnswer) {
@@ -1316,6 +1319,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     setTimeout(() => {
       this.notificationElement?.nativeElement?.focus();
     }, 0);
+  }
+
+  private updateShouldShowPrioritizationColumn(): void {
+    const hasPrioritizationCase = this.validationRowValues.some(row =>
+        row.answers.some(answer => answer.type === 'EXAMPLE') &&
+        this.hasMultipleExamples(row.answers[0].featurePrecondition.id)
+    );
+    const isCurrentlyHidden = this.hiddenColumns.has(9);
+
+    if (hasPrioritizationCase && isCurrentlyHidden) {
+      this.toggleColumnVisibility(9);
+    }
+    if (!hasPrioritizationCase && !isCurrentlyHidden) {
+      this.toggleColumnVisibility(9);
+    }
   }
 
   closeNotification(): void {

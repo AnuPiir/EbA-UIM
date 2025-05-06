@@ -15,6 +15,7 @@
                 <img src="{{ 'method.figures.1' | translate }}">
                 <span class="figure-text" [innerHTML]="'method.figureText.1' | translate | sanitizeHtml"></span>
               </div>
+              <p [innerHTML]="'method.intro.text2' | translate | sanitizeHtml"></p>
           </div>
         </div>
         </mat-tab>
@@ -90,6 +91,7 @@
                 <img src="{{ 'method.figures.5' | translate }}">
                 <span class="figure-text" [innerHTML]="'method.figureText.5' | translate | sanitizeHtml"></span>
               </div>
+              <p [innerHTML]="'method.step4.text0' | translate | sanitizeHtml"></p>
               <h3 [innerHTML]="'method.step4.subheading1' | translate | sanitizeHtml"></h3>
               <p [innerHTML]="'method.step4.text1' | translate | sanitizeHtml"></p>
               <h3 [innerHTML]="'method.step4.subheading2' | translate | sanitizeHtml"></h3>
@@ -131,10 +133,6 @@
                   <p [innerHTML]="'method.step6.example' | translate | sanitizeHtml"></p>
                 </div>
               </div>
-              <div class="figure">
-                <img src="{{ 'method.figures.7' | translate }}">
-                <span class="figure-text" [innerHTML]="'method.figureText.7' | translate | sanitizeHtml"></span>
-              </div>
             </div>
           </div>
         </mat-tab>
@@ -143,6 +141,11 @@
             <div class="content">
               <h2 [innerHTML]="'method.step7.header' | translate | sanitizeHtml"></h2>
               <p [innerHTML]="'method.step7.text' | translate | sanitizeHtml"></p>
+              <div class="figure">
+                 <img src="{{ 'method.figures.7' | translate }}">
+                 <span class="figure-text" [innerHTML]="'method.figureText.7' | translate | sanitizeHtml"></span>
+              </div>
+              <p [innerHTML]="'method.step7.text2' | translate | sanitizeHtml"></p>
               <ul>
                 <li class="green plan" [innerHTML]="'method.step7.plan1' | translate | sanitizeHtml"></li>
                 <li class="orange plan" [innerHTML]="'method.step7.plan2' | translate | sanitizeHtml"></li>
@@ -151,15 +154,15 @@
                 <li class="blue plan" [innerHTML]="'method.step7.plan5' | translate | sanitizeHtml"></li>
                 <li [innerHTML]="'method.step7.plan6' | translate | sanitizeHtml"></li>
               </ul>
+              <div class="example">
+                 <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
+                 <div class="example-text">
+                     <p [innerHTML]="'method.step7.example' | translate | sanitizeHtml"></p>
+                 </div>
+              </div>
               <div class="figure">
                 <img src="{{ 'method.figures.8' | translate }}">
                 <span class="figure-text" [innerHTML]="'method.figureText.8' | translate | sanitizeHtml"></span>
-              </div>
-              <div class="example">
-                <span class="example-label" [innerHTML]="'method.general.example' | translate | sanitizeHtml"></span>
-                <div class="example-text">
-                  <p [innerHTML]="'method.step7.example' | translate | sanitizeHtml"></p>
-                </div>
               </div>
             </div>
           </div>
@@ -169,6 +172,7 @@
             <div class="content">
               <h2 [innerHTML]="'method.nb.header' | translate | sanitizeHtml"></h2>
               <p [innerHTML]="'method.nb.text' | translate | sanitizeHtml"></p>
+              <p [innerHTML]="'method.nb.text2' | translate | sanitizeHtml"></p>
             </div>
           </div>
         </mat-tab>
