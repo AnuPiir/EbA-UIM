@@ -2,7 +2,7 @@
 <div class="projects-wrapper">
     <div class="add-project" (click)="handleOpenAddNewQuestionnaire()" [class.toggled]="isToggled">
         <div class="add-project-header" (click)="handleCloseAddNewQuestionnaire($event)">
-            <h2>{{'addGroup.title' | translate}}</h2>
+            <h2>{{'addProject.title' | translate}}</h2>
             <div class="button-icon-container">
                 <span *ngIf="!isToggled" class="material-symbols-outlined icon">expand_more</span>
                 <span *ngIf="isToggled" class="material-symbols-outlined icon">expand_less</span>
