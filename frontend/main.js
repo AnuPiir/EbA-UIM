@@ -36,8 +36,8 @@ function createWindow() {
             const isWindows = platform === 'win32';
 
             backendPath = isMac
-                ? path.join(process.resourcesPath, 'app', 'jars', 'backend-1.2.0.jar')
-                : path.join(process.resourcesPath, 'jars', 'backend-1.2.0.jar');
+                ? path.join(process.resourcesPath, 'app', 'jars', 'backend-1.3.0.jar')
+                : path.join(process.resourcesPath, 'jars', 'backend-1.3.0.jar');
 
             javaPath = isMac
                 ? path.join(process.resourcesPath, 'app', 'jre', 'temurin-21.jre', 'Contents', 'Home', 'bin', 'java')
