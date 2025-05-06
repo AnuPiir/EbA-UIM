@@ -27,8 +27,8 @@ function createWindow() {
 
     if (!developerMode) {
         const backendPath = app.isPackaged
-            ? path.join(process.resourcesPath, "jars", "backend-1.2.0.jar")
-            : path.join(__dirname, "jars", "backend-1.2.0.jar");
+            ? path.join(process.resourcesPath, "jars", "backend-1.3.0.jar")
+            : path.join(__dirname, "jars", "backend-1.3.0.jar");
 
         const javaPath = app.isPackaged
             ? path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe')
@@ -60,6 +60,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 600,
+        title: 'Experience-based Analysis',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -69,7 +70,6 @@ function createWindow() {
 
     Menu.setApplicationMenu(null);
 
-    mainWindow.setTitle("Experience-based Analysis");
     mainWindow.maximize();
 
     mainWindow.loadURL(
