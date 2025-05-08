@@ -8,7 +8,7 @@ const { spawn } = require("child_process");
 const fs = require('fs');
 const log = require('electron-log');
 
-const logDir = path.join(app.getPath('documents'), 'ebam');
+const logDir = path.join(app.getPath('documents'), 'EbA-UIM');
 const logFilePath = path.join(logDir, 'electron-app-log.txt');
 if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });

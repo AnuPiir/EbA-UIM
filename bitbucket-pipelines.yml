@@ -8,7 +8,7 @@ definitions:
 
 pipelines:
   branches:
-    master:
+    ebam-gerdo:
       - step:
           name: Build and Package App
           script:
@@ -17,6 +17,20 @@ pipelines:
             - cd backend
             - mvn test
             - mvn clean package
+            - cd ../frontend
+            - # Install frontend dependencies
+            - npm install
+            - mkdir -p jars
+            - cp ../backend/target/*.jar jars/
+            - npm run build
+            - npm run package-linux-debian-x64
+            - npm run debian-installer-x64
+            - cd release-builds/linux-deb
+            - pipe: atlassian/bitbucket-upload-file:0.3.2
+            - variables:
+                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                FILENAME: 'eba-uim_1.3.0_x64.deb'
           artifacts:
             - frontend/release-builds/**
     
