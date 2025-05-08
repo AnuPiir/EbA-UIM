@@ -31,7 +31,7 @@ pipelines:
 
             # Package for All
             - npm run package-linux-debian-x64
-            # Zip the package for easier download
+            - apt-get install fakeroot
             - npm run debian-installer-x64
             - cd release-builds/linux-deb
 
