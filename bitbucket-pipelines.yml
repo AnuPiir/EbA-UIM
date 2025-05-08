@@ -34,6 +34,7 @@ pipelines:
             # Package for All
             - npm run package-linux-debian-x64
             - apt-get install -y fakeroot
+            - umask 0022
             - npm run debian-installer-x64
             - cd release-builds/linux-deb
 
