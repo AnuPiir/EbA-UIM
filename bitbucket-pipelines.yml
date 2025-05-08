@@ -1,11 +1,5 @@
 image: node:18
 
-definitions:
-  caches:
-    npm: ~/.npm
-    maven: ~/.m2
-    node-modules: node_modules
-
 pipelines:
   branches:
     ebam-gerdo:
@@ -31,7 +25,7 @@ pipelines:
 
             # Package for All
             - npm run package-linux-debian-x64
-            - apt-get install fakeroot
+            - apt-get install -y fakeroot
             - npm run debian-installer-x64
             - cd release-builds/linux-deb
 
