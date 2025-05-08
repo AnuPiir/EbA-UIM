@@ -18,19 +18,29 @@ pipelines:
             - mvn test
             - mvn clean package
             - cd ../frontend
-            - # Install frontend dependencies
+
+            # Install frontend dependencies
             - npm install
+
+            # Create jars directory and copy backend JAR
             - mkdir -p jars
             - cp ../backend/target/*.jar jars/
+
+            # Build the Angular app
             - npm run build
+
+            # Package for All
             - npm run package-linux-debian-x64
+            # Zip the package for easier download
             - npm run debian-installer-x64
             - cd release-builds/linux-deb
+
+            # Use Bitbucket's API to upload the zip files
             - pipe: atlassian/bitbucket-upload-file:0.3.2
-            - variables:
+              variables:
                 BITBUCKET_USERNAME: $BITBUCKET_USERNAME
                 BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
                 FILENAME: 'eba-uim_1.3.0_x64.deb'
+
           artifacts:
             - frontend/release-builds/**
-    
