@@ -1,20 +1,28 @@
 image: node:18
 
+definitions:
+  caches:
+    npm: ~/.npm
+    maven: ~/.m2
+
 pipelines:
   branches:
     ebam-gerdo:
       - step:
           name: Build and Package App
+          caches:
+            - npm
+            - maven
           script:
             # Build backend with Maven
             - apt-get update && apt-get install -y maven
             - cd backend
             - mvn test
-            - mvn clean package
+            - mvn clean package -DskipTests
             - cd ../frontend
 
-            # Install frontend dependencies
-            - npm install
+            # Install frontend dependencies using cache
+            - npm ci
 
             # Create jars directory and copy backend JAR
             - mkdir -p jars
@@ -29,7 +37,7 @@ pipelines:
             - npm run debian-installer-x64
             - cd release-builds/linux-deb
 
-            # Use Bitbucket's API to upload the zip files
+            # Use Bitbucket's API to upload the installer
             - pipe: atlassian/bitbucket-upload-file:0.3.2
               variables:
                 BITBUCKET_USERNAME: $BITBUCKET_USERNAME
