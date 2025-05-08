@@ -37,13 +37,15 @@ function createWindow() {
 
             backendPath = isMac
                 ? path.join(process.resourcesPath, 'app', 'jars', 'backend-1.3.0.jar')
-                : path.join(process.resourcesPath, 'jars', 'backend-1.3.0.jar');
+                : isWindows
+                    ? path.join(process.resourcesPath, 'jars', 'backend-1.3.0.jar')
+                    : path.join(process.resourcesPath, 'app', 'jars', 'backend-1.3.0.jar');
 
             javaPath = isMac
                 ? path.join(process.resourcesPath, 'app', 'jre', 'temurin-21.jre', 'Contents', 'Home', 'bin', 'java')
                 : isWindows
                     ? path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java.exe')
-                    : path.join(process.resourcesPath, 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java'); // Linux case, no .exe
+                    : path.join(process.resourcesPath, 'app', 'jre', 'jdk-21.0.7+6-jre', 'bin', 'java'); // Linux case, no .exe
         } else {
             backendPath = path.join(__dirname, 'jars', 'backend-1.2.0.jar');
             javaPath = 'java';
