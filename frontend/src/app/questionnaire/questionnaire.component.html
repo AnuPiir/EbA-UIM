@@ -1,20 +1,27 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div class="projects-wrapper">
-    <div class="add-project" (click)="handleOpenAddNewQuestionnaire()" [class.toggled]="isToggled">
-        <div class="add-project-header" (click)="handleCloseAddNewQuestionnaire($event)">
+    <div class="add-project" (click)="handleOpenAddNewQuestionnaire()" [class.toggled]="isToggled"
+         (keydown.enter)="handleOpenAddNewQuestionnaire()"
+         (keydown.space)="handleOpenAddNewQuestionnaire()"
+         tabindex="0" role="button" [attr.aria-expanded]="isToggled">
+        <div class="add-project-header" (click)="handleCloseAddNewQuestionnaire($event)"
+             (keydown.enter)="handleCloseAddNewQuestionnaire($event)"
+             (keydown.space)="handleCloseAddNewQuestionnaire($event)"
+             tabindex="0" role="button" [attr.aria-expanded]="isToggled">
             <h2>{{'addProject.title' | translate}}</h2>
             <div class="button-icon-container">
                 <span *ngIf="!isToggled" class="material-symbols-outlined icon">expand_more</span>
                 <span *ngIf="isToggled" class="material-symbols-outlined icon">expand_less</span>
             </div>
         </div>
-        <div *ngIf=isToggled class="add-project-row">
+        <div *ngIf=isToggled class="add-project-row" (click)="$event.stopPropagation()">
             <div class="add-project-input">
                 <h3>{{ 'addProject.input' | translate }}</h3>
                 <input placeholder="{{'addProject.placeholder' | translate}}" id="questionnaireName" type="text"
                        [(ngModel)]="questionnaireName"/>
             </div>
             <div class="add-project-buttons">
+
                 <button (click)="toggleAddNewQuestionnaire()"
                         class="button cancel-button">{{ 'button.cancel' | translate }}
                 </button>
@@ -23,8 +30,9 @@
                 </button>
             </div>
         </div>
-        <div *ngIf="isToggled" class="add-project-row import-row">
+        <div *ngIf="isToggled" class="add-project-row import-row" (click)="$event.stopPropagation()">
             <div class="import-project-button">
+
                 <button (click)="importProject()" class="button blue upload-button">
                     <span class="material-symbols-outlined icon">upload</span>
                     {{ 'button.import' | translate }}
@@ -41,7 +49,12 @@
                     <div class="header-alignment-container">
                         <div class="invisible-project-name-spacer"></div>
                         <div class="invisible-button-spacer"></div>
-                        <div (click)="toggleSortOrder()" class="sort-button">
+                        <div (click)="toggleSortOrder()" class="sort-button"
+                             (keydown.enter)="toggleSortOrder()"
+                             (keydown.space)="toggleSortOrder()"
+                             tabindex="0"
+                             role="button"
+                             [attr.aria-pressed]="isNewestFirst">
                             {{ 'projectsTable.sortByLastModified' | translate }} {{ isNewestFirst ? '↓' : '↑' }}
                         </div>
                     </div>
@@ -51,8 +64,7 @@
             <tbody>
             <tr *ngFor="let questionnaire of getPaginatedQuestionnaires()" class="projects-table-row">
                 <td class="project-cell">
-                    <span
-                            [matTooltip]="questionnaire.name.length > 25 ? questionnaire.name : ''"
+                    <span [matTooltip]="questionnaire.name.length > 25 ? questionnaire.name : ''"
                             matTooltipPosition="above"
                             [matTooltipDisabled]="questionnaire.name.length <= 25"
                             class="project-name">
@@ -73,41 +85,34 @@
             </tbody>
         </table>
         <div class="pagination-controls" *ngIf="showPagination()">
-            <button
-                    (click)="prevPage()"
+            <button (click)="prevPage()" class="button pagination-button"
                     [disabled]="currentPage === 1"
-                    class="button pagination-button"
                     [attr.aria-label]="'paginationButton.previous' | translate">
-                <
+                        {{ 'paginationButton.previous' | translate }}
             </button>
 
             <div class="page-numbers">
                 <ng-container *ngFor="let page of getPageNumbers()">
-                    <button
-                            *ngIf="!page.isEllipsis"
-                            class="button page-number-button"
+                    <button *ngIf="!page.isEllipsis" class="button page-number-button"
                             [class.active]="page.value === currentPage"
                             (click)="goToPage(page.value)"
                             [attr.aria-current]="page.value === currentPage ? 'page' : null"
                             [attr.aria-label]="('pagination.page' | translate) + ' ' + page.value">
-                        {{ page.value }}
+                                {{ page.value }}
                     </button>
-                    <span *ngIf="page.isEllipsis"
-                          class="ellipsis"
-                          aria-hidden="true">
+                    <span *ngIf="page.isEllipsis" class="ellipsis" aria-hidden="true">
                             {{ page.value }}
                     </span>
                 </ng-container>
             </div>
-            <button
-                    (click)="nextPage()"
+            <button (click)="nextPage()" class="button pagination-button"
                     [disabled]="currentPage === totalPages"
-                    class="button pagination-button"
                     [attr.aria-label]="'paginationButton.next' | translate">
+                        {{ 'paginationButton.next' | translate }}
             </button>
             <span class="pagination-text">
-        {{ 'pagination.page' | translate }} {{ currentPage }} {{ 'pagination.of' | translate }} {{ totalPages }}
-    </span>
+                {{ 'pagination.page' | translate }} {{ currentPage }} {{ 'pagination.of' | translate }} {{ totalPages }}
+            </span>
         </div>
     </div>
 </div>

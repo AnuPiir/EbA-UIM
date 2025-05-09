@@ -1,8 +1,8 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
+<div aria-live="polite" class="visually-hidden" #columnStatus></div>
 <div class="notification-overlay" *ngIf="showNotification">
     <app-notification [title]="notificationTitle" [message]="notificationMessage" [show]="showNotification" (close)="closeNotification()" tabindex="-1"> </app-notification>
 </div>
-
 <div *ngIf="!loading" class="table-wrapper">
 
     <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000" #tableViewport>
@@ -27,15 +27,19 @@
 
                                     <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
 
-                                    <mat-icon *ngIf="validation.tooltipEt"
-                                              matTooltip="{{isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn}}"
-                                              matTooltipClass="tooltip"
-                                              class="material-symbols-outlined overflow-unset">info
-                                    </mat-icon>
+                                    <ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
+                                    <button mat-icon-button disableRipple
+                                            matTooltip="{{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}"
+                                            matTooltipClass="tooltip-below" matTooltipPosition="below" aria-label="Show info"
+                                            class="header-tooltip-button flat-icon-button" tabindex="0">
+                                        <mat-icon>info</mat-icon>
+                                    </button>
+                                    </ng-container>
+
                                 </div>
                         </ng-container>
                     </ng-container>
-                    <th *ngIf="shouldShowPrioritizationColumn" class="content-cell-sixteenth-child">
+                    <th class="content-cell-sixteenth-child">
                 </tr>
             </thead>
 
@@ -61,7 +65,7 @@
                                 [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '',
                                             i === 1 ? 'left-border-highlight' : '', i === 3 ? 'right-border-highlight' : '']"
                                 [ngStyle]="{'background-color': isRowDisabled(validationRowValue) && shouldGrayOut(validation)
-                                        ? '#e0e0e0' : getValidationRowAnswer(validation, validationRowValue)?.backgroundColor || '#F7F1E6'}">
+                                        ? '#e0e0e0' : getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'}">
 
                                 <div class="selection max-h-250" *ngIf="isValidationSelectable(validation)">
                                     <app-select
@@ -94,8 +98,10 @@
                                                     placeholder="ID">
                                           </textarea>
                                         </div>
-                                        <app-menu [toggle]="'Menu'" [icon]="menuIcon"
-                                                  [actions]="getFeatureActions(validationRowValue)"></app-menu>
+                                        <app-featuremenu
+                                                [onDeleteFeature]="getFeatureActions(validationRowValue)[0].onClick">
+                                        </app-featuremenu>
+
                                     </div>
                                     <div class="textarea-border w-100">
                                         <textarea [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
@@ -111,8 +117,11 @@
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
                                     </div>
-                                    <app-menu [toggle]="'Menu'" [icon]="menuIcon"
-                                              [actions]="getPreconditionActions(validationRowValue)"></app-menu>
+                                    <app-preconditionmenu
+                                            [onAddPrecondition]="getPreconditionActions(validationRowValue)[0].onClick"
+                                            [onDeletePrecondition]="getPreconditionActions(validationRowValue)[1].onClick">
+                                    </app-preconditionmenu>
+
                                 </div>
                                 <div *ngIf="isValidationExample(validation)" class="cell-with-menu max-h-250">
                                     <div class="textarea-border">
@@ -121,8 +130,12 @@
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
                                     </div>
-                                    <app-menu [toggle]="'Menu'" [icon]="menuIcon"
-                                              [actions]="getExampleActions(validationRowValue)"></app-menu>
+                                    <app-examplemenu
+                                            [onAddExample]="getExampleActions(validationRowValue)[0].onClick"
+                                            [onDeleteExample]="getExampleActions(validationRowValue)[1].onClick"
+                                            [onNoExample]="getExampleActions(validationRowValue)[2].onClick"
+                                    ></app-examplemenu>
+
                                 </div>
                                 <div *ngIf="i === 9 && hasMultipleExamples(validationRowValue.answers[0].featurePrecondition.id)"
                                      class="prioritization-checkbox max-h-250">
@@ -157,11 +170,14 @@
                                         <div *ngIf="showColorSelectionMap[validationRowValue.rowId]"
                                              class="textarea-color-selection-container with-close">
                                             <div class="color-options">
-                                                <div *ngFor="let color of colorOptions" class="textarea-color-option"
+                                                <button *ngFor="let color of colorOptions" class="textarea-color-option"
                                                      [style.background-color]="color.value"
                                                      (click)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))"
-                                                     [attr.title]="color.name | translate">
-                                                </div>
+                                                     (keydown.enter)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue))"
+                                                     (keydown.space)="onColorChange(color.value, getValidationRowAnswer(validation, validationRowValue)); $event.preventDefault()"
+                                                     [attr.aria-label]="color.name | translate"
+                                                     matTooltip="{{ color.name | translate }}">
+                                                </button>
                                             </div>
                                             <button (click)="toggleColorSelection(validationRowValue.rowId)"
                                                     class="toggle-button close-color-btn">
@@ -214,6 +230,7 @@
 
         </table>
     </cdk-virtual-scroll-viewport>
+    <app-back-to-top *ngIf="viewport" [viewport]="viewport"></app-back-to-top>
 </div>
 
 

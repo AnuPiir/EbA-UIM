@@ -1,7 +1,8 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
 <div *ngIf="!loading" class="page-body" [ngClass]="{'compressed-page-body': !showProjectsWrapper}">
-  <div class="modals" [ngClass]="{ 'content-hidden': !showProjectsWrapper }">
-      <!-- Hide/Show Button -->
+    <a id="skip-to-table-link" class="skip-link" href="#validation-table" (click)="focusValidationTable($event)">
+        {{ 'skipButton.skipToTable' | translate }} </a>
+    <div class="modals" [ngClass]="{ 'content-hidden': !showProjectsWrapper }">
       <div class="wrapper1">
       <div class="toggle-wrapper">
           <button
@@ -19,8 +20,15 @@
       </div>
       <div class="wrapper2">
       <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project" (click)="handleOpenAddNewGroup()" [class.toggled]="isToggledGroupAdding">
-          <div class="add-project-header" (click)="handleCloseAddNewGroup($event)">
+      <div class="add-project" (click)="handleOpenAddNewGroup()" [class.toggled]="isToggledGroupAdding"
+           (keydown.enter)="handleOpenAddNewGroup()"
+           (keydown.space)="handleOpenAddNewGroup()"
+           tabindex="0" role="button" [attr.aria-expanded]="isToggledGroupAdding">
+          <div class="add-project-header" (click)="handleCloseAddNewGroup($event)"
+               (keydown.enter)="handleCloseAddNewGroup($event)"
+               (keydown.space)="handleCloseAddNewGroup($event)"
+               tabindex="0" role="button"
+               [attr.aria-expanded]="isToggledGroupAdding">
               <h2>{{'addGroup.title' | translate}}</h2>
               <div class="button-icon-container">
                   <span *ngIf="!isToggledGroupAdding" class="material-symbols-outlined icon">expand_more</span>
@@ -52,8 +60,16 @@
       </div>
     </div>
     <div *ngIf="showProjectsWrapper" class="projects-wrapper">
-      <div class="add-project" (click)="handleOpenAddNewStakeholder()" [class.toggled]="isToggledStakeholderAdding">
-          <div class="add-project-header" (click)="handleCloseAddNewStakeholder($event)">
+      <div class="add-project" (click)="handleOpenAddNewStakeholder()" [class.toggled]="isToggledStakeholderAdding"
+           (keydown.enter)="handleOpenAddNewStakeholder()"
+           (keydown.space)="handleOpenAddNewStakeholder()"
+           tabindex="0" role="button"
+           [attr.aria-expanded]="isToggledStakeholderAdding">
+          <div class="add-project-header" (click)="handleCloseAddNewStakeholder($event)"
+               (keydown.enter)="handleCloseAddNewStakeholder($event)"
+               (keydown.space)="handleCloseAddNewStakeholder($event)"
+               tabindex="0" role="button"
+               [attr.aria-expanded]="isToggledStakeholderAdding">
               <h2>{{'addStakeholder.title' | translate}}</h2>
               <div class="button-icon-container">
                   <span *ngIf="!isToggledStakeholderAdding" class="material-symbols-outlined icon">expand_more</span>
@@ -87,53 +103,13 @@
   </div>
   </div>
 </div>
-  <!-- <div>
-      <mat-accordion>
-        <mat-expansion-panel #mep="matExpansionPanel">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Add new feature group (translate)
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <mat-form-field>
-            <mat-label>Group name (translate)</mat-label>
-            <input [(ngModel)]="featureGroupName" matInput placeholder="Enter group name (translate)">
-          </mat-form-field>
-          <button mat-raised-button (click)="toggleAddNewQuistionnaire()" color="secondary">Cancel (translate)</button>
-          <button mat-raised-button (click)="createNewFeatureGroup(featureGroupName);mep.toggle()" color="primary">Create (translate)</button>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-
-    <div>
-      <mat-accordion>
-        <mat-expansion-panel #mep="matExpansionPanel">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Add new stakeholder (translate) NOT IMPLEMENTED YET
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div>
-            <h2>Existing stakeholders (translate)</h2>
-            <p>Lorem ipsum</p>
-          </div>
-
-          <mat-form-field>
-            <mat-label>Stakeholder name (translate)</mat-label>
-            <input matInput placeholder="Enter stakeholder name (translate)">
-          </mat-form-field>
-          <button mat-raised-button (click)="toggleAddNewQuistionnaire()" color="secondary">Cancel (translate)</button>
-          <button mat-raised-button color="primary">Create (translate)</button>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-  </div> -->
   <div *ngIf="!tabsLoading">
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #featureGroupTabs>
       <mat-tab *ngFor="let featureGroup of featureGroups; index as i"  label="{{featureGroup.name}}" class="tabs">
-        <app-validation [featureGroup]="featureGroup" [stakeholders]="stakeholders" [tabIndex]="i"></app-validation>
+          <ng-container *ngIf="i === 0">
+              <div id="first-tab-focus-anchor" tabindex="-1" aria-label="Main content section"></div>
+          </ng-container>
+          <app-validation [featureGroup]="featureGroup" [stakeholders]="stakeholders" [tabIndex]="i"></app-validation>
       </mat-tab>
     </mat-tab-group>
   </div>

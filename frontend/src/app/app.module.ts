@@ -25,6 +25,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import { MenuComponent } from './menus/menu.component';
 import { SelectComponent } from './select/select.component';
 import { InfoComponent } from './info/info.component';
@@ -45,6 +46,9 @@ import { ConfirmActionModalComponent } from './questionnaire/modal/confirm-actio
 import { PreferenceService } from './services/preference.service';
 import {firstValueFrom} from "rxjs";
 import {TruncatePipe} from "./utils/truncate.pipe";
+import { ExamplemenuComponent } from './validation/menus/examplemenu/examplemenu.component';
+import { FeaturemenuComponent } from './validation/menus/featuremenu/featuremenu.component';
+import { PreconditionmenuComponent } from './validation/menus/preconditionmenu/preconditionmenu.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -102,6 +106,9 @@ export function initAppFactory(
     NotificationComponent,
     ConfirmActionModalComponent,
     TruncatePipe,
+    ExamplemenuComponent,
+    FeaturemenuComponent,
+    PreconditionmenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -119,6 +126,7 @@ export function initAppFactory(
     MatButtonModule,
     MatTabsModule,
     MatTooltipModule,
+    MatMenuModule,
     ModalModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

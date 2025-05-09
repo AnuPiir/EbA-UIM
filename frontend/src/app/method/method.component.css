@@ -91,7 +91,7 @@ img {
   border-color: var(--contrast-highlight);
 }
 
-:host ::ng-deep div[role='tab'] {
+:host ::ng-deep .mat-mdc-tab  {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,12 +107,12 @@ img {
   letter-spacing: normal;
 }
 
-:host ::ng-deep div[role='tab']:hover {
+:host ::ng-deep .mat-mdc-tab:hover {
   background-color: var(--highlight);
   color: var(--text-color);
 }
 
-:host ::ng-deep div[role='tab'].mdc-tab--active {
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active {
   background-color: var(--beige);
   color: var(--text-color);
   border-width: 0.25rem;
@@ -167,4 +167,27 @@ img {
   --mat-tab-header-inactive-hover-label-text-color: none;
   --mat-tab-header-active-focus-indicator-color: none;
   --mat-tab-header-active-hover-indicator-color: none;
+}
+
+:host ::ng-deep .mat-mdc-tab:focus-visible {
+  outline: .25rem solid #fb8825;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  background: var(--highlight, #ffe);
+  color: #000;
+  padding: 0.5rem 1rem;
+  z-index: 1000;
+  transform: translateY(-200%);
+  transition: transform 0.3s ease;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }

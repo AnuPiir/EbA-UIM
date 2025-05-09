@@ -56,4 +56,10 @@ export class ToolbarComponent{
   isLanguageSelected(language: string): boolean {
     return this.currentLang === language;
   }
+
+  jumpToSkip() {
+    setTimeout(() => {
+      document.getElementById('skip-link')?.focus();
+    }, 0);
+  }
 }

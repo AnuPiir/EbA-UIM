@@ -48,6 +48,10 @@
     cursor: default;
 }
 
+.add-project:focus-visible {
+  outline: .25rem solid #fb8825;
+}
+
 .add-project-header {
     display: flex;
     flex-direction: row;
@@ -156,7 +160,11 @@ table {
 }
 
 .see-more-button:hover {
-    background-color: var(--green);
+  background-color: var(--green);
+}
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
 }
 
 .upload-button {

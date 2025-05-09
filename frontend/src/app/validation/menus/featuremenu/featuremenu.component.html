@@ -1,0 +1,17 @@
+<div class="menu-component" (keydown)="handleKeyDown($event)">
+    <button class="menu-button button-icon"
+            (click)="toggleMenu()" [attr.aria-haspopup]="true"
+            [attr.aria-expanded]="isOpen" aria-controls="feature-menu">
+        <span class="material-symbols-outlined icon">arrow_drop_down</span>
+    </button>
+    <ul *ngIf="isOpen" id="feature-menu" class="dropdown-menu" role="menu">
+        <li id="feature-item-0" role="menuitem" class="menu-row" tabindex="0"
+            (click)="handleDeleteFeature()"
+            (keydown.enter)="handleDeleteFeature()"
+            (keydown.space)="handleDeleteFeature(); $event.preventDefault()"
+            #menuItem>
+            <span class="material-symbols-outlined icon small-icon">delete</span>
+            <span class="action-label">{{ 'menu.deleteFeature' | translate }}</span>
+        </li>
+    </ul>
+</div>

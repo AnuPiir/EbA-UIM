@@ -35,6 +35,9 @@
   display: inline-block;
 }
 
+:focus-visible {
+  outline: .25rem solid #fb8825;
+}
 .stakeholder {
   display: flex;
   align-items: flex-start;
