@@ -60,3 +60,9 @@ a.toolbar-router:hover {
 .language-active {
   font-weight: bold;
 }
+
+a.toolbar-router:focus-visible,
+.button-language:focus-visible {
+  outline: .25rem solid #fb8825;
+  outline-offset: 0.25rem;
+}

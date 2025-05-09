@@ -2,6 +2,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
+    z-index: 1000;
     padding: 8px 12px;
     background-color: var(--text-color);
     color: white;
@@ -10,23 +11,37 @@
     border-color: #1a222c;
     cursor: pointer;
     font-size: 18px;
+    font-weight: 500;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s, background-color 0.3s, color 0.3s;
-    z-index: 500;
-    font-weight: 500;
-
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    transform: translateX(0);
 }
 
 .back-to-top .material-symbols-outlined {
     font-size: 24px;
 }
 
-.back-to-top:hover,
-.back-to-top:focus {
+.back-to-top:hover {
     background-color: #263826FF;
     color: white;
     outline: none;
+}
+
+:focus-visible {
+    outline: .25rem solid #fb8825;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
 }

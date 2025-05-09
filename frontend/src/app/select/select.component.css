@@ -111,3 +111,16 @@
   color: #505050;
 }
 
+.select-button.disabled {
+  background-color: var(--brown);
+  color: var(--text-color);
+  cursor: not-allowed;
+  border-color: var(--dark-brown);
+
+}
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
+  outline-offset: -4px;
+}
+

@@ -342,6 +342,17 @@ export class FeatureGroupComponent implements OnInit {
     });
   }
 
+  focusValidationTable(event: Event) {
+    event.preventDefault();
+    if (this.tab) {
+      this.tab.selectedIndex = 0;
+    }
+    setTimeout(() => {
+      const firstTab = document.querySelector('[role="tab"]') as HTMLElement;
+      firstTab?.focus();
+    }, 100);
+  }
+
   getFeatureGroupEditAction(featureGroup: any):any {
     return () => this.openFeatureGroupEditModal(featureGroup);
   }

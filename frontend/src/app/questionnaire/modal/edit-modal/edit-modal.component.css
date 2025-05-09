@@ -22,3 +22,7 @@
   justify-content: flex-end;
   gap: 1rem;
 }
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
+}

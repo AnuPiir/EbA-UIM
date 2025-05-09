@@ -1,0 +1,24 @@
+<div class="menu-component" (keydown)="handleKeyDown($event)">
+    <button class="menu-button button-icon"
+            (click)="toggleMenu()" [attr.aria-haspopup]="true" [attr.aria-expanded]="isOpen"
+            aria-controls="example-menu" #toggleBtn>
+        <span class="material-symbols-outlined icon">arrow_drop_down</span>
+    </button>
+    <ul *ngIf="isOpen" id="example-menu" class="dropdown-menu" role="menu">
+        <li id="menu-item-0" role="menuitem" class="menu-row" tabindex="0"
+                (click)="handleAddExample()" (keydown.enter)="handleAddExample()" (keydown.space)="onAddExample(); $event.preventDefault()" #menuItem>
+            <span class="material-symbols-outlined icon small-icon">add</span>
+            <span class="action-label">{{ 'menu.addExample' | translate }}</span>
+        </li>
+        <li id="menu-item-1" role="menuitem" class="menu-row" tabindex="0"
+                (click)="handleDeleteExample()" (keydown.enter)="handleDeleteExample()" (keydown.space)="onDeleteExample(); $event.preventDefault()" #menuItem>
+            <span class="material-symbols-outlined icon small-icon">delete</span>
+            <span class="action-label">{{ 'menu.deleteExample' | translate }}</span>
+        </li>
+        <li id="menu-item-2" role="menuitem" class="menu-row" tabindex="0"
+                (click)="handleNoExample()" (keydown.enter)="handleNoExample()" (keydown.space)="onNoExample(); $event.preventDefault()" #menuItem>
+            <span class="material-symbols-outlined icon small-icon">cancel</span>
+            <span class="action-label">{{ 'menu.noExample' | translate }}</span>
+        </li>
+    </ul>
+</div>

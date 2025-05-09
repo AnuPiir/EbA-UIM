@@ -57,3 +57,7 @@ table{
   color: var(--dark-blue);
   border-color: var(--dark-blue);
 }
+
+:focus-visible {
+  outline: .25rem solid #fb8825;
+}

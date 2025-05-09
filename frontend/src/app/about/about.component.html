@@ -2,7 +2,8 @@
   <div class="content">
     <h1 [innerHTML]="'about.header' | translate | sanitizeHtml"></h1>
     <div class="green-area">
-      <p [innerHTML]="'about.area' | translate | sanitizeHtml"></p>
+        <span id="screenreader-summary-heading" class="visually-hidden">Summary of contents</span>
+        <p [innerHTML]="'about.area' | translate | sanitizeHtml"></p>
     </div>
     <h2 [innerHTML]="'about.section1Heading' | translate | sanitizeHtml"></h2>
     <p [innerHTML]="'about.section1Text' | translate | sanitizeHtml">
