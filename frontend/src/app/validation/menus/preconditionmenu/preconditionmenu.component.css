@@ -1,0 +1,115 @@
+.menu-component{
+    position: relative;
+    height: fit-content;
+    width: fit-content;
+    display: inline-block;
+    padding: 0;
+    background-color: var(--light-green);
+    border-radius: 0.25rem;
+    border: solid;
+    border-width: 0.125rem;
+    border-color: var(--text-color);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+    margin-top: 0.25rem;
+
+    background-color: var(--beige);
+    border: 2px solid var(--text-color);
+    border-radius: 0.625rem;
+}
+
+
+.menu-component:focus-visible {
+    outline: .25rem solid #fb8825;
+    outline-offset: -8px;
+}
+
+.menu-button.button-icon {
+    padding: 0.25rem;
+    margin: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: unset;
+    min-height: unset;
+    font-size: 1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+}
+
+.material-symbols-outlined.icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.arrow_drop_down-menu {
+    top: 0rem;
+    left: 1.5rem;
+}
+
+.menu-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: fit-content;
+    white-space: nowrap;
+    width: 100%;
+    padding: 1rem;
+    gap: 0.5rem;
+    color: var(--text-color);
+    background-color: var(--beige);
+    border: none;
+}
+
+.menu-row:hover {
+    background-color: var(--light-brown);
+}
+
+.arrow_drop_down {
+    width: fit-content;
+    height: fit-content;
+    max-width: 1.5rem;
+    max-height: 1.5rem;
+    color: var(--dark-green);
+    background-color: var(--light-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    border: solid;
+    border-width: 0.125rem;
+}
+
+.arrow_drop_down:hover {
+    background-color: var(--green);
+}
+
+.more_vert {
+    max-width: 2rem;
+    max-height: 2rem;
+}
+
+.more_vert-icon {
+    font-size: 2.25rem;
+}
+
+:focus-visible {
+    outline: .25rem solid #fb8825;
+}
+
+.menu-row:focus-visible {
+    outline: .25rem solid #fb8825;
+    outline-offset: -4px;
+}

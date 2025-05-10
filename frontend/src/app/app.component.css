@@ -3,3 +3,28 @@
   display: flex;
   justify-content: center;
 }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+}
+
+.skip-link:focus-visible {
+  position: absolute;
+  top: 1rem;
+  left: 5rem;
+  background-color: var(--text-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  z-index: 1000;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0.25rem;
+  outline: 0.25rem solid #fb8825;
+  outline-offset: 0;
+}
+
+
+
+

@@ -1,8 +1,13 @@
 <div id="content" [ngClass]="currentColorScheme">
   <!-- <button (click)="toggleColorScheme()">Toggle Color Scheme</button> -->
+    <a id="skip-link" class="skip-link" href="#main-content" (click)="focusMainContent($event)">
+        {{ 'toolbar.skipToMain' | translate }}
+    </a>
   <app-toolbar>  <button (click)="toggleColorScheme()">Toggle Color Scheme</button>
   </app-toolbar>
   <div class="page-body">
-    <router-outlet></router-outlet>
+    <main id="main-content" tabindex="-1" role="main">
+      <router-outlet></router-outlet>
+    </main>
   </div>
 </div>

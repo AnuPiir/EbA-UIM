@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, Input, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ValidationService } from './service/validation.service';
 import { Validation, ValidationType } from './model/validation';
 import { ValidationRow } from './model/validation-row';
@@ -25,6 +25,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChangeDetectorRef, NgZone } from '@angular/core';
 import {NoSituationModalComponent} from "../questionnaire/modal/no-situation-modal/no-situation-modal.component";
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { MatMenuTrigger } from '@angular/material/menu';
+import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {ConfirmActionModalComponent} from "../questionnaire/modal/confirm-action-modal/confirm-action-modal.component";
 
 @Component({
@@ -60,18 +62,25 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   notificationTitle: string = '';
   notificationMessage: string = '';
   private notifiedPreconditionIds: Set<number> = new Set<number>();
+  ctrlRecentlyPressed = false;
+  ctrlPressTimeout: any = null;
   shouldShowPrioritizationColumn: boolean = false;
 
   @ViewChild('PreconditionMenu') menuComponent!: MenuComponent;
   @ViewChild('formattedSentence', { static: false }) formattedSentenceRef!: ElementRef;
   @ViewChild('notificationElement') notificationElement!: ElementRef;
+  @ViewChild(MatMenuTrigger) infoMenuTrigger!: MatMenuTrigger;
+  @ViewChild('infoIcon', { read: ElementRef }) infoIcon!: ElementRef<HTMLElement>;
+  @ViewChild('status') statusEl!: ElementRef<HTMLElement>;
+  @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport)
+  viewport!: CdkVirtualScrollViewport;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];
   @Input() featureGroup: FeatureGroupResponse;
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
-
 
   colorOptions = [
     { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
@@ -1101,12 +1110,42 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return this.hiddenColumns.has(index);
   }
 
-  toggleColumnVisibility(index: number) {
-    if (this.hiddenColumns.has(index)) {
-      this.hiddenColumns.delete(index);
-    } else {
-      this.hiddenColumns.add(index);
+  @HostListener('window:keydown', ['$event'])
+  handleAltH(event: KeyboardEvent) {
+    if (event.altKey && event.key.toLowerCase() === 'h') {
+      event.preventDefault();
+      this.toggleColumnVisibility(13);
     }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleCtrlCombinations(event: KeyboardEvent) {
+    const key = event.key.toLowerCase();
+    if (key === 'control') {
+      this.ctrlRecentlyPressed = true;
+      clearTimeout(this.ctrlPressTimeout);
+      this.ctrlPressTimeout = setTimeout(() => {
+        this.ctrlRecentlyPressed = false;
+      }, 3000);
+    }
+    if (key === 'h' && (event.ctrlKey || this.ctrlRecentlyPressed)) {
+      event.preventDefault();
+      this.ctrlRecentlyPressed = false;
+      clearTimeout(this.ctrlPressTimeout);
+      this.toggleColumnVisibility(13);
+    }
+  }
+
+  toggleColumnVisibility(idx: number) {
+    if (this.hiddenColumns.has(idx)) {
+      this.hiddenColumns.delete(idx);
+    } else {
+      this.hiddenColumns.add(idx);
+    }
+    setTimeout(() => {
+      const msg = `Duplicate column ${this.isColumnHidden(idx) ? 'hidden' : 'shown'}.`;
+      this.statusEl.nativeElement.textContent = msg;
+    }, 0);
   }
 
   getRowPreConditionAnswer(validationRow: ValidationRow): ValidationAnswer {
@@ -1405,4 +1444,5 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       });
     }
   }
+
 }
