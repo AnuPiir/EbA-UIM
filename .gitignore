@@ -25,6 +25,7 @@ EbA installer.exe
 .settings
 .springBeans
 .sts4-cache
+/release-builds/
 
 ### IntelliJ IDEA ###
 .idea
