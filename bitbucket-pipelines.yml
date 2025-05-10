@@ -32,7 +32,7 @@ pipelines:
             - npm run build
 
             # Package for All
-            - npm run package-linux-debian-arm64
+            - npm run package-linux-arm64
             - apt-get install -y fakeroot
             - umask 0022
             - npm run debian-installer-arm64

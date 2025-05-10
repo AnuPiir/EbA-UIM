@@ -15,8 +15,6 @@
     "debian-installer-arm64": "electron-installer-debian --src ./release-builds/EbA-UIM-linux-arm64 --dest ./release-builds/linux-deb --arch arm64",
     "package-linux-x64": "electron-packager . EbA-UIM --overwrite --platform=linux --arch=x64 --icon=./icons/eba.ico --prune=true --out=release-builds",
     "debian-installer-x64": "electron-installer-debian --src ./release-builds/EbA-UIM-linux-x64 --dest ./release-builds/linux-deb --arch x64",
-    "linux-electron": "npm run package-linux && npm run linux-inst",
-    "mac-electron": "npm run package-mac && npm run mac-inst",
     "package-win": "electron-packager . EbA-UIM --overwrite --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds",
     "wdio": "wdio run ./wdio.conf.ts",
     "package": "electron-forge package",
