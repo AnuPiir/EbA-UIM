@@ -33,6 +33,7 @@ EbA installer.exe
 *.iml
 *.ipr
 /out/
+.vscode
 
 ### NetBeans ###
 /nbproject/private/
