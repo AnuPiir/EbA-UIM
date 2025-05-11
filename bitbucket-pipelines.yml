@@ -9,7 +9,7 @@ pipelines:
   branches:
     master:
       - step:
-          name: Build and Package App
+          name: Build and Package App for Linux
           caches:
             - npm
             - maven
