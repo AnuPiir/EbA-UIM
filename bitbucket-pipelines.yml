@@ -14,32 +14,22 @@ pipelines:
             - npm
             - maven
           script:
-            # Build backend with Maven
             - apt-get update && apt-get install -y maven
             - cd backend
             - mvn test
             - mvn clean package -DskipTests
             - cd ../frontend
-
-            # Install frontend dependencies using cache
             - npm ci
-
-            # Create jars directory and copy backend JAR
             - mkdir -p jars
             - cp ../backend/target/*.jar jars/
-
-            # Build the Angular app
             - npm run build
-
-            # Package for All
             - npm run package-linux-arm64
             - apt-get install -y fakeroot
             - umask 0022
             - npm run debian-installer-arm64
             - cd release-builds/linux-deb
 
-            # Use Bitbucket's API to upload the installer
-            - pipe: atlassian/bitbucket-upload-file:0.3.2
+            - pipe: atlassian/bitbucket-upload-file:0.7.4
               variables:
                 BITBUCKET_USERNAME: $BITBUCKET_USERNAME
                 BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
