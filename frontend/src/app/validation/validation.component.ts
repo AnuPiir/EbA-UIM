@@ -83,12 +83,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   MenuComponent: any;
 
   colorOptions = [
-    { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
     { name: 'colorPickerExplanation.green', value: 'var(--light-green)' },
     { name: 'colorPickerExplanation.orange', value: 'var(--light-orange)' },
     { name: 'colorPickerExplanation.red', value: 'var(--light-red)' },
     { name: 'colorPickerExplanation.yellow', value: 'var(--light-yellow)' },
     { name: 'colorPickerExplanation.blue', value: 'var(--light-blue)' },
+    { name: 'colorPickerExplanation.grey', value: 'var(--light-grey)' },
     { name: 'colorPickerExplanation.default', value: 'var(--beige)' }
   ];
 

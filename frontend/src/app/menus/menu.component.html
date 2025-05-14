@@ -1,5 +1,5 @@
 <div class="menu-component">
-    <button class="menu-button button-icon {{icon}} " (click)="toggleMenu(toggle)">
+    <button class="menu-button button-icon {{icon}} " (click)="toggleMenu(toggle)" [attr.aria-label]="'dropdownMenu.name' | translate">
         <span class="material-symbols-outlined {{icon}}-icon">{{icon}}</span>
     </button>
     <div *ngIf=isToggled class="dropdown-menu {{icon}}-menu">

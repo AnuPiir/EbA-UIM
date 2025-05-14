@@ -48,6 +48,12 @@ a.toolbar-router:hover {
   background-color: var(--highlight);
 }
 
+.toolbar-router.active-link {
+  font-weight: bold;
+  background-color: var(--highlight);
+  border: 2px solid var(--text-color);
+}
+
 .button-language {
   background: none;
   border: none;

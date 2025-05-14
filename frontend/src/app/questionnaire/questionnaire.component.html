@@ -1,4 +1,4 @@
-<mat-spinner *ngIf="loading"></mat-spinner>
+<mat-spinner *ngIf="loading" role="status" aria-live="polite" [attr.aria-label]="'loading.spinner' | translate"></mat-spinner>
 <div class="projects-wrapper">
     <div class="add-project" (click)="handleOpenAddNewQuestionnaire()" [class.toggled]="isToggled"
          (keydown.enter)="handleOpenAddNewQuestionnaire()"
@@ -26,7 +26,7 @@
                         class="button cancel-button">{{ 'button.cancel' | translate }}
                 </button>
                 <button [disabled]="questionnaireName.length <= 0" (click)="addNewQuestionnaire(questionnaireName)"
-                        formtarget="_blank" class="button add-button">{{ 'button.add' | translate }}
+                        data-purpose="add-questionnaire" formtarget="_blank" class="button add-button">{{ 'button.add' | translate }}
                 </button>
             </div>
         </div>
@@ -71,6 +71,7 @@
                     {{ questionnaire.name | truncate:25 }}
                     </span>
                     <a [routerLink]="validationPath" [queryParams]="{questionnaireId: questionnaire.id}"
+                       [attr.aria-label]="('projectsTable.seeMore' | translate) + ': ' + questionnaire.name"
                        class="see-more-button">{{ 'projectsTable.seeMore' | translate }}</a>
                     <p>{{ questionnaire.lastModified | date: 'dd.MM.yyyy HH:mm' : 'et-EE' }}</p>
                 </td>

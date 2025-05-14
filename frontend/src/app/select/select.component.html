@@ -1,7 +1,7 @@
 <div class="select-component">
   <button class="select-button {{selectedValue}}" (click)="toggleSelect()">
     <span>{{customSelectionValue() | translate}}</span>
-    <span class="material-symbols-outlined icon">arrow_drop_down</span>
+    <span class="material-symbols-outlined icon" aria-hidden="true">arrow_drop_down</span>
   </button>
     <div *ngIf="isToggled" class="options" #optionContainer [ngClass]="{'options-flip-up': isFlippedUp}">
         <button

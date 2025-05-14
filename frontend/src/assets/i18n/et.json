@@ -86,7 +86,8 @@
     "delete": "Kustuta",
     "edit": "Muuda",
     "save": "Salvesta",
-    "cancelEdit": "Tühista muutmine"
+    "cancelEdit": "Tühista muutmine",
+    "deleteRowARIA": "Kustuta rida"
   },
   "select": {
     "chooseOption": "Vali",
@@ -336,6 +337,12 @@
   "pagination": {
     "of": "Kokku",
     "page": "Leht"
+  },
+  "loading": {
+    "spinner": "Sisu laadimine"
+  },
+  "dropdownMenu": {
+    "name": "Ava rippmenüü"
   },
   "questionnaires": "Küsimustikud",
   "et": "EST",

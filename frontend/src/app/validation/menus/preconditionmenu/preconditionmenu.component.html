@@ -1,24 +1,24 @@
 <div class="menu-component" (keydown)="handleKeyDown($event)">
     <button class="menu-button button-icon"
-            (click)="toggleMenu()" [attr.aria-haspopup]="true"
+            (click)="toggleMenu()" [attr.aria-haspopup]="true" [attr.aria-label]="'dropdownMenu.name' | translate"
             [attr.aria-expanded]="isOpen" aria-controls="precondition-menu">
-        <span class="material-symbols-outlined icon">arrow_drop_down</span>
+        <span class="material-symbols-outlined icon" aria-hidden="true">arrow_drop_down</span>
     </button>
     <ul *ngIf="isOpen" id="precondition-menu" class="dropdown-menu" role="menu">
-        <li id="precondition-item-0" role="menuitem" class="menu-row" tabindex="0"
+        <li id="precondition-item-0" role="menuitem" class="menu-row" tabindex="0" data-purpose="add-precondition"
             (click)="handleAddPrecondition()"
             (keydown.enter)="handleAddPrecondition()"
             (keydown.space)="handleAddPrecondition(); $event.preventDefault()"
             #menuItem>
-            <span class="material-symbols-outlined icon small-icon">add</span>
+            <span class="material-symbols-outlined icon small-icon" aria-hidden="true">add</span>
             <span class="action-label">{{ 'menu.addPrecondition' | translate }}</span>
         </li>
-        <li id="precondition-item-1" role="menuitem" class="menu-row" tabindex="0"
+        <li id="precondition-item-1" role="menuitem" class="menu-row" tabindex="0" data-purpose="delete-precondition"
             (click)="handleDeletePrecondition()"
             (keydown.enter)="handleDeletePrecondition()"
             (keydown.space)="handleDeletePrecondition(); $event.preventDefault()"
             #menuItem>
-            <span class="material-symbols-outlined icon small-icon">delete</span>
+            <span class="material-symbols-outlined icon small-icon" aria-hidden="true">delete</span>
             <span class="action-label">{{ 'menu.deletePrecondition' | translate }}</span>
         </li>
     </ul>
