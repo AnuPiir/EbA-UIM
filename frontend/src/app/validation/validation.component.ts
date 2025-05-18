@@ -82,6 +82,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @Input() stakeholders: StakeholderResponse[];
   MenuComponent: any;
 
+  focusNextRow: { rowId: number; target: 'feature' | 'precondition' | 'example' } | null = null;
+
   colorOptions = [
     { name: 'colorPickerExplanation.green', value: 'var(--light-green)' },
     { name: 'colorPickerExplanation.orange', value: 'var(--light-orange)' },
@@ -122,6 +124,21 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     var vtextarea = this.el.nativeElement.querySelectorAll('textarea')
     for(let i=0;i<vtextarea.length;i++){
       vtextarea[i].style.height = vtextarea[i].scrollHeight + 'px';
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (this.showNotification) {
+      return;
+    }
+    if (this.focusNextRow) {
+      const { rowId, target } = this.focusNextRow;
+      const selector = `#${target}-${rowId}`;
+      const el = this.el.nativeElement.querySelector(selector);
+      if (el) {
+        el.focus();
+        this.focusNextRow = null;
+      }
     }
   }
 
@@ -393,7 +410,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return result;
   }
 
-  async addValidationRow(existingFeature?: FeatureResponse, existingPreCondition?: FeaturePreCondition, stakeholder?: StakeholderResponse) {
+  async addValidationRow(existingFeature?: FeatureResponse, existingPreCondition?: FeaturePreCondition, stakeholder?: StakeholderResponse, focusTarget: 'feature' | 'precondition' | 'example' = 'feature') {
     this.isAddingNewRow = true;
     let validationRow: ValidationAnswer[] = [];
     let maxRowId = 0;
@@ -452,6 +469,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         );
 
     this.validationRowValues = this.validationRowValues.sort((a, b) => a.answers[0].feature.id - b.answers[0].feature.id || a.answers[0].featurePrecondition.id - b.answers[0].featurePrecondition.id || a.rowId - b.rowId);
+
+    this.focusNextRow = { rowId: maxRowId + 1, target: focusTarget };
 
     this.mapFeatureRowSpans();
     this.updateShouldShowPrioritizationColumn();
@@ -602,7 +621,6 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           this.featureService.update(validationRowAnswer.feature.id, eventValue, validationRowAnswer.feature.customId)
       );
     }
-
     if (validation.type === ValidationType.FEATURE_PRECONDITION) {
       validationRowAnswer.featurePrecondition = await firstValueFrom(
           this.featurePreconditionService.update(validationRowAnswer.featurePrecondition.id, eventValue)
@@ -1163,7 +1181,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         icon: 'add',
         onClick: () => {
           // Pass the stakeholder when adding a new precondition
-          this.addValidationRow(validationRowValue.answers[0].feature, undefined, stakeholder);
+          this.addValidationRow(validationRowValue.answers[0].feature, undefined, stakeholder, 'precondition');
         }
       },
       {
@@ -1205,7 +1223,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           this.addValidationRow(
               validationRowValue.answers[0].feature,
               this.getRowPreConditionAnswer(validationRowValue).featurePrecondition,
-              effectiveStakeholder
+              effectiveStakeholder, 'example'
           );
         }
       },

@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="loading" role="status" aria-live="polite" [attr.aria-label]="'loading.spinner' | translate"></mat-spinner>
 <div aria-live="polite" class="visually-hidden" #columnStatus></div>
-<div class="notification-overlay" *ngIf="showNotification" role="alert" aria-live="assertive">
+<div class="notification-overlay" *ngIf="showNotification" role="alert" aria-live="assertive" #notificationElement>
     <app-notification [title]="notificationTitle" [message]="notificationMessage" [show]="showNotification" (close)="closeNotification()" tabindex="-1"> </app-notification>
 </div>
 <div *ngIf="!loading" class="table-wrapper">
@@ -91,7 +91,7 @@
                                 <div *ngIf="isValidationFeature(validation)" class="feature-cell max-h-250">
                                     <div class="cell-with-menu">
                                         <div class="textarea-border">
-                                          <textarea id="id"
+                                          <textarea id="id" [id]="'feature-' + validationRowValue.rowId"
                                                     [ngModel]="getValidationRowAnswer(validation, validationRowValue).feature.customId"
                                                     (ngModelChange)="onFeatureCustomIdChange($event, getValidationRowAnswer(validation, validationRowValue).feature)"
                                                     class="border-0 custom-id max-h-200"
@@ -112,7 +112,8 @@
                                 </div>
                                 <div *ngIf="isValidationFeaturePrecondition(validation)" class="cell-with-menu max-h-250">
                                     <div class="textarea-border">
-                                        <textarea [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
+                                        <textarea [id]="'precondition-' + validationRowValue.rowId"
+                                                [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                                                   (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
@@ -125,7 +126,8 @@
                                 </div>
                                 <div *ngIf="isValidationExample(validation)" class="cell-with-menu max-h-250">
                                     <div class="textarea-border">
-                                        <textarea [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
+                                        <textarea [id]="'example-' + validationRowValue.rowId"
+                                                [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                                                   (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
@@ -220,7 +222,7 @@
             <tfoot>
                 <tr>
                     <td class="add-row">
-                        <button [disabled]="isAddingNewRow" class="add-row-button" (click)="addValidationRow()">
+                        <button [disabled]="isAddingNewRow" class="add-row-button" (click)="addValidationRow(undefined, undefined, undefined, 'feature')">
                             <span class="material-symbols-outlined icon small-icon" aria-hidden="true">add</span>
                             {{ 'table.newRow' | translate }}
                         </button>

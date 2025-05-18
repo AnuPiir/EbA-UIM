@@ -36,26 +36,6 @@ export class ExamplemenuComponent {
     this.isOpen = false;
   }
 
-  /*handleKeyDown(event: KeyboardEvent): void {
-    if (!this.isOpen) return;
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.focusedIndex = (this.focusedIndex + 1) % this.menuItems.length;
-      this.focusItem(this.focusedIndex);
-    }
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.focusedIndex = (this.focusedIndex - 1 + this.menuItems.length) % this.menuItems.length;
-      this.focusItem(this.focusedIndex);
-    }
-    if (event.key === 'Escape') {
-      this.closeMenu();
-    }
-    if (event.key === 'Tab') {
-      this.closeMenu();
-    }
-  }*/
-
   handleKeyDown(event: KeyboardEvent): void {
     if (!this.isOpen) return;
 
@@ -71,9 +51,7 @@ export class ExamplemenuComponent {
         this.focusItem(this.focusedIndex);
         break;
       case 'Escape':
-        // 1) close…
         this.closeMenu();
-        // 2) return focus to the toggle button
         this.toggleBtn.nativeElement.focus();
         event.preventDefault();
         break;
