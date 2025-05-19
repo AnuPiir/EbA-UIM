@@ -1,8 +1,8 @@
 <div class="delete-modal">
     <h1>{{ title }}</h1>
     <p>{{ message }}</p>
-    <div class="delete-modal-actions">
-        <button (click)="close(false)" type="button" class="button cancel-button">{{'button.cancel' | translate}}</button>
-        <button (click)="close(true)" type="button" class="button delete-button">{{'button.delete' | translate}}</button>
+    <div class="delete-modal-actions" role="dialog" aria-modal="true">
+        <button (click)="close(false)" type="button" class="button cancel-button" data-purpose="cancel-action">{{'button.cancel' | translate}}</button>
+        <button (click)="close(true)" type="button" class="button delete-button" data-purpose="delete-confirm">{{'button.delete' | translate}}</button>
     </div>
 </div>

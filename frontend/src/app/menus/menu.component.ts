@@ -54,6 +54,16 @@ export class MenuComponent {
     }
   }
 
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscape(event: KeyboardEvent) {
+    if (this.isToggled || this.stakeholderListToggled || this.colorListToggled) {
+      this.isToggled = false;
+      this.stakeholderListToggled = false;
+      this.colorListToggled = false;
+      event.preventDefault();
+    }
+  }
+
   stakeHolderCloseAction(): any {
     return {onClick: () => this.stakeholderListToggled = false};
   }

@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, ElementRef, HostListener, QueryList, ViewChildren, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-examplemenu',
@@ -16,6 +16,8 @@ export class ExamplemenuComponent {
   focusedIndex = 0;
 
   @ViewChildren('menuItem') menuItems!: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('toggleBtn', { static: true })
+  toggleBtn!: ElementRef<HTMLButtonElement>;
 
   constructor(private el: ElementRef) {}
 
@@ -36,21 +38,26 @@ export class ExamplemenuComponent {
 
   handleKeyDown(event: KeyboardEvent): void {
     if (!this.isOpen) return;
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.focusedIndex = (this.focusedIndex + 1) % this.menuItems.length;
-      this.focusItem(this.focusedIndex);
-    }
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.focusedIndex = (this.focusedIndex - 1 + this.menuItems.length) % this.menuItems.length;
-      this.focusItem(this.focusedIndex);
-    }
-    if (event.key === 'Escape') {
-      this.closeMenu();
-    }
-    if (event.key === 'Tab') {
-      this.closeMenu();
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.focusedIndex = (this.focusedIndex + 1) % this.menuItems.length;
+        this.focusItem(this.focusedIndex);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.focusedIndex = (this.focusedIndex - 1 + this.menuItems.length) % this.menuItems.length;
+        this.focusItem(this.focusedIndex);
+        break;
+      case 'Escape':
+        this.closeMenu();
+        this.toggleBtn.nativeElement.focus();
+        event.preventDefault();
+        break;
+      case 'Tab':
+        this.closeMenu();
+        break;
     }
   }
 

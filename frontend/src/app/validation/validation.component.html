@@ -1,11 +1,11 @@
-<mat-spinner *ngIf="loading"></mat-spinner>
+<mat-spinner *ngIf="loading" role="status" aria-live="polite" [attr.aria-label]="'loading.spinner' | translate"></mat-spinner>
 <div aria-live="polite" class="visually-hidden" #columnStatus></div>
-<div class="notification-overlay" *ngIf="showNotification">
+<div class="notification-overlay" *ngIf="showNotification" role="alert" aria-live="assertive" #notificationElement>
     <app-notification [title]="notificationTitle" [message]="notificationMessage" [show]="showNotification" (close)="closeNotification()" tabindex="-1"> </app-notification>
 </div>
 <div *ngIf="!loading" class="table-wrapper">
 
-    <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000" #tableViewport>
+    <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000" [style.height.px]="getViewportHeight()" #tableViewport>
         <table>
             <thead>
                 <tr>
@@ -45,7 +45,10 @@
 
             <tbody>
                 <tr *cdkVirtualFor="let validationRowValue of validationRowValues; index as j"
-                    [ngClass]="{'prioritized': isPrioritized(validationRowValue)}" class="fixed-size-row">
+                    [ngClass]="{
+                    'prioritized': isPrioritized(validationRowValue),
+                    'last-visible-row': isLastRow(j)
+                    }">
 
                     <td class="id-cell background-beige">{{ j + 1 }}</td>
 
@@ -91,7 +94,7 @@
                                 <div *ngIf="isValidationFeature(validation)" class="feature-cell max-h-250">
                                     <div class="cell-with-menu">
                                         <div class="textarea-border">
-                                          <textarea id="id"
+                                          <textarea id="id" [id]="'feature-' + validationRowValue.rowId"
                                                     [ngModel]="getValidationRowAnswer(validation, validationRowValue).feature.customId"
                                                     (ngModelChange)="onFeatureCustomIdChange($event, getValidationRowAnswer(validation, validationRowValue).feature)"
                                                     class="border-0 custom-id max-h-200"
@@ -112,7 +115,8 @@
                                 </div>
                                 <div *ngIf="isValidationFeaturePrecondition(validation)" class="cell-with-menu max-h-250">
                                     <div class="textarea-border">
-                                        <textarea [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
+                                        <textarea [id]="'precondition-' + validationRowValue.rowId"
+                                                [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                                                   (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
@@ -125,7 +129,8 @@
                                 </div>
                                 <div *ngIf="isValidationExample(validation)" class="cell-with-menu max-h-250">
                                     <div class="textarea-border">
-                                        <textarea [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
+                                        <textarea [id]="'example-' + validationRowValue.rowId"
+                                                [ngModel]="getValidationRowAnswer(validation, validationRowValue).answer"
                                                   (ngModelChange)="textAreaValueChange($event, getValidationRowAnswer(validation, validationRowValue), validation, validationRowValue)"
                                                   class="border-0 textarea-min-height max-h-200">
                                         </textarea>
@@ -210,8 +215,8 @@
                         </ng-container>
                     </ng-container>
                     <td class="delete-row">
-                        <button class="delete-row-button button-icon" (click)="deleteRow(validationRowValue.rowId)">
-                            <span class="material-symbols-outlined icon">delete</span>
+                        <button class="delete-row-button button-icon" (click)="deleteRow(validationRowValue.rowId)" [attr.aria-label]="'table.deleteRowARIA' | translate">
+                            <span class="material-symbols-outlined icon" aria-hidden="true">delete</span>
                         </button>
                     </td>
                 </tr>
@@ -220,10 +225,11 @@
             <tfoot>
                 <tr>
                     <td class="add-row">
-                        <button [disabled]="isAddingNewRow" class="add-row-button" (click)="addValidationRow()">
-                            <span class="material-symbols-outlined icon small-icon">add</span>
+                        <button [disabled]="isAddingNewRow" class="add-row-button" (click)="addValidationRow(undefined, undefined, undefined, 'feature')">
+                            <span class="material-symbols-outlined icon small-icon" aria-hidden="true">add</span>
                             {{ 'table.newRow' | translate }}
                         </button>
+                        <app-container></app-container>
                     </td>
                 </tr>
             </tfoot>

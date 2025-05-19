@@ -86,7 +86,9 @@
     "delete": "Delete",
     "edit": "Edit",
     "save": "Save",
-    "cancelEdit": "Cancel editing"
+    "cancelEdit": "Cancel editing",
+    "deleteRowARIA": "Delete row",
+    "saved": "Changes are saved automatically"
   },
   "select": {
     "chooseOption": "Select",
@@ -331,6 +333,12 @@
   "pagination": {
     "of": "Total",
     "page": "Page"
+  },
+  "loading": {
+    "spinner": "Loading content"
+  },
+  "dropdownMenu": {
+    "name": "Open dropdown menu"
   },
   "questionnaires": "Questionnaires",
   "et": "EST",

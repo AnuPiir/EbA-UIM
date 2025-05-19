@@ -44,7 +44,7 @@ export class QuestionnaireComponent implements OnInit {
     notificationMessage = '';
 
     currentPage: number = 1;
-    questionnairesPerPage: number = 3;
+    questionnairesPerPage: number = 10;
     totalPages: number = 1;
 
     constructor(

@@ -47,7 +47,11 @@ td {
 }
 
 cdk-virtual-scroll-viewport {
-  height: calc(100vh - 200px);
+  max-height: 95vh !important;
+}
+
+.last-visible-row td {
+  border: 1px solid var(--brown) !important;
 }
 
 tfoot td { border: none; }
@@ -88,6 +92,7 @@ textarea::placeholder {
 
 .table-wrapper {
   border: none;
+  height: 100vh;
 }
 
 .header {
@@ -179,23 +184,28 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .content-cell-eleventh-child {
-  width: 15rem;
+  width: 16rem;
   border-right: none;
+  text-align: right;
 }
 
 .content-cell-twelveth-child {
   width: 11rem;
   border-right: none;
   border-left: none;
+  text-align: -webkit-center;
 }
 
 .content-cell-thirteenth-child  {
   width: 16rem;
   border-left: none;
+  max-width: 99%;
+  text-align: left;
 }
 
 .content-cell-fourteenth-child, .content-cell-fifteenth-child  {
   width: 28.3rem;
+  max-width: 99%;
 }
 
 .content-cell-sixteenth-child  {
@@ -207,6 +217,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   position: sticky;
   left: 0.5rem;
   z-index: 1;
+  gap: 1rem;
 }
 
 ::ng-deep .mat-mdc-menu-panel.custom-info-menu {
@@ -329,6 +340,13 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   gap: 0.5rem;
   background-color: var(--light-green);
   color: var(--dark-green);
+}
+
+tfoot tr,
+tfoot td {
+  padding: 40px 0 20px 0;
+  margin: 0;
+  height: 150px;
 }
 
 .add-row-button:hover {
@@ -551,9 +569,9 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 
 .notification-overlay {
   position: fixed;
-  top:    0;
-  left:   0;
-  right:  0;
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
