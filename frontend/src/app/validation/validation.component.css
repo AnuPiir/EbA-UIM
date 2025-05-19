@@ -50,6 +50,10 @@ cdk-virtual-scroll-viewport {
   max-height: 95vh !important;
 }
 
+.last-visible-row td {
+  border: 1px solid var(--brown) !important;
+}
+
 tfoot td { border: none; }
 
 tr>th:first-child {
@@ -342,7 +346,7 @@ tfoot tr,
 tfoot td {
   padding: 40px 0 20px 0;
   margin: 0;
-  height: 100px;
+  height: 150px;
 }
 
 .add-row-button:hover {

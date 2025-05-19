@@ -45,7 +45,10 @@
 
             <tbody>
                 <tr *cdkVirtualFor="let validationRowValue of validationRowValues; index as j"
-                    [ngClass]="{'prioritized': isPrioritized(validationRowValue)}" class="fixed-size-row">
+                    [ngClass]="{
+                    'prioritized': isPrioritized(validationRowValue),
+                    'last-visible-row': isLastRow(j)
+                    }">
 
                     <td class="id-cell background-beige">{{ j + 1 }}</td>
 
