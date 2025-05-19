@@ -145,7 +145,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   getViewportHeight(): number {
     const rowCount = this.validationRowValues.length;
     const itemSize = 250;
-    return rowCount * itemSize + 225;
+    return rowCount * itemSize + 250;
   }
 
   isLastRow(j: number): boolean {
