@@ -49,6 +49,7 @@ import {TruncatePipe} from "./utils/truncate.pipe";
 import { ExamplemenuComponent } from './validation/menus/examplemenu/examplemenu.component';
 import { FeaturemenuComponent } from './validation/menus/featuremenu/featuremenu.component';
 import { PreconditionmenuComponent } from './validation/menus/preconditionmenu/preconditionmenu.component';
+import { ContainerComponent } from './container/container.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -109,6 +110,7 @@ export function initAppFactory(
     ExamplemenuComponent,
     FeaturemenuComponent,
     PreconditionmenuComponent,
+    ContainerComponent,
   ],
   imports: [
     BrowserModule,

@@ -212,6 +212,7 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   position: sticky;
   left: 0.5rem;
   z-index: 1;
+  gap: 1rem;
 }
 
 ::ng-deep .mat-mdc-menu-panel.custom-info-menu {

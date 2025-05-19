@@ -87,7 +87,8 @@
     "edit": "Edit",
     "save": "Save",
     "cancelEdit": "Cancel editing",
-    "deleteRowARIA": "Delete row"
+    "deleteRowARIA": "Delete row",
+    "saved": "Changes are saved automatically"
   },
   "select": {
     "chooseOption": "Select",

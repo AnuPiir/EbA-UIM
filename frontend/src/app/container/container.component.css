@@ -1,0 +1,19 @@
+.container {
+    padding: 0.35rem 0.5rem 0.5rem 0.5rem;
+    border-radius: 0.625rem;
+    color: var(--text-color);
+    display: inline-block;
+    white-space: nowrap;
+    height: 2.5rem;
+    margin-top: 1rem;
+    width: auto;
+    max-width: none;
+    box-sizing: border-box;
+    gap: 0.5rem
+}
+
+.save-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

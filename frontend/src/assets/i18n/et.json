@@ -87,7 +87,8 @@
     "edit": "Muuda",
     "save": "Salvesta",
     "cancelEdit": "Tühista muutmine",
-    "deleteRowARIA": "Kustuta rida"
+    "deleteRowARIA": "Kustuta rida",
+    "saved": "Salvestamine toimub automaatselt"
   },
   "select": {
     "chooseOption": "Vali",

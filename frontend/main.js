@@ -1,6 +1,7 @@
 if (require('electron-squirrel-startup')) return;
 
-const { app, BrowserWindow, globalShortcut, Menu} = require('electron');
+//const { app, BrowserWindow, globalShortcut, Menu} = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const { spawn } = require("child_process");
@@ -68,7 +69,7 @@ function createWindow() {
         },
     });
 
-    Menu.setApplicationMenu(null);
+    //Menu.setApplicationMenu(null);
 
     mainWindow.maximize();
 
@@ -84,7 +85,7 @@ function createWindow() {
         mainWindow = null;
     });
 
-    globalShortcut.register('CommandOrControl+R', function() {
+    /*globalShortcut.register('CommandOrControl+R', function() {
         mainWindow.loadURL(
             url.format({
                 pathname: path.join(__dirname, 'dist/frontend/index.html'),
@@ -102,7 +103,7 @@ function createWindow() {
     globalShortcut.register('CommandOrControl+-', () => {
         let zoomLevel = mainWindow.webContents.getZoomLevel();
         mainWindow.webContents.setZoomLevel(zoomLevel - 1);
-    });
+    });*/
 
     process.env.API_URL = 'http://localhost:8080/api';
 }

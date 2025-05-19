@@ -85,35 +85,32 @@
             </tr>
             </tbody>
         </table>
-        <div class="pagination-controls" *ngIf="showPagination()">
-            <button (click)="prevPage()" class="button pagination-button"
-                    [disabled]="currentPage === 1"
-                    [attr.aria-label]="'paginationButton.previous' | translate">
-                        {{ 'paginationButton.previous' | translate }}
-            </button>
+    </div>
+    <div class="pagination-controls" *ngIf="showPagination()">
+        <button (click)="prevPage()" class="button pagination-button"
+                [disabled]="currentPage === 1"
+                [attr.aria-label]="'paginationButton.previous' | translate">
+            {{ 'paginationButton.previous' | translate }}
+        </button>
 
-            <div class="page-numbers">
-                <ng-container *ngFor="let page of getPageNumbers()">
-                    <button *ngIf="!page.isEllipsis" class="button page-number-button"
-                            [class.active]="page.value === currentPage"
-                            (click)="goToPage(page.value)"
-                            [attr.aria-current]="page.value === currentPage ? 'page' : null"
-                            [attr.aria-label]="('pagination.page' | translate) + ' ' + page.value">
-                                {{ page.value }}
-                    </button>
-                    <span *ngIf="page.isEllipsis" class="ellipsis" aria-hidden="true">
+        <div class="page-numbers">
+            <ng-container *ngFor="let page of getPageNumbers()">
+                <button *ngIf="!page.isEllipsis" class="button page-number-button"
+                        [class.active]="page.value === currentPage"
+                        (click)="goToPage(page.value)"
+                        [attr.aria-current]="page.value === currentPage ? 'page' : null"
+                        [attr.aria-label]="('pagination.page' | translate) + ' ' + page.value">
+                    {{ page.value }}
+                </button>
+                <span *ngIf="page.isEllipsis" class="ellipsis" aria-hidden="true">
                             {{ page.value }}
                     </span>
-                </ng-container>
-            </div>
-            <button (click)="nextPage()" class="button pagination-button"
-                    [disabled]="currentPage === totalPages"
-                    [attr.aria-label]="'paginationButton.next' | translate">
-                        {{ 'paginationButton.next' | translate }}
-            </button>
-            <span class="pagination-text">
-                {{ 'pagination.page' | translate }} {{ currentPage }} {{ 'pagination.of' | translate }} {{ totalPages }}
-            </span>
+            </ng-container>
         </div>
+        <button (click)="nextPage()" class="button pagination-button"
+                [disabled]="currentPage === totalPages"
+                [attr.aria-label]="'paginationButton.next' | translate">
+            {{ 'paginationButton.next' | translate }}
+        </button>
     </div>
 </div>
