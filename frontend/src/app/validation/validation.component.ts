@@ -482,7 +482,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === ValidationType.EXAMPLE)
       );
 
-      if (exampleRows.length === 2 && !this.notifiedPreconditionIds.has(preconditionId)) {
+      if (this.hasMultipleDistinctCombinationAnswers(preconditionId) && !this.notifiedPreconditionIds.has(preconditionId)) {
         this.notificationTitle = 'prioritizationNotice.title';
         this.notificationMessage = 'prioritizationNotice.message';
         this.showNotificationAndFocus();
@@ -633,6 +633,25 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
       this.validationService.saveValidationAnswer(validationRowAnswer).subscribe(
           next => {
             this.updateRelatedValidationAnswers(validation, validationRowValue);
+
+            const combinationValidation = this.validations.find(v =>
+                v.validationAutofillList.some(vafl => vafl.type === 'COMBINATION')
+            );
+
+            if (combinationValidation) {
+              this.updateShouldShowPrioritizationColumn();
+
+              const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+              if (
+                  this.hasMultipleDistinctCombinationAnswers(preconditionId) &&
+                  !this.notifiedPreconditionIds.has(preconditionId)
+              ) {
+                this.notificationTitle = 'prioritizationNotice.title';
+                this.notificationMessage = 'prioritizationNotice.message';
+                this.showNotificationAndFocus();
+                this.notifiedPreconditionIds.add(preconditionId);
+              }
+            }
           }
       );
     }, this.TIMEOUT_BEFORE_SENDING_ANSWER_UPDATE)
@@ -862,6 +881,20 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     return true;
   }
 
+  private checkAndTriggerPrioritization(preconditionId: number): void {
+    if (
+        this.hasMultipleDistinctCombinationAnswers(preconditionId) &&
+        !this.notifiedPreconditionIds.has(preconditionId)
+    ) {
+      this.notificationTitle = 'prioritizationNotice.title';
+      this.notificationMessage = 'prioritizationNotice.message';
+      this.showNotificationAndFocus();
+      this.notifiedPreconditionIds.add(preconditionId);
+    }
+
+    this.updateShouldShowPrioritizationColumn();
+  }
+
   updateCombinationAutoFillAnswers(answerValuesSortedByWeight: any[], validationRowValue: ValidationRow, validationFilledByAnswer: Validation) {
     let foundMatch = false;
     for (let combinationResult of this.validationCombinationResults) {
@@ -884,6 +917,8 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
           }
           this.validationService.saveValidationAnswer(correctAnswer).subscribe(next => {
             this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
+            const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+            this.checkAndTriggerPrioritization(validationRowValue.answers[0].featurePrecondition.id);
           });
         }
         foundMatch = true;
@@ -900,7 +935,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
         if (conclusionAnswer?.conclusionChanged) {
           correctAnswer.conclusionChanged = true;
         }
-        this.validationService.saveValidationAnswer(correctAnswer).subscribe();
+        this.validationService.saveValidationAnswer(correctAnswer).subscribe(() => {
+          this.updateRelatedValidationAnswers(validationFilledByAnswer, validationRowValue);
+
+          const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+          this.checkAndTriggerPrioritization(preconditionId);
+        });
       }
     }
   }
@@ -1378,17 +1418,50 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }, 0);
   }
 
-  private updateShouldShowPrioritizationColumn(): void {
-    const hasPrioritizationCase = this.validationRowValues.some(row =>
-        row.answers.some(answer => answer.type === 'EXAMPLE') &&
-        this.hasMultipleExamples(row.answers[0].featurePrecondition.id)
+  hasMultipleDistinctCombinationAnswers(preconditionId: number): boolean {
+    const combinationValidation = this.validations.find(v =>
+        v.validationAutofillList.some(vafl => vafl.type === 'COMBINATION')
     );
-    const isCurrentlyHidden = this.hiddenColumns.has(9);
+    if (!combinationValidation) return false;
 
-    if (hasPrioritizationCase && isCurrentlyHidden) {
+    const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
+        row.answers.some(a =>
+            a.featurePrecondition.id === preconditionId &&
+            a.type === 'EXAMPLE'
+        )
+    );
+
+    const combinationAnswers = rowsWithSamePrecondition
+        .map(row =>
+            row.answers.find(a => a.validationId === combinationValidation.id)?.answer?.trim()
+        )
+        .filter(answer => !!answer && answer !== '');
+
+    const uniqueAnswers = new Set(combinationAnswers);
+    return uniqueAnswers.size >= 2;
+  }
+
+
+  private updateShouldShowPrioritizationColumn(): void {
+    const preconditionIds = new Set<number>(
+        this.validationRowValues
+            .map(row => row.answers[0]?.featurePrecondition?.id)
+            .filter(id => id !== undefined)
+    );
+
+    let shouldShow = false;
+    for (const id of preconditionIds) {
+      if (this.hasMultipleDistinctCombinationAnswers(id)) {
+        shouldShow = true;
+        break;
+      }
+    }
+
+    const isCurrentlyHidden = this.hiddenColumns.has(9);
+    if (shouldShow && isCurrentlyHidden) {
       this.toggleColumnVisibility(9);
     }
-    if (!hasPrioritizationCase && !isCurrentlyHidden) {
+    if (!shouldShow && !isCurrentlyHidden) {
       this.toggleColumnVisibility(9);
     }
   }
@@ -1399,10 +1472,22 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   hasMultipleExamples(preconditionId: number): boolean {
-    const rowsWithSamePrecondition = this.validationRowValues.filter(row =>
-        row.answers.some(answer => answer.featurePrecondition.id === preconditionId && answer.type === ValidationType.EXAMPLE)
+    const combinationValidation = this.validations.find(v =>
+        v.validationAutofillList.some(vafl => vafl.type === 'COMBINATION')
     );
-    return rowsWithSamePrecondition.length > 1;
+    if (!combinationValidation) return false;
+
+    const combinationAnswers = this.validationRowValues
+        .filter(row =>
+            row.answers.some(a => a.featurePrecondition.id === preconditionId && a.type === 'EXAMPLE')
+        )
+        .map(row =>
+            row.answers.find(a => a.validationId === combinationValidation.id)?.answer?.trim()
+        )
+        .filter(answer => !!answer);
+
+    const uniqueAnswers = new Set(combinationAnswers);
+    return uniqueAnswers.size >= 2;
   }
 
   onCheckboxChange(validationRowValue: ValidationRow): void {
