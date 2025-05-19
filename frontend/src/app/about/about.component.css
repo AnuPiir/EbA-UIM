@@ -9,6 +9,18 @@
   gap: 5rem;
 }
 
+.eba-back-to-top-fixed-wrapper {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.eba-back-to-top-fixed-wrapper app-back-to-top {
+  pointer-events: auto;
+}
+
 .content {
   display: flex;
   flex-direction: column;

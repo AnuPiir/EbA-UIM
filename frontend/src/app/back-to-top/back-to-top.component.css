@@ -1,14 +1,9 @@
 .back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
     padding: 8px 12px;
     background-color: var(--text-color);
     color: white;
-    border: 0.125rem solid;
+    border: 0.125rem solid #1a222c;
     border-radius: 1rem;
-    border-color: #1a222c;
     cursor: pointer;
     font-size: 18px;
     font-weight: 500;
@@ -17,7 +12,6 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transform: translateX(0);
 }
 
 .back-to-top .material-symbols-outlined {
