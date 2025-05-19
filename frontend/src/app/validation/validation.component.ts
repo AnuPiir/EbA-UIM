@@ -73,8 +73,7 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   @ViewChild('infoIcon', { read: ElementRef }) infoIcon!: ElementRef<HTMLElement>;
   @ViewChild('status') statusEl!: ElementRef<HTMLElement>;
   @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
-  @ViewChild(CdkVirtualScrollViewport)
-  viewport!: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
 
   @Input() tabIndex: number;
   @Input() columns: string[] = [];

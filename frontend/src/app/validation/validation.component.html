@@ -27,13 +27,18 @@
 
                                     <span *ngIf="!isColumnHidden(i)">{{ getTranslation(validation) }}</span>
 
-                                    <ng-container *ngIf="validation.tooltipEt && i !== 12 && i !== 13">
+                                    <ng-container *ngIf="(isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn) && i !== 12 && i !== 13">
                                     <button mat-icon-button disableRipple
                                             matTooltip="{{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}"
-                                            matTooltipClass="tooltip-below" matTooltipPosition="below" aria-label="Show info"
+                                            matTooltipClass="tooltip-below" matTooltipPosition="below"
+                                            [attr.aria-label]="'Show info about ' + getTranslation(validation)"
+                                            [attr.aria-describedby]="'tooltip-' + i"
                                             class="header-tooltip-button flat-icon-button" tabindex="0">
                                         <mat-icon>info</mat-icon>
                                     </button>
+                                    <span class="visually-hidden" [id]="'tooltip-' + i">
+                                       Info: {{ isCurrentLangEt ? validation.tooltipEt : validation.tooltipEn }}
+                                    </span>
                                     </ng-container>
 
                                 </div>
@@ -236,7 +241,9 @@
 
         </table>
     </cdk-virtual-scroll-viewport>
-    <app-back-to-top *ngIf="viewport" [viewport]="viewport"></app-back-to-top>
+    <div class="eba-back-to-top-fixed-wrapper">
+        <app-back-to-top *ngIf="viewport" [viewport]="viewport"></app-back-to-top>
+    </div>
 </div>
 
 

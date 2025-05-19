@@ -8,24 +8,36 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 })
 
 export class BackToTopComponent implements AfterViewInit {
-  @Input() viewport!: CdkVirtualScrollViewport;
+  @Input() viewport?: CdkVirtualScrollViewport;
   showButton = false;
   ctrlPressTimeout: any = null;
   ctrlPressed = false;
 
   @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
 
+  private onScroll(): void {
+    const offset = this.viewport
+        ? this.viewport.measureScrollOffset('top')
+        : window.scrollY || document.documentElement.scrollTop;
+
+    this.updateButtonVisibility(offset);
+  }
+
+  private onScrollBound = () => this.onScroll();
+
   ngAfterViewInit(): void {
-    if (this.viewport) {
-      this.viewport.elementScrolled().subscribe(() => {
-        const offset = this.viewport.measureScrollOffset('top');
-        this.updateButtonVisibility(offset);
-      });
+    if (this.viewport?.elementRef?.nativeElement) {
+      this.viewport.elementRef.nativeElement.addEventListener('scroll', this.onScrollBound);
     } else {
-      window.addEventListener('scroll', () => {
-        const offset = window.scrollY || document.documentElement.scrollTop;
-        this.updateButtonVisibility(offset);
-      });
+      window.addEventListener('scroll', this.onScrollBound);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.viewport?.elementRef?.nativeElement) {
+      this.viewport.elementRef.nativeElement.removeEventListener('scroll', this.onScrollBound);
+    } else {
+      window.removeEventListener('scroll', this.onScrollBound);
     }
   }
 
@@ -44,10 +56,9 @@ export class BackToTopComponent implements AfterViewInit {
     } else {
       window.scrollTo({ top: 0 });
     }
-    const focusTarget = document.querySelector('a, button, [tabindex="0"]') as HTMLElement;
+    const focusTarget = document.querySelector('a, button, [tabindex="1"]') as HTMLElement;
     focusTarget?.focus();
   }
-
 
   handleKeyPress(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -73,7 +84,5 @@ export class BackToTopComponent implements AfterViewInit {
       clearTimeout(this.ctrlPressTimeout);
     }
   }
-
-
 
 }
