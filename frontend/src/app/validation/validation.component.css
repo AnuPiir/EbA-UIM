@@ -179,23 +179,28 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 }
 
 .content-cell-eleventh-child {
-  width: 15rem;
+  width: 16rem;
   border-right: none;
+  text-align: right;
 }
 
 .content-cell-twelveth-child {
   width: 11rem;
   border-right: none;
   border-left: none;
+  text-align: -webkit-center;
 }
 
 .content-cell-thirteenth-child  {
   width: 16rem;
   border-left: none;
+  max-width: 99%;
+  text-align: left;
 }
 
 .content-cell-fourteenth-child, .content-cell-fifteenth-child  {
   width: 28.3rem;
+  max-width: 99%;
 }
 
 .content-cell-sixteenth-child  {
@@ -551,9 +556,9 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
 
 .notification-overlay {
   position: fixed;
-  top:    0;
-  left:   0;
-  right:  0;
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
