@@ -162,11 +162,25 @@ npm run make
 
 The installer should appear in the `frontend/out/make/squirrel.windows/x64` folder named `eba-uim_{{version}}.exe`
 
-### Creating installer for macOs
-...
-### Creating installer for Linux
-...
+### Creating installer for macOS arm64
+Run the following command.
 
+```bash
+npm run package-mac-arm64 && npm run dmg-arm64
+```
+The installer should appear in the `../release-builds/macOS` folder named `EbA-UIM.dmg`
+...
+### Creating installer for Linux arm64
+...
+Run the following command.
+
+```bash
+npm run package-linux-arm64 && npm run debian-installer-arm64
+```
+The installer should appear in the `../release-builds/linux-deb` folder named `eba-uim_1.3.0_arm64.deb`
+
+
+The same process can be repeated for x64 architecture by replacing `arm64` with `x64` in the commands above.
 ---
 
 ## 👨‍💻 Authors
