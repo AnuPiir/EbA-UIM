@@ -5,7 +5,7 @@
 </div>
 <div *ngIf="!loading" class="table-wrapper">
 
-    <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000" #tableViewport>
+    <cdk-virtual-scroll-viewport itemSize="250" [minBufferPx]="1000" [maxBufferPx]="2000" [style.height.px]="getViewportHeight()" #tableViewport>
         <table>
             <thead>
                 <tr>

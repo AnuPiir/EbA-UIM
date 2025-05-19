@@ -47,7 +47,7 @@ td {
 }
 
 cdk-virtual-scroll-viewport {
-  height: calc(100vh - 200px);
+  max-height: 95vh !important;
 }
 
 tfoot td { border: none; }
@@ -88,6 +88,7 @@ textarea::placeholder {
 
 .table-wrapper {
   border: none;
+  height: 100vh;
 }
 
 .header {
@@ -335,6 +336,13 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   gap: 0.5rem;
   background-color: var(--light-green);
   color: var(--dark-green);
+}
+
+tfoot tr,
+tfoot td {
+  padding: 0;
+  margin: 0;
+  height: 100px;
 }
 
 .add-row-button:hover {

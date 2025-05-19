@@ -142,6 +142,12 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  getViewportHeight(): number {
+    const rowCount = this.validationRowValues.length;
+    const itemSize = 250;
+    return rowCount * itemSize + 175;
+  }
+
   ngOnInit(): void {
     const questionnaireId = this.route.snapshot.queryParamMap.get('questionnaireId');
     if (!questionnaireId  || isNaN(Number(questionnaireId))) {
