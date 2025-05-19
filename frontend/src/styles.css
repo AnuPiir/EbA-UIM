@@ -295,17 +295,17 @@ border-color: var(--dark-purple);
 
 /* Scrollbar Style */
 ::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+    width: 12px;
+    height: 12px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #71a16d;
+    background-color: #5b8358;
     border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #86bd80;
+    background-color: #6e9b68;
     cursor: pointer;
 }
 
