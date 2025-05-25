@@ -71,7 +71,9 @@
                                 class="background-beige no-bottom-border"
                                 [class]="getStickyClassByIndex(i)"
                                 [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '',
-                                            i === 1 ? 'left-border-highlight' : '', i === 3 ? 'right-border-highlight' : '']"
+                                            i === 1 ? 'left-border-highlight' : '',
+                                            i === 3 ? 'right-border-highlight' : '',
+                                            isValidationFeature(validation) ? 'top-border-highlight box-shadow-2-4-3' : '']"
                                 [ngStyle]="{'background-color': isRowDisabled(validationRowValue) && shouldGrayOut(validation)
                                         ? '#e0e0e0' : getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'}">
 

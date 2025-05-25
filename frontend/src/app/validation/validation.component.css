@@ -51,7 +51,7 @@ cdk-virtual-scroll-viewport {
 }
 
 .last-visible-row td {
-  border: 1px solid var(--brown) !important;
+  border-bottom: 1px solid var(--brown) !important;
 }
 
 tfoot td { border: none; }
@@ -139,7 +139,6 @@ th.content-cell-tenth-child.ng-star-inserted > div, th.content-cell-second-child
   left: 3rem;
   z-index: 1;
   width: 15.5rem;
-  box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.42);
 }
 
 .content-cell-second-child {
@@ -605,3 +604,18 @@ body.modal-open {
   overflow: hidden;
 }
 
+.top-border-highlight {
+  border-top: 0.25rem solid #C0B2A3FF;
+}
+
+.right-border-highlight {
+  border-right: 0.25rem solid #C0B2A3FF;
+}
+
+.bottom-border-highlight {
+  border-bottom: 0.25rem solid #C0B2A3FF;
+}
+
+.box-shadow-2-4-3 {
+  box-shadow: 2px 4px 3px #C0B2A3FF;
+}
