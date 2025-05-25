@@ -69,6 +69,6 @@ a.toolbar-router:hover {
 
 a.toolbar-router:focus-visible,
 .button-language:focus-visible {
-  outline: .25rem solid #fb8825;
+  outline: .25rem solid #3C00BD;
   outline-offset: 0.25rem;
 }

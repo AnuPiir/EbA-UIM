@@ -278,7 +278,8 @@
   },
   "backToTop": {
     "buttonLabel": "ÜLES",
-    "ariaLabel": "Nupp lehe algusesse liikumiseks. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt."
+    "ariaLabel": "Nupp lehe algusesse liikumiseks. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt.",
+    "ariaLabel2": "Tagasi üles liikumiseks nupp on nüüd saadaval. Vajutage Enter, Tühik või kasutage Ctrl + Üles-noolt."
   },
   "hidePanels": {
     "hide": "Peida",

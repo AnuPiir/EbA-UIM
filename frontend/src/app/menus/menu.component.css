@@ -84,10 +84,10 @@
 }
 
 :focus-visible {
-  outline: .25rem solid #fb8825;
+  outline: .25rem solid #3C00BD;
 }
 
 .menu-row:focus-visible {
-  outline: .25rem solid #fb8825;
+  outline: .25rem solid #3C00BD;
   outline-offset: -4px;
 }

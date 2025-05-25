@@ -73,7 +73,7 @@ mat-tab-group {
 }
 
 :host ::ng-deep div[role="tab"]:focus-visible {
-  outline: .25rem solid #fb8825;
+  outline: .25rem solid #3C00BD;
 }
 
 :host ::ng-deep .mdc-tab-indicator .mdc-tab-indicator__content {
@@ -259,7 +259,7 @@ mat-tab-group {
 }
 
 :focus-visible {
-  outline: .25rem solid #fb8825;
+  outline: .25rem solid #3C00BD;
 }
 
 .skip-link {
@@ -271,14 +271,14 @@ mat-tab-group {
 .skip-link:focus-visible {
   position: static;
   margin-bottom: 1rem;
-  background-color: var(--text-color);
-  color: white;
+  background-color: #fac899;
+  color: var(--text-color);
   padding: 0.5rem 1rem;
   z-index: 1000;
   text-decoration: none;
   font-weight: bold;
   border-radius: 0.25rem;
-  outline: 0.25rem solid #fb8825;
+  outline: 0.25rem solid #3C00BD;
   outline-offset: 0;
   display: inline-block;
 }

@@ -14,14 +14,14 @@
   position: absolute;
   top: 1rem;
   left: 5rem;
-  background-color: var(--text-color);
-  color: white;
+  background-color: #fac899;
+  color: var(--text-color);
   padding: 0.5rem 1rem;
   z-index: 1000;
   text-decoration: none;
   font-weight: bold;
   border-radius: 0.25rem;
-  outline: 0.25rem solid #fb8825;
+  outline: 0.25rem solid #3C00BD;
   outline-offset: 0;
 }
 

@@ -1,5 +1,6 @@
 import {Component, HostListener, ViewChild, AfterViewInit, Input, ElementRef} from '@angular/core';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-back-to-top',
@@ -8,6 +9,9 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 })
 
 export class BackToTopComponent implements AfterViewInit {
+
+  constructor(private translate: TranslateService) {}
+
   @Input() viewport?: CdkVirtualScrollViewport;
   showButton = false;
   ctrlPressTimeout: any = null;
@@ -45,8 +49,9 @@ export class BackToTopComponent implements AfterViewInit {
     const wasVisible = this.showButton;
     this.showButton = offset > 200;
     if (!wasVisible && this.showButton && this.liveAnnouncer) {
-      this.liveAnnouncer.nativeElement.textContent =
-          'Back to top button is now available'; //muuta
+      this.translate.get('backToTop.ariaLabel2').subscribe((translation: string) => {
+        this.liveAnnouncer.nativeElement.textContent = translation;
+      });
     }
   }
 
