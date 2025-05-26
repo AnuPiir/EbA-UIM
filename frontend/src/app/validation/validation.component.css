@@ -616,6 +616,6 @@ body.modal-open {
   border-bottom: 0.25rem solid #C0B2A3FF;
 }
 
-.box-shadow-2-4-3 {
-  box-shadow: 2px 4px 3px #C0B2A3FF;
+.shadow-right {
+  box-shadow: 2px 0 0 rgba(192, 178, 163, 0.7);
 }

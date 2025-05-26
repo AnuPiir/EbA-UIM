@@ -73,7 +73,7 @@
                                 [ngClass]="[getStickyClassByIndex(i), isRowDisabled(validationRowValue) && shouldGrayOut(validation) ? 'gray-out-cell' : '',
                                             i === 1 ? 'left-border-highlight' : '',
                                             i === 3 ? 'right-border-highlight' : '',
-                                            isValidationFeature(validation) ? 'top-border-highlight box-shadow-2-4-3' : '']"
+                                            isValidationFeature(validation) ? 'top-border-highlight shadow-right' : '']"
                                 [ngStyle]="{'background-color': isRowDisabled(validationRowValue) && shouldGrayOut(validation)
                                         ? '#e0e0e0' : getValidationRowAnswer(validation, validationRowValue).backgroundColor || '#F7F1E6'}">
 
