@@ -15,7 +15,7 @@ export class BackToTopComponent implements AfterViewInit {
   @Input() viewport?: CdkVirtualScrollViewport;
   showButton = false;
   ctrlPressTimeout: any = null;
-  ctrlPressed = false;
+  ctrlRecentlyPressed = false;
 
   @ViewChild('liveAnnouncer', { static: false }) liveAnnouncer!: ElementRef;
 
@@ -73,19 +73,27 @@ export class BackToTopComponent implements AfterViewInit {
   }
 
   @HostListener('window:keydown', ['$event'])
-  onKeyPress(event: KeyboardEvent) {
-    if (event.key === 'Control') {
-      this.ctrlPressed = true;
+  onKeyPressCtrlArrowUp(event: KeyboardEvent) {
+    const key = event.key;
+
+    if (key === 'Control') {
+      this.ctrlRecentlyPressed = true;
       clearTimeout(this.ctrlPressTimeout);
       this.ctrlPressTimeout = setTimeout(() => {
-        this.ctrlPressed = false;
+        this.ctrlRecentlyPressed = false;
       }, 3000);
     }
 
-    if (event.key === 'ArrowUp' && this.ctrlPressed) {
+    if (event.ctrlKey && key === 'ArrowUp') {
       event.preventDefault();
       this.scrollToTop();
-      this.ctrlPressed = false;
+      return;
+    }
+
+    if (this.ctrlRecentlyPressed && key === 'ArrowUp') {
+      event.preventDefault();
+      this.scrollToTop();
+      this.ctrlRecentlyPressed = false;
       clearTimeout(this.ctrlPressTimeout);
     }
   }

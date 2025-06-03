@@ -650,15 +650,17 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
             if (combinationValidation) {
               this.updateShouldShowPrioritizationColumn();
 
-              const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
-              if (
-                  this.hasMultipleDistinctCombinationAnswers(preconditionId) &&
-                  !this.notifiedPreconditionIds.has(preconditionId)
-              ) {
-                this.notificationTitle = 'prioritizationNotice.title';
-                this.notificationMessage = 'prioritizationNotice.message';
-                this.showNotificationAndFocus();
-                this.notifiedPreconditionIds.add(preconditionId);
+              if (validation.type !== ValidationType.STAKEHOLDER && validation.type !== ValidationType.EXAMPLE && validation.type !== ValidationType.FEATURE_PRECONDITION) {
+                const preconditionId = validationRowValue.answers[0].featurePrecondition.id;
+                if (
+                    this.hasMultipleDistinctCombinationAnswers(preconditionId) &&
+                    !this.notifiedPreconditionIds.has(preconditionId)
+                ) {
+                  this.notificationTitle = 'prioritizationNotice.title';
+                  this.notificationMessage = 'prioritizationNotice.message';
+                  this.showNotificationAndFocus();
+                  this.notifiedPreconditionIds.add(preconditionId);
+                }
               }
             }
           }
@@ -1178,28 +1180,28 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
   }
 
   @HostListener('window:keydown', ['$event'])
-  handleAltH(event: KeyboardEvent) {
-    if (event.altKey && event.key.toLowerCase() === 'h') {
-      event.preventDefault();
-      this.toggleColumnVisibility(13);
-    }
-  }
+  onKeyPressCtrlH(event: KeyboardEvent) {
+    const key = event.key;
 
-  @HostListener('window:keydown', ['$event'])
-  handleCtrlCombinations(event: KeyboardEvent) {
-    const key = event.key.toLowerCase();
-    if (key === 'control') {
+    if (key === 'Control') {
       this.ctrlRecentlyPressed = true;
       clearTimeout(this.ctrlPressTimeout);
       this.ctrlPressTimeout = setTimeout(() => {
         this.ctrlRecentlyPressed = false;
       }, 3000);
     }
-    if (key === 'h' && (event.ctrlKey || this.ctrlRecentlyPressed)) {
+
+    if (event.ctrlKey && key.toLowerCase() === 'h') {
       event.preventDefault();
+      this.toggleColumnVisibility(13);
+      return;
+    }
+
+    if (this.ctrlRecentlyPressed && key.toLowerCase() === 'h') {
+      event.preventDefault();
+      this.toggleColumnVisibility(13);
       this.ctrlRecentlyPressed = false;
       clearTimeout(this.ctrlPressTimeout);
-      this.toggleColumnVisibility(13);
     }
   }
 

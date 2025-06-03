@@ -517,6 +517,8 @@ tfoot td {
   border-radius: 4px;
   position: relative;
   margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
 }
 
 .conclusion-warning-box .close-btn {
@@ -526,17 +528,25 @@ tfoot td {
   justify-content: center;
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 1rem;
   cursor: pointer;
   color: #856404;
   font-weight: bolder;
 }
 
 .warning-icon {
-  vertical-align: middle;
-  margin-right: 6px;
   font-size: 20px;
   color: #856404;
+  flex-shrink: 0;
+  margin-right: 6px;
+  margin-top: 3px;
+}
+
+.warning-text {
+  flex: 1;
+  word-break: break-word;
+  display: block;
+  max-width: 23rem;
 }
 
 .filler-cell-feature {
