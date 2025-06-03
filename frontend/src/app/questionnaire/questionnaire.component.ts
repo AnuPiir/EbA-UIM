@@ -252,7 +252,6 @@ export class QuestionnaireComponent implements OnInit {
             reader.onload = (e) => {
                 try {
                     const jsonData = JSON.parse(e.target?.result as string);
-                    console.log(jsonData);
                     this.questionnaireService.importQuestionnaireFromJson(jsonData).subscribe(
                         response => {
                             if (response) {

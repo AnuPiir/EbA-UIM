@@ -126,7 +126,9 @@ public class ExportService {
 	private Sheet getSheet(Workbook workbook, String name) {
 		Sheet sheet1 = workbook.createSheet(name);
 		for (int i = 0; i < columnsWidths.size(); i++) {
-			sheet1.setColumnWidth(i, columnsWidths.get(i) * 256 / 7);
+			int px = columnsWidths.get(i);
+			int poiWidth = (int) ((px - 5) / 7. * 256 * 0.6);
+			sheet1.setColumnWidth(i, poiWidth);
 		}
 		return sheet1;
 	}
