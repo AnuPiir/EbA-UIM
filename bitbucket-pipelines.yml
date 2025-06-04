@@ -7,7 +7,7 @@ definitions:
 
 pipelines:
   branches:
-    master:
+    ebam-gerdo:
       - step:
           name: Build and Package App for Linux
           caches:
