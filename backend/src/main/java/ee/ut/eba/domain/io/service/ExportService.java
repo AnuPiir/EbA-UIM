@@ -21,26 +21,28 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ExportService {
-	private final ValidationAnswerService validationAnswerService;
 
-	private final ExcelColumnService excelColumnService;
+	private final ValidationAnswerService validationAnswerService;
 	private final FeatureGroupService featureGroupService;
 	private final QuestionnaireService questionnaireService;
 
 	private final List<Integer> columnsWidths = Arrays.asList(144, 420, 74, 201, 365, 365, 234, 234, 234, 234, 170, 452,
 			201, 365, 602, 602);
+
 	private final List<HorizontalAlignment> headerColumnsAlignment = Arrays.asList(HorizontalAlignment.CENTER,
 			HorizontalAlignment.LEFT, HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT,
 			HorizontalAlignment.LEFT, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.LEFT, HorizontalAlignment.LEFT);
+
 	private final List<HorizontalAlignment> bodyColumnsAlignment = Arrays.asList(HorizontalAlignment.CENTER,
 			HorizontalAlignment.LEFT, HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT,
 			HorizontalAlignment.LEFT, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT, HorizontalAlignment.LEFT,
 			HorizontalAlignment.LEFT);
+
 	private final List<VerticalAlignment> bodyColumnsVerticalAlignment = Arrays.asList(VerticalAlignment.TOP,
 			VerticalAlignment.TOP, VerticalAlignment.TOP, VerticalAlignment.TOP, VerticalAlignment.TOP,
 			VerticalAlignment.TOP, VerticalAlignment.CENTER, VerticalAlignment.CENTER, VerticalAlignment.CENTER,
@@ -50,6 +52,17 @@ public class ExportService {
 	private final Map<String, Map<String, String>> selectionTranslations = Map.of("YES",
 			Map.of("et", "Jah", "en", "Yes"), "PARTLY", Map.of("et", "Osaliselt", "en", "Partly"), "DONT_KNOW",
 			Map.of("et", "Ei tea", "en", "Don't know"), "NO", Map.of("et", "Ei", "en", "No"));
+
+	Map<String, List<String>> columnNames = Map.of("et",
+			List.of("ID", "Funktsionaalsuse kirjeldus", "", "Sidusrühm", "Funktisonaalsuse eeltingimus",
+					"Võrreldav situatsioon", "Sama sidusrühm?", "Sama kontekst?", "Eesmärgipärane kasutus?",
+					"Lahendusega rahul?", "Prioritiseeri", "Kirjeldus, mil määral on eeltingimus täidetud", "", "",
+					"Lause koond", "Tee järeldused ja loo tegevuskava"),
+			"en",
+			List.of("ID", "Feature description", "", "Stakeholder", "Features precondition", "Comparable situation",
+					"The same stakeholder?", "The same context?", "Purposeful use?", "Satisfied with the solution?",
+					"Prioritize", "To what extent the preconditions are met", "", "", "As a sentence",
+					"Conclusions and action plan"));
 
 	private final Map<String, XSSFColor> selectionBackground = Map.of("YES",
 			new XSSFColor(new byte[]{(byte) 179, (byte) 217, (byte) 155}), "PARTLY",
@@ -175,7 +188,7 @@ public class ExportService {
 		rowCounter++;
 		row.setHeight((short) 800);
 
-		List<String> headerNames = excelColumnService.getColumnNames(language);
+		List<String> headerNames = columnNames.get(language);
 
 		for (int i = 0; i < headerNames.size(); i++) {
 			CellStyle headerStyle = getHeaderStyle(workbook, headerColumnsAlignment.get(i));
@@ -204,7 +217,7 @@ public class ExportService {
 				row.setHeight((short) -1);
 
 				Cell cell0 = row.createCell(0);
-				cell0.setCellValue(groupId);
+				cell0.setCellValue(values.get(0).customId);
 				cell0.setCellStyle(
 						getCellStyle(workbook, bodyColumnsAlignment.get(0), bodyColumnsVerticalAlignment.get(0), null));
 
@@ -229,8 +242,10 @@ public class ExportService {
 
 	private HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> getAnswersSortedByRowAndGroup(
 			List<ValidationAnswer> validationAnswers) {
-		List<ExcelCell> cells = validationAnswers.stream().map(answer -> new ExcelCell(answer.getFeatureGroup().getId(),
-				answer.getFeature().getId(), answer.getRowId(), answer.getAnswer(), answer.getType())).toList();
+		List<ExcelCell> cells = validationAnswers.stream()
+				.map(answer -> new ExcelCell(answer.getFeatureGroup().getId(), answer.getFeature().getId(),
+						answer.getRowId(), answer.getAnswer(), answer.getType(), answer.getFeature().getCustomId()))
+				.toList();
 
 		HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> result = new HashMap<>();
 

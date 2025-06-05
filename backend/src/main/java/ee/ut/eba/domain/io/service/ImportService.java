@@ -39,7 +39,9 @@ public class ImportService {
 	@Transactional
 	public int importQuestionnaire(QuestionaireJson jsonData) {
 		emptyMemory();
-		jsonData.validationAnswers().sort(Comparator.comparing(answer -> answer.featureGroup().id()));
+		jsonData.validationAnswers()
+				.sort(Comparator.comparingInt((ValidationAnswerJson answer) -> answer.featureGroup().id())
+						.thenComparingInt(answer -> answer.feature().id()));
 		int questionnaireId = saveQuestionnaire(jsonData);
 		for (ValidationAnswerJson validationAnswer : jsonData.validationAnswers()) {
 			int validationId = validationAnswer.validation().id();
