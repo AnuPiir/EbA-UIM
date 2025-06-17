@@ -1290,6 +1290,11 @@ export class ValidationComponent implements OnInit, AfterContentChecked {
     ];
   }
 
+  shouldShowNoExampleOption(validationRowValue: ValidationRow): boolean {
+    const selectAnswers = validationRowValue.answers.filter(a => a.type === 'SELECT');
+    return selectAnswers.every(a => a.answer && a.answer !== 'CHOOSE_OPTION');
+  }
+
   deleteFeature(id: number) {
     const initialState = {
       title: this.translateService.instant('confirmModal.deleteFeatureTitle'),

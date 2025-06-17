@@ -11,6 +11,7 @@ export class ExamplemenuComponent {
   @Input() onAddExample: () => void;
   @Input() onDeleteExample: () => void;
   @Input() onNoExample: () => void;
+  @Input() showNoExampleOption: boolean = true;
 
   isOpen = false;
   focusedIndex = 0;
