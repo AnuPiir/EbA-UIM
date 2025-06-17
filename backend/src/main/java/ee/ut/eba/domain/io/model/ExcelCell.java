@@ -10,7 +10,8 @@ public class ExcelCell {
 	public Boolean prioritized;
 	public String backgroundColor;
 
-	public ExcelCell(int featureGroupId, int featureId, int rowId, String value, String type, String customId, Boolean prioritized, String backgroundColor) {
+	public ExcelCell(int featureGroupId, int featureId, int rowId, String value, String type, String customId,
+			Boolean prioritized, String backgroundColor) {
 		this.featureGroupId = featureGroupId;
 		this.featureId = featureId;
 		this.rowId = rowId;

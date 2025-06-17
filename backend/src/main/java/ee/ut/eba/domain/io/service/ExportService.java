@@ -54,10 +54,10 @@ public class ExportService {
 			Map.of("et", "Ei tea", "en", "Don't know"), "NO", Map.of("et", "Ei", "en", "No"));
 
 	Map<String, List<String>> columnNames = Map.of("et",
-			List.of("ID", "Funktsiooni kirjeldus", "", "Sidusrühm", "Funktsiooni eeltingimus",
-					"Võrdluseks sobiv näide", "Sama sidusrühm?", "Sama kontekst?", "Tegevus eesmärgikohane?",
-					"Sidusrühma rahulolu?", "Prioritiseeri", "Kirjeldus, mil määral on eeltingimus täidetud", "", "",
-					"", "Järeldused ja tegevuskava"),
+			List.of("ID", "Funktsiooni kirjeldus", "", "Sidusrühm", "Funktsiooni eeltingimus", "Võrdluseks sobiv näide",
+					"Sama sidusrühm?", "Sama kontekst?", "Tegevus eesmärgikohane?", "Sidusrühma rahulolu?",
+					"Prioritiseeri", "Kirjeldus, mil määral on eeltingimus täidetud", "", "", "",
+					"Järeldused ja tegevuskava"),
 			"en",
 			List.of("ID", "Feature description", "", "Stakeholder", "Feature precondition", "Comparison example",
 					"The same stakeholder?", "The same context?", "Purposeful action?", "Stakeholder satisfaction?",
@@ -71,15 +71,14 @@ public class ExportService {
 			new XSSFColor(new byte[]{(byte) 245, (byte) 148, (byte) 138}), "",
 			new XSSFColor(new byte[]{(byte) 211, (byte) 211, (byte) 211}));
 
-	private final Map<String, XSSFColor> backgroundColorMap = Map.of(
-			"var(--light-green)", new XSSFColor(new byte[]{(byte) 179, (byte) 217, (byte) 155}),
-			"var(--light-orange)", new XSSFColor(new byte[]{(byte) 246, (byte) 186, (byte) 137}),
-			"var(--light-red)", new XSSFColor(new byte[]{(byte) 245, (byte) 148, (byte) 138}),
-			"var(--light-yellow)", new XSSFColor(new byte[]{(byte) 246, (byte) 227, (byte) 163}),
-			"var(--light-blue)", new XSSFColor(new byte[]{(byte) 160, (byte) 206, (byte) 234}),
-			"var(--light-grey)", new XSSFColor(new byte[]{(byte) 220, (byte) 220, (byte) 220}),
-			"var(--beige)", new XSSFColor(new byte[]{(byte) 247, (byte) 241, (byte) 230})
-	);
+	private final Map<String, XSSFColor> backgroundColorMap = Map.of("var(--light-green)",
+			new XSSFColor(new byte[]{(byte) 179, (byte) 217, (byte) 155}), "var(--light-orange)",
+			new XSSFColor(new byte[]{(byte) 246, (byte) 186, (byte) 137}), "var(--light-red)",
+			new XSSFColor(new byte[]{(byte) 245, (byte) 148, (byte) 138}), "var(--light-yellow)",
+			new XSSFColor(new byte[]{(byte) 246, (byte) 227, (byte) 163}), "var(--light-blue)",
+			new XSSFColor(new byte[]{(byte) 160, (byte) 206, (byte) 234}), "var(--light-grey)",
+			new XSSFColor(new byte[]{(byte) 220, (byte) 220, (byte) 220}), "var(--beige)",
+			new XSSFColor(new byte[]{(byte) 247, (byte) 241, (byte) 230}));
 
 	private int rowCounter = 0;
 
@@ -255,8 +254,9 @@ public class ExportService {
 					ExcelCell c = values.get(i);
 					if (i == 9) {
 						// Check if row is prioritized
-						boolean hasCheckmark = values.stream().anyMatch(v ->
-								"FEATURE_PRECONDITION".equalsIgnoreCase(v.type) && Boolean.TRUE.equals(v.prioritized));
+						boolean hasCheckmark = values.stream()
+								.anyMatch(v -> "FEATURE_PRECONDITION".equalsIgnoreCase(v.type)
+										&& Boolean.TRUE.equals(v.prioritized));
 
 						if (hasCheckmark) {
 							cell.setCellValue("✓");
@@ -280,7 +280,8 @@ public class ExportService {
 			List<ValidationAnswer> validationAnswers) {
 		List<ExcelCell> cells = validationAnswers.stream()
 				.map(answer -> new ExcelCell(answer.getFeatureGroup().getId(), answer.getFeature().getId(),
-						answer.getRowId(), answer.getAnswer(), answer.getType(), answer.getFeature().getCustomId(), answer.getPrioritized(), answer.getBackgroundColor()))
+						answer.getRowId(), answer.getAnswer(), answer.getType(), answer.getFeature().getCustomId(),
+						answer.getPrioritized(), answer.getBackgroundColor()))
 				.toList();
 
 		HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> result = new HashMap<>();
