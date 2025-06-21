@@ -88,7 +88,7 @@
     "save": "Salvesta",
     "cancelEdit": "Tühista muutmine",
     "deleteRowARIA": "Kustuta rida",
-    "saved": "Salvestamine toimub automaatselt"
+    "saved": "EbA-UIM rakendus on arendamisel (PoC) ning andmete automaatsel salvestamisel võib esineda tõrkeid."
   },
   "select": {
     "chooseOption": "Vali",

@@ -88,7 +88,7 @@
     "save": "Save",
     "cancelEdit": "Cancel editing",
     "deleteRowARIA": "Delete row",
-    "saved": "Changes are saved automatically"
+    "saved": "The EbA-UIM application is under development (PoC), and automatic data saving may experience errors."
   },
   "select": {
     "chooseOption": "Select",
