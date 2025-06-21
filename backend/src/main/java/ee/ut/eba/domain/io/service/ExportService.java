@@ -21,26 +21,28 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ExportService {
-	private final ValidationAnswerService validationAnswerService;
 
-	private final ExcelColumnService excelColumnService;
+	private final ValidationAnswerService validationAnswerService;
 	private final FeatureGroupService featureGroupService;
 	private final QuestionnaireService questionnaireService;
 
 	private final List<Integer> columnsWidths = Arrays.asList(144, 420, 74, 201, 365, 365, 234, 234, 234, 234, 170, 452,
 			201, 365, 602, 602);
+
 	private final List<HorizontalAlignment> headerColumnsAlignment = Arrays.asList(HorizontalAlignment.CENTER,
 			HorizontalAlignment.LEFT, HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT,
 			HorizontalAlignment.LEFT, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.LEFT, HorizontalAlignment.LEFT);
+
 	private final List<HorizontalAlignment> bodyColumnsAlignment = Arrays.asList(HorizontalAlignment.CENTER,
 			HorizontalAlignment.LEFT, HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT,
 			HorizontalAlignment.LEFT, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.CENTER, HorizontalAlignment.CENTER, HorizontalAlignment.CENTER,
 			HorizontalAlignment.RIGHT, HorizontalAlignment.CENTER, HorizontalAlignment.LEFT, HorizontalAlignment.LEFT,
 			HorizontalAlignment.LEFT);
+
 	private final List<VerticalAlignment> bodyColumnsVerticalAlignment = Arrays.asList(VerticalAlignment.TOP,
 			VerticalAlignment.TOP, VerticalAlignment.TOP, VerticalAlignment.TOP, VerticalAlignment.TOP,
 			VerticalAlignment.TOP, VerticalAlignment.CENTER, VerticalAlignment.CENTER, VerticalAlignment.CENTER,
@@ -51,12 +53,32 @@ public class ExportService {
 			Map.of("et", "Jah", "en", "Yes"), "PARTLY", Map.of("et", "Osaliselt", "en", "Partly"), "DONT_KNOW",
 			Map.of("et", "Ei tea", "en", "Don't know"), "NO", Map.of("et", "Ei", "en", "No"));
 
+	Map<String, List<String>> columnNames = Map.of("et",
+			List.of("ID", "Funktsiooni kirjeldus", "", "Sidusrühm", "Funktsiooni eeltingimus", "Võrdluseks sobiv näide",
+					"Sama sidusrühm?", "Sama kontekst?", "Tegevus eesmärgikohane?", "Sidusrühma rahulolu?",
+					"Prioritiseeri", "Kirjeldus, mil määral on eeltingimus täidetud", "", "", "",
+					"Järeldused ja tegevuskava"),
+			"en",
+			List.of("ID", "Feature description", "", "Stakeholder", "Feature precondition", "Comparison example",
+					"The same stakeholder?", "The same context?", "Purposeful action?", "Stakeholder satisfaction?",
+					"Prioritize", "To what extent the preconditions are met", "", "", "",
+					"Conclusions and action plan"));
+
 	private final Map<String, XSSFColor> selectionBackground = Map.of("YES",
 			new XSSFColor(new byte[]{(byte) 179, (byte) 217, (byte) 155}), "PARTLY",
 			new XSSFColor(new byte[]{(byte) 247, (byte) 222, (byte) 135}), "DONT_KNOW",
 			new XSSFColor(new byte[]{(byte) 160, (byte) 206, (byte) 234}), "NO",
 			new XSSFColor(new byte[]{(byte) 245, (byte) 148, (byte) 138}), "",
 			new XSSFColor(new byte[]{(byte) 211, (byte) 211, (byte) 211}));
+
+	private final Map<String, XSSFColor> backgroundColorMap = Map.of("var(--light-green)",
+			new XSSFColor(new byte[]{(byte) 179, (byte) 217, (byte) 155}), "var(--light-orange)",
+			new XSSFColor(new byte[]{(byte) 246, (byte) 186, (byte) 137}), "var(--light-red)",
+			new XSSFColor(new byte[]{(byte) 245, (byte) 148, (byte) 138}), "var(--light-yellow)",
+			new XSSFColor(new byte[]{(byte) 246, (byte) 227, (byte) 163}), "var(--light-blue)",
+			new XSSFColor(new byte[]{(byte) 160, (byte) 206, (byte) 234}), "var(--light-grey)",
+			new XSSFColor(new byte[]{(byte) 220, (byte) 220, (byte) 220}), "var(--beige)",
+			new XSSFColor(new byte[]{(byte) 247, (byte) 241, (byte) 230}));
 
 	private int rowCounter = 0;
 
@@ -126,7 +148,9 @@ public class ExportService {
 	private Sheet getSheet(Workbook workbook, String name) {
 		Sheet sheet1 = workbook.createSheet(name);
 		for (int i = 0; i < columnsWidths.size(); i++) {
-			sheet1.setColumnWidth(i, columnsWidths.get(i) * 256 / 7);
+			int px = columnsWidths.get(i);
+			int poiWidth = (int) ((px - 5) / 7. * 256 * 0.6);
+			sheet1.setColumnWidth(i, poiWidth);
 		}
 		return sheet1;
 	}
@@ -153,9 +177,23 @@ public class ExportService {
 			VerticalAlignment verticalAlignment, ExcelCell cell) {
 		CellStyle cellStyle = workbook.createCellStyle();
 
-		if (cell != null && cell.type.equalsIgnoreCase("SELECT")) {
-			cellStyle.setFillForegroundColor(selectionBackground.get(cell.value.strip()));
-			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		if (cell != null) {
+
+			if ("SELECT".equalsIgnoreCase(cell.type)) {
+				XSSFColor color = selectionBackground.get(cell.value.strip());
+				if (color != null && cellStyle instanceof XSSFCellStyle xssfCellStyle) {
+					xssfCellStyle.setFillForegroundColor(color);
+					xssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				}
+			}
+
+			if (cell.backgroundColor != null) {
+				XSSFColor bgColor = backgroundColorMap.get(cell.backgroundColor.strip());
+				if (bgColor != null && cellStyle instanceof XSSFCellStyle xssfCellStyle) {
+					xssfCellStyle.setFillForegroundColor(bgColor);
+					xssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				}
+			}
 		}
 
 		cellStyle.setAlignment(horizontalAlignment);
@@ -173,7 +211,7 @@ public class ExportService {
 		rowCounter++;
 		row.setHeight((short) 800);
 
-		List<String> headerNames = excelColumnService.getColumnNames(language);
+		List<String> headerNames = columnNames.get(language);
 
 		for (int i = 0; i < headerNames.size(); i++) {
 			CellStyle headerStyle = getHeaderStyle(workbook, headerColumnsAlignment.get(i));
@@ -202,7 +240,7 @@ public class ExportService {
 				row.setHeight((short) -1);
 
 				Cell cell0 = row.createCell(0);
-				cell0.setCellValue(groupId);
+				cell0.setCellValue(values.get(0).customId);
 				cell0.setCellStyle(
 						getCellStyle(workbook, bodyColumnsAlignment.get(0), bodyColumnsVerticalAlignment.get(0), null));
 
@@ -214,9 +252,22 @@ public class ExportService {
 				for (int i = 1; i < values.size(); i++) {
 					Cell cell = row.createCell(i + 1);
 					ExcelCell c = values.get(i);
-					cell.setCellValue(c.type.equalsIgnoreCase("SELECT")
-							? selectionTranslations.getOrDefault(c.value, Map.of()).getOrDefault(language, c.value)
-							: c.value);
+					if (i == 9) {
+						// Check if row is prioritized
+						boolean hasCheckmark = values.stream()
+								.anyMatch(v -> "FEATURE_PRECONDITION".equalsIgnoreCase(v.type)
+										&& Boolean.TRUE.equals(v.prioritized));
+
+						if (hasCheckmark) {
+							cell.setCellValue("✓");
+						} else {
+							cell.setCellValue("");
+						}
+					} else {
+						cell.setCellValue(c.type.equalsIgnoreCase("SELECT")
+								? selectionTranslations.getOrDefault(c.value, Map.of()).getOrDefault(language, c.value)
+								: c.value);
+					}
 					cell.setCellStyle(getCellStyle(workbook, bodyColumnsAlignment.get(i + 1),
 							bodyColumnsVerticalAlignment.get(i + 1), c));
 				}
@@ -227,8 +278,11 @@ public class ExportService {
 
 	private HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> getAnswersSortedByRowAndGroup(
 			List<ValidationAnswer> validationAnswers) {
-		List<ExcelCell> cells = validationAnswers.stream().map(answer -> new ExcelCell(answer.getFeatureGroup().getId(),
-				answer.getFeature().getId(), answer.getRowId(), answer.getAnswer(), answer.getType())).toList();
+		List<ExcelCell> cells = validationAnswers.stream()
+				.map(answer -> new ExcelCell(answer.getFeatureGroup().getId(), answer.getFeature().getId(),
+						answer.getRowId(), answer.getAnswer(), answer.getType(), answer.getFeature().getCustomId(),
+						answer.getPrioritized(), answer.getBackgroundColor()))
+				.toList();
 
 		HashMap<Integer, HashMap<Integer, HashMap<Integer, List<ExcelCell>>>> result = new HashMap<>();
 

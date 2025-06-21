@@ -10,6 +10,8 @@ import ee.ut.eba.domain.questionnaire.persistence.Questionnaire;
 import ee.ut.eba.domain.questionnaire.service.QuestionnaireService;
 import ee.ut.eba.domain.stakeholder.service.StakeholderService;
 import ee.ut.eba.domain.validationanswer.service.ValidationAnswerService;
+
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,9 @@ public class ImportService {
 	@Transactional
 	public int importQuestionnaire(QuestionaireJson jsonData) {
 		emptyMemory();
+		jsonData.validationAnswers()
+				.sort(Comparator.comparingInt((ValidationAnswerJson answer) -> answer.featureGroup().id())
+						.thenComparingInt(answer -> answer.feature().id()));
 		int questionnaireId = saveQuestionnaire(jsonData);
 		for (ValidationAnswerJson validationAnswer : jsonData.validationAnswers()) {
 			int validationId = validationAnswer.validation().id();

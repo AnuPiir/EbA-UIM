@@ -11,8 +11,12 @@
     </p>
     <h2 [innerHTML]="'about.section2Heading' | translate | sanitizeHtml"></h2>
     <p [innerHTML]="'about.section2Text' | translate | sanitizeHtml"></p>
-    <h2 [innerHTML]="'about.section3Heading' | translate | sanitizeHtml"></h2>
-    <p [innerHTML]="'about.section3Text' | translate | sanitizeHtml"></p>
+    <h3 [innerHTML]="'about.section3Heading' | translate | sanitizeHtml"></h3>
+    <p [innerHTML]="formatTextWithLineBreaks(('about.section3Text' | translate))"></p>
+    <h2 [innerHTML]="'about.section4Heading' | translate | sanitizeHtml"></h2>
+    <p [innerHTML]="'about.section4Text' | translate | sanitizeHtml"></p>
+    <h2 [innerHTML]="'about.section5Heading' | translate | sanitizeHtml"></h2>
+    <p [innerHTML]="formatTextWithLineBreaks(('about.section5Text' | translate))"></p>
     <h2 [innerHTML]="'about.contact' | translate | sanitizeHtml"></h2>
     <p [innerHTML]="'about.address' | translate | sanitizeHtml"></p>
     </div>

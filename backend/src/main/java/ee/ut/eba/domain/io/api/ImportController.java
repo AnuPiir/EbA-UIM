@@ -26,8 +26,7 @@ public class ImportController {
 	public ResponseEntity<Map<String, Object>> importQuestionnaire(@RequestBody QuestionaireJson jsonData) {
 		int id = importService.importQuestionnaire(jsonData);
 		Map<String, Object> response = new HashMap<>();
-		response.put("message", "Questionnaire imported successfully!");
-		response.put("id", id);
+		response.put("message", "Questionnaire with id " + id + " imported successfully!");
 		return ResponseEntity.ok(response);
 	}
 }
